@@ -1,32 +1,32 @@
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include "opencv2/opencv.hpp"
+
 #include <iostream>
 
 using namespace cv;
 using namespace std;
 
-int main(int argc, char **argv)
+int main(int argc, const char **argv)
 {
-	if (argc != 2)
+	VideoCapture cap(1);
+
+	if (!cap.isOpened())
 	{
-		cout << "Usage: JoystickCalibration <image>" << endl;
+		cerr << "Could not open capture device" << endl;
 		return -1;
 	}
 
-	//Read the file
-	Mat image;
-	image = imread(argv[1], IMREAD_COLOR);
-	if (!image.data)
+	Mat frame;
+	cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
+
+	for (;;)
 	{
-		cout << "Could not open " << argv[1] << endl;
-		return -1;
+		cap >> frame;
+		if (frame.empty())
+			continue;
+		imshow("result", frame);
+		if (waitKey(30) == 27)
+			break;
 	}
 
-	//Create a window for display
-	namedWindow("Display window", WINDOW_AUTOSIZE);
-	imshow("Display window", image);
-
-	//Wait for a keystroke in the window
-	waitKey(0);
 	return 0;
 }
