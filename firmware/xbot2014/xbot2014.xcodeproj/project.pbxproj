@@ -12,10 +12,10 @@
 
 /* Begin PBXFileReference section */
 		3E13D6221A297F8700B0313D /* Index */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Index; sourceTree = BUILT_PRODUCTS_DIR; };
-		3E13D6281A297F8700B0313D /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		3E13D6281A297F8700B0313D /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		3EC7FA5A1A298F2800E7D588 /* example.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = example.c; sourceTree = "<group>"; };
-		3EC7FA5C1A29900D00E7D588 /* usb_serial.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_serial.c; sourceTree = "<group>"; };
-		3EC7FA5D1A29900D00E7D588 /* usb_serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_serial.h; sourceTree = "<group>"; };
+		3EC7FA5E1A2992D600E7D588 /* usb_serial.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_serial.c; sourceTree = "<group>"; };
+		3EC7FA5F1A2992D600E7D588 /* usb_serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_serial.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -38,7 +38,8 @@
 		3E13D6241A297F8700B0313D /* xbot2014 */ = {
 			isa = PBXGroup;
 			children = (
-				3EC7FA5B1A29900D00E7D588 /* usb_serial */,
+				3EC7FA5E1A2992D600E7D588 /* usb_serial.c */,
+				3EC7FA5F1A2992D600E7D588 /* usb_serial.h */,
 				3EC7FA5A1A298F2800E7D588 /* example.c */,
 				3E13D6271A297F8700B0313D /* Makefiles */,
 			);
@@ -51,15 +52,6 @@
 				3E13D6281A297F8700B0313D /* Makefile */,
 			);
 			name = Makefiles;
-			sourceTree = "<group>";
-		};
-		3EC7FA5B1A29900D00E7D588 /* usb_serial */ = {
-			isa = PBXGroup;
-			children = (
-				3EC7FA5C1A29900D00E7D588 /* usb_serial.c */,
-				3EC7FA5D1A29900D00E7D588 /* usb_serial.h */,
-			);
-			path = usb_serial;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -286,6 +278,7 @@
 		3E13D62D1A297F8700B0313D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -293,6 +286,7 @@
 		3E13D62E1A297F8700B0313D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
