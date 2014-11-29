@@ -201,6 +201,7 @@ xcuserdata
 .svn
 *.orig
 
+#AVR stuff
 *.cof
 *.hex
 *.obj
@@ -211,3 +212,7 @@ xcuserdata
 *.lst
 *.map
 *.srec
+*.eep
+*.o.d
+*.lss
+*.sym
