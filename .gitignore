@@ -181,3 +181,11 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+*.xcscheme
+
+firmware/xbot2014/xbot2014.xcodeproj/xcuserdata/johnmiller.xcuserdatad/xcschemes/xcschememanagement.plist
+
+*.xcuserstate
+
+firmware/xbot2014/xbot2014.xcodeproj/project.xcworkspace/xcshareddata/xbot2014.xccheckout
