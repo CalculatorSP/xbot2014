@@ -182,10 +182,21 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
-*.xcscheme
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+*.bak*
 
-firmware/xbot2014/xbot2014.xcodeproj/xcuserdata/johnmiller.xcuserdatad/xcschemes/xcschememanagement.plist
+#Xcode files
+#This ignores everything inside a *.xcodeproj except the project.pbxproj
+*.xcodeproj/
+!*.xcodeproj/project.pbxproj
+*.log
+xcuserdata
 
-*.xcuserstate
+#Project files
+[Bb]uild/
 
-firmware/xbot2014/xbot2014.xcodeproj/project.xcworkspace/xcshareddata/xbot2014.xccheckout
+#Version control files
+.svn
+*.orig
