@@ -200,3 +200,14 @@ xcuserdata
 #Version control files
 .svn
 *.orig
+
+*.cof
+*.hex
+*.obj
+*.elf
+*.conf
+*.o
+*.bin
+*.lst
+*.map
+*.srec
