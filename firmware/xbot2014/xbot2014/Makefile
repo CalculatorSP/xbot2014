@@ -53,7 +53,7 @@ F_CPU = 16000000
 AVRDUDE_PROGRAMMER = stk500v2
 
 # com1 = serial port. Use lpt1 to connect to parallel port.
-AVRDUDE_PORT = /dev/cu.usbmodemfd121    # programmer connected to serial device
+AVRDUDE_PORT = com1    # programmer connected to serial device
 
 # Output format. (can be srec, ihex, binary)
 FORMAT = ihex

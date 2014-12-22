@@ -114,29 +114,11 @@ char mode = 0x41;
 char motorSetting1 = 0xff;
 char motorSetting2 = 0xff;
 
-
 char analogEnabled = 0;
 
 char parseIndex = 0;
-char recievedUpdate = 0;
 int timeoutCounter = 0;
 
-
-void printHex(char c)
-{
-	char n = (c >>4);
-	if(n < 10)
-		n += 48;
-	else
-		n += 55;
-	usb_serial_putchar(n);
-	n = (c & 0xf);
-	if(n < 10)
-		n += 48;
-	else
-		n += 55;
-	usb_serial_putchar(n);
-}
 
 int main(void)
 {	
@@ -170,18 +152,20 @@ int main(void)
 	usb_serial_flush_input();
 	int flashCounter = 0;
 	char LEDstate = 1;
+    int attnCounter = 0;
 
 	while (1) {
 
-idle:
-		TEST_HIGH;
-		ACK_HIGH;
-		SPDR = 0xff;
-		if(ATT_PIN)
-		{
-			timeoutCounter++;
+        while (ATT_PIN)
+        {
+            TEST_HIGH;
+            ACK_HIGH;
+            SPDR = 0xff;
+
+            timeoutCounter++;
 			if(timeoutCounter >= 30000)//we've been disconnected
 			{
+                usb_serial_putchar_nowait('d');
 				mode = 0x41;
 				motorSetting1 = 0xff;
 				motorSetting2 = 0xff;
@@ -202,62 +186,24 @@ idle:
 						LEDstate = 1;	
 					}
 					flashCounter = 0;
-					
 				}
 			}
-			if(usb_serial_available())
-			{
-				LED_ON;
-				int c = usb_serial_getchar();
-				if (c >= 0) 
-				{
-					switch(parseIndex)
-					{
-					case 0:
-						if(c == 0x5A)
-							parseIndex++;
-						else
-							usb_serial_putchar('x');
-						break;
-					case 1:
-						buttons1 &= c;//combine this with any pending presses
-						buttons1postReportState = c;
-						parseIndex++;
-						break;
-					case 2:
-						buttons2 &= c;//combine this with any pending presses
-						buttons2postReportState = c;
-						parseIndex++;
-						break;
-					case 3:
-						joyRX = c;
-						parseIndex++;
-						break;
-					case 4:
-						joyRY = c;
-						parseIndex++;
-						break;
-					case 5:
-						joyLX = c;
-						parseIndex++;
-						break;
-					case 6:
-						joyLY = c;
-						parseIndex = 0;
-						recievedUpdate = 1;
-						break;
-					}
-				}
-				else
-				{
-					parseIndex = 0;
-					usb_serial_putchar('x');
-				}
-			}
+
 			_delay_us(1);
-			goto idle;
 		}
-		timeoutCounter = 0;
+        
+        timeoutCounter = 0;
+
+        attnCounter++;
+        if (attnCounter >= 1000)
+        {
+            attnCounter = 0;
+            buttons2 = 0xBF;//press cross
+            usb_serial_putchar_nowait('k');
+            usb_serial_putchar_nowait('\n');
+        }
+        else
+            buttons2 = 0xff;//release all buttons
 		
 		if((buttons1 & 0x10) == 0) upPressure = 0xFF; else upPressure = 0x00;
 		if((buttons1 & 0x20) == 0) rightPressure = 0xFF; else rightPressure = 0x00;
@@ -479,29 +425,11 @@ idle:
 finish:
 		TEST_HIGH;
 		ACK_HIGH;
-		if((buttons1 == 0xff)&&(buttons2 == 0xff))
-		{
-			LED_OFF;
-		}
 
-		//copy queued releases into button state
-		buttons1 = buttons1postReportState;
-		buttons2 = buttons2postReportState;
 		sei();//renable usb interrupts
-		
-		if(recievedUpdate == 1)
-		{
-			//ack the update was sent to the console
-			usb_serial_putchar('k');
-			recievedUpdate = 0;
-		}
 
-		while(!ATT_PIN)
-		{
-			_delay_us(20); //conservative so we aren't still in ATT low at the top of the loop		
-		}
+        while(!ATT_PIN);//make sure ATT is asserted at top of loop
 
-		
 		counter++;
 	}
 }
