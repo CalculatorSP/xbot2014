@@ -14,6 +14,7 @@
 /* Begin PBXFileReference section */
 		3E13D6221A297F8700B0313D /* Index */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Index; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E13D6281A297F8700B0313D /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; usesTabs = 1; };
+		3E3A0D2F1A511E2300656CB1 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		3E97716C1A479D8500E61884 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		3EC7FA5E1A2992D600E7D588 /* usb_serial.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_serial.c; sourceTree = "<group>"; };
 		3EC7FA5F1A2992D600E7D588 /* usb_serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_serial.h; sourceTree = "<group>"; };
@@ -43,6 +44,7 @@
 				3EC7FA5F1A2992D600E7D588 /* usb_serial.h */,
 				3E13D6271A297F8700B0313D /* Makefiles */,
 				3E97716C1A479D8500E61884 /* main.c */,
+				3E3A0D2F1A511E2300656CB1 /* main.h */,
 			);
 			path = xbot2014;
 			sourceTree = "<group>";
