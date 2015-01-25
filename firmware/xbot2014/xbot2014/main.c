@@ -42,8 +42,6 @@ uint8_t rumble0_val = 0x00;
 uint8_t rumble1_val = 0x00;
 uint8_t devicemode = 0x41;
 
-bool locked = false;
-
 inline void psx_setup(void)
 {
     // Set up MISO as output, others as inputs
@@ -206,11 +204,9 @@ ISR(SPI_STC_vect)
                 else if (command == PSX_CMD_ANALOG)
                 {
                     devicemode = PSX_MODE_ANALOG;
-                    packet_status[2] == 0x01;
+                    packet_status[2] = 0x01;
                 }
             }
-            if (bytenum == 2)
-                locked = (command == PSX_CMD_LOCKED);
             break;
          
         // Get more status info

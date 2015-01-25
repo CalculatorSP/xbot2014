@@ -42,8 +42,8 @@
 
 // You can change these to give your code its own name.  On Windows,
 // these are only used before an INF file (driver install) is loaded.
-#define STR_MANUFACTURER	L"Your Name"
-#define STR_PRODUCT		L"USB Serial"
+#define STR_MANUFACTURER	L"John Miller"
+#define STR_PRODUCT		L"xbot"
 
 // All USB serial devices are supposed to have a serial number
 // (according to Microsoft).  On windows, a new COM port is created
@@ -646,7 +646,9 @@ void usb_serial_flush_output(void)
 // communication
 uint32_t usb_serial_get_baud(void)
 {
-	return *(uint32_t *)cdc_line_coding;
+    uint32_t *tmp = (uint32_t *)cdc_line_coding;
+    return *tmp;
+	//return *(uint32_t *)cdc_line_coding;
 }
 uint8_t usb_serial_get_stopbits(void)
 {
