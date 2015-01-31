@@ -218,9 +218,10 @@ ISR(SPI_STC_vect)
         // Main polling command
         case (PSX_STATE_POLL):
             SPDR = packet_poll[bytenum];
-            if (packet_vibrate[bytenum] == 0x00)
+            if (bytenum > 0 && bytenum < sizeof(packet_bytenum))
+            if (packet_vibrate[bytenum-1] == 0x00)
                 rumble0_val = command;
-            else if (packet_vibrate[bytenum] == 0x01)
+            else if (packet_vibrate[bytenum-1] == 0x01)
                 rumble1_val = command;
             break;
             
