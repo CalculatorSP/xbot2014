@@ -1,4 +1,5 @@
 #include "main.h"
+#include "usb_serial.h"
 
 #include <stdint.h>
 #include <avr/io.h>
@@ -214,15 +215,17 @@ ISR(SPI_STC_vect)
         case (PSX_STATE_CHECK):
             SPDR = packet_check[bytenum];
             break;
-
+            
         // Main polling command
         case (PSX_STATE_POLL):
             SPDR = packet_poll[bytenum];
-            if (bytenum > 0 && bytenum < sizeof(packet_bytenum))
-            if (packet_vibrate[bytenum-1] == 0x00)
-                rumble0_val = command;
-            else if (packet_vibrate[bytenum-1] == 0x01)
-                rumble1_val = command;
+            if (bytenum > 0 && bytenum < sizeof(packet_vibrate))
+            {
+                if (packet_vibrate[bytenum-1] == 0x00)
+                    rumble0_val = command;
+                else if (packet_vibrate[bytenum-1] == 0x01)
+                    rumble1_val = command;
+            }
             break;
             
         // Enter/Exit Config Mode, also poll all button states, joysticks, and pressures
