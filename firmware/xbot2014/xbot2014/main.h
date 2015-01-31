@@ -17,8 +17,8 @@
 
 #define PSX_SS   (PB0)
 #define PSX_CLK  (PB1)
-#define PSX_MISO (PB2)
-#define PSX_MOSI (PB3)
+#define PSX_MOSI (PB2)
+#define PSX_MISO (PB3)
 #define PSX_ACK  (PB7)
 
 #define PSX_STATE_HEADER        (0x00)
@@ -45,5 +45,12 @@
 #define PSX_MODE_ANALOG         (0x73)
 #define PSX_MODE_PRESSURES      (0x79)
 #define PSX_MODE_CONFIG         (0xF3)
+
+#define CONTROLLER_BUFSIZE      (20)
+
+#define LED_CONFIG	(DDRD |= (1<<6))
+#define LED_OFF		(PORTD &= ~(1<<6))
+#define LED_ON		(PORTD |= (1<<6))
+#define LED_TOGGLE  (PORTD ^= (1<<6))
 
 #endif
