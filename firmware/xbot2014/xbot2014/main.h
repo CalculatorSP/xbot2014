@@ -12,45 +12,10 @@
 #define CPU_125kHz      0x07
 #define CPU_62kHz       0x08
 
-#define PSX_PORT    (PORTB)
-#define PSX_DDR     (DDRB)
-
-#define PSX_SS   (PB0)
-#define PSX_CLK  (PB1)
-#define PSX_MOSI (PB2)
-#define PSX_MISO (PB3)
-#define PSX_ACK  (PB7)
-
-#define PSX_STATE_HEADER        (0x00)
-#define PSX_STATE_PRESSURE      (0x40)
-#define PSX_STATE_CHECK         (0x41)
-#define PSX_STATE_POLL          (0x42)
-#define PSX_STATE_CONFIG        (0x43)
-#define PSX_STATE_MODE          (0x44)
-#define PSX_STATE_STATUS        (0x45)
-#define PSX_STATE_CONST0        (0x46)
-#define PSX_STATE_CONST1        (0x47)
-#define PSX_STATE_CONST2        (0x4C)
-#define PSX_STATE_VIBRATE       (0x4D)
-#define PSX_STATE_BYTESET       (0x4F)
-
-#define PSX_CMD_HEADER          (0x01)
-#define PSX_CMD_ENTER_CONFIG    (0x01)
-#define PSX_CMD_EXIT_CONFIG     (0x00)
-#define PSX_CMD_DIGITAL         (0x00)
-#define PSX_CMD_ANALOG          (0x01)
-#define PSX_CMD_LOCKED          (0x03)
-
-#define PSX_MODE_DIGITAL        (0x41)
-#define PSX_MODE_ANALOG         (0x73)
-#define PSX_MODE_PRESSURES      (0x79)
-#define PSX_MODE_CONFIG         (0xF3)
-
-#define CONTROLLER_BUFSIZE      (20)
-
 #define LED_CONFIG	(DDRD |= (1<<6))
 #define LED_OFF		(PORTD &= ~(1<<6))
 #define LED_ON		(PORTD |= (1<<6))
-#define LED_TOGGLE  (PORTD ^= (1<<6))
+
+#define DO_NOTHING()
 
 #endif
