@@ -365,8 +365,12 @@ gccversion :
 
 
 # Program the device.
+#program: $(OBJDIR)/$(TARGET).hex $(OBJDIR)/$(TARGET).eep
+#	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
+
+# LOLOLOL HACK: make the teensy go to bootloader mode
 program: $(OBJDIR)/$(TARGET).hex $(OBJDIR)/$(TARGET).eep
-	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
+	echo "pppppppppppppppppppppppppppppppppppppp\n" > /dev/cu.usbmodem12341
 
 # Generate avr-gdb config/init file which does the following:
 #     define the reset signal, load the target file, connect to target, and set

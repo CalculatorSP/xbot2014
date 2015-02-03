@@ -1,4 +1,6 @@
-/* API for PSX Controller Emulation
+/***********************************************************************
+ *
+ * API for PSX Controller Emulation
  * https://github.com/CalculatorSP/xbot2014
  * Copyright (c) 2014,2015 John Miller
  *
@@ -19,22 +21,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */
-
-// Version 0.9: First working version
-// Version 1.0: Initial Release
+ *
+ ***********************************************************************/
 
 #define PSX_PRIVATE_INCLUDE
 #include "psx.h"
 
-/**************************************************************************
+
+/***********************************************************************
  *
  *  Configurable Options
  *
- **************************************************************************/
+ ***********************************************************************/
 
 // Number of controller instructions to buffer
-#define CONTROLLER_BUFSIZE  (20)
+#define CONTROLLER_BUFSIZE  (32)
 
 // Port/pin setup (change this if your hardware configuration is different)
 #define PSX_PORT    (PORTB)
@@ -47,11 +48,11 @@
 #define PSX_ACK  (PB7)
 
 
-/**************************************************************************
+/***********************************************************************
  *
  *  Private Variables - Data Packets, etc
  *
- **************************************************************************/
+ ***********************************************************************/
 
 // Internal packets, automatically configured
 static uint8_t packet_header[3] =
@@ -63,7 +64,7 @@ static uint8_t packet_pressure[7] =
 static uint8_t packet_check[7] =
 { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF };
 
-static uint8_t packet_poll_default[19] =
+static const uint8_t packet_poll_default[19] =
 { 0xFF, 0xFF, 0x7F, 0x7F, 0x7F, 0x7F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF };
 
 static uint8_t packet_status[7] =
@@ -91,6 +92,9 @@ static volatile uint8_t devicemode = PSX_MODE_DIGITAL;
 static volatile uint8_t rumble0_val = 0x00;
 static volatile uint8_t rumble1_val = 0x00;
 
+// Track whether polling data is new
+static volatile bool new_data = false;
+
 // Keep track of which packet we are sending, and how many bytes are in it
 static uint8_t state = PSX_STATE_HEADER;
 static uint8_t length_to_send = 2;
@@ -102,7 +106,7 @@ static uint8_t bytenum = 0;
 static uint8_t const_num = 0x00;
 
 // Controller data to send (send empty data until we hear from PC)
-static uint8_t *packet_poll = packet_poll_default;
+static const uint8_t *packet_poll = packet_poll_default;
 
 // Buffer for controller instructions
 static uint8_t controller_buffer[CONTROLLER_BUFSIZE][19];
@@ -114,11 +118,11 @@ static uint8_t write_to = 0;
 static uint8_t read_from = 0;
 
 
-/**************************************************************************
+/***********************************************************************
  *
  *  Public Functions - API for commmunicating with PSX
  *
- **************************************************************************/
+ ***********************************************************************/
 
 void psx_setup(void)
 {
@@ -141,8 +145,15 @@ void psx_setup(void)
     sei();
 }
 
-void psx_deposit(uint8_t *instr)
+bool psx_deposit(const uint8_t *instr)
 {
+    // Make sure buffer is not full
+    // Ensure atomicity to avoid conflicts
+    SPCR &= ~(1<<SPIE);
+    if ((write_to + 1) % CONTROLLER_BUFSIZE == read_from)
+        return false;
+    SPCR |= (1<<SPIE);
+    
     // Copy instruction to controller_buffer (last byte must always be 0xFF)
     memcpy(controller_buffer[write_to], instr, sizeof(controller_buffer[write_to]) - 1);
     controller_buffer[write_to][18] = 0xFF;
@@ -152,9 +163,11 @@ void psx_deposit(uint8_t *instr)
     SPCR &= ~(1<<SPIE);
     write_to = (write_to + 1) % CONTROLLER_BUFSIZE;
     SPCR |= (1<<SPIE);
+    
+    return true;
 }
 
-uint8_t *psx_get_default(void)
+const uint8_t *psx_get_default(void)
 {
     return packet_poll_default;
 }
@@ -171,24 +184,35 @@ uint8_t psx_get_devicemode(void)
     return retval;
 }
 
-uint16_t psx_get_rumble(void)
+bool psx_get_rumble(uint16_t *rum)
 {
-    uint16_t retval;
+    bool retval;
     
     // Ensure atomicity to avoid conflicts
     SPCR &= ~(1<<SPIE);
-    retval = (rumble0_val<<8) | rumble1_val;
+    
+    if (rum != NULL)
+        *rum = (((uint16_t)rumble1_val)<<8) | (uint16_t)rumble0_val;
+    
+    if (new_data)
+    {
+        new_data = false;
+        retval = true;
+    }
+    else
+        retval = false;
+    
     SPCR |= (1<<SPIE);
     
     return retval;
 }
 
 
-/**************************************************************************
+/***********************************************************************
  *
  *  Private Functions
  *
- **************************************************************************/
+ ***********************************************************************/
 
 static inline void psx_ack(void)
 {
@@ -237,14 +261,6 @@ static void handle_next_spi_byte(void)
                     bytenum = 0;
                     packet_header[0] = devicemode; // Exit config mode
                     length_to_send = (packet_header[0] & 0x0F) << 1;
-                    
-                    // If controller instructions are pending, go to next one. Otherwise, resend
-                    // the previous one. Only send if PSX is listening for full pressure info
-                    if (read_from != write_to && devicemode == PSX_MODE_PRESSURES)
-                    {
-                        packet_poll = controller_buffer[read_from];
-                        read_from = (read_from + 1) % CONTROLLER_BUFSIZE;
-                    }
                     psx_ack();
                 }
                 else if (command == PSX_STATE_CONFIG)
@@ -294,6 +310,18 @@ static void handle_next_spi_byte(void)
                     rumble0_val = command;
                 else if (packet_vibrate[bytenum-1] == 0x01)
                     rumble1_val = command;
+            }
+            if (bytenum == length_to_send)
+            {
+                new_data = true;
+                
+                // If controller instructions are pending, go to next one. Otherwise, resend
+                // the previous one. Only send if PSX is listening for full pressure info
+                if (read_from != write_to && devicemode == PSX_MODE_PRESSURES)
+                {
+                    packet_poll = controller_buffer[read_from];
+                    read_from = (read_from + 1) % CONTROLLER_BUFSIZE;
+                }
             }
             break;
             

@@ -2,12 +2,15 @@
 #define __xbot2014__psx__
 
 #include <stdint.h>
+#include <stdbool.h>
 
-void psx_setup(void);               // initialize SPI, etc.
-void psx_deposit(uint8_t *instr);   // set the next controller state
-uint8_t *psx_get_default(void);     // get default packet (no buttons)
-uint8_t psx_get_devicemode(void);   // get device mode (digital/analog/pressures)
-uint16_t psx_get_rumble(void);      // rumble0 is MSB, rumble1 is LSB
+void psx_setup(void);                   // initialize SPI, etc.
+bool psx_deposit(const uint8_t *instr); // set the next controller state
+                                        //  returns false if buffer is full (does not deposit)
+const uint8_t *psx_get_default(void);   // get default packet (no buttons)
+uint8_t psx_get_devicemode(void);       // get device mode (digital/analog/pressures)
+bool psx_get_rumble(uint16_t *rum);     // rumble0 is MSB, rumble1 is LSB
+                                        //  return val indicates if data is new
 
 #define PSX_MODE_DIGITAL        (0x41)
 #define PSX_MODE_ANALOG         (0x73)
