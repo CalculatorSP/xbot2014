@@ -201,9 +201,9 @@ void parse_and_execute_command(const char *buf)
                 if (c >= '0' && c <= '9')
                     instr[i] = (c - '0') << 4;
                 else if (c >= 'A' && c <= 'F')
-                    instr[i] = (c - 'A') << 4;
+                    instr[i] = (c - 'A' + 0xA) << 4;
                 else if (c >= 'a' && c <= 'f')
-                    instr[i] = (c - 'a') << 4;
+                    instr[i] = (c - 'a' + 0xA) << 4;
                 else
                 {
                     // Parse error
@@ -219,9 +219,9 @@ void parse_and_execute_command(const char *buf)
                 if (c >= '0' && c <= '9')
                     instr[i] |= (c - '0');
                 else if (c >= 'A' && c <= 'F')
-                    instr[i] |= (c - 'A');
+                    instr[i] |= (c - 'A' + 0xA);
                 else if (c >= 'a' && c <= 'f')
-                    instr[i] |= (c - 'a');
+                    instr[i] |= (c - 'a' + 0xA);
                 else
                 {
                     // Parse error
