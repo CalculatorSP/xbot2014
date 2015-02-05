@@ -8,19 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		3E13D6291A297F8700B0313D /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 3E13D6281A297F8700B0313D /* Makefile */; };
+		3E3A36441A82F997004B31F4 /* pipe.c in Sources */ = {isa = PBXBuildFile; fileRef = 3E3A36421A82F997004B31F4 /* pipe.c */; };
+		3E3A36491A82F9A3004B31F4 /* psx.c in Sources */ = {isa = PBXBuildFile; fileRef = 3E3A36451A82F9A3004B31F4 /* psx.c */; };
+		3E3A364A1A82F9A3004B31F4 /* usb_serial.c in Sources */ = {isa = PBXBuildFile; fileRef = 3E3A36471A82F9A3004B31F4 /* usb_serial.c */; };
 		3E97716D1A479D8500E61884 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3E97716C1A479D8500E61884 /* main.c */; };
-		3E983AE61A7D99340096540F /* psx.c in Sources */ = {isa = PBXBuildFile; fileRef = 3E983AE41A7D99340096540F /* psx.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3E13D6221A297F8700B0313D /* Index */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Index; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E13D6281A297F8700B0313D /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		3E3A0D2F1A511E2300656CB1 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		3E3A36421A82F997004B31F4 /* pipe.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pipe.c; sourceTree = "<group>"; };
+		3E3A36431A82F997004B31F4 /* pipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pipe.h; sourceTree = "<group>"; };
+		3E3A36451A82F9A3004B31F4 /* psx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = psx.c; sourceTree = "<group>"; };
+		3E3A36461A82F9A3004B31F4 /* psx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = psx.h; sourceTree = "<group>"; };
+		3E3A36471A82F9A3004B31F4 /* usb_serial.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_serial.c; sourceTree = "<group>"; };
+		3E3A36481A82F9A3004B31F4 /* usb_serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_serial.h; sourceTree = "<group>"; };
 		3E97716C1A479D8500E61884 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		3E983AE41A7D99340096540F /* psx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = psx.c; sourceTree = "<group>"; };
-		3E983AE51A7D99340096540F /* psx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = psx.h; sourceTree = "<group>"; };
-		3EC7FA5E1A2992D600E7D588 /* usb_serial.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = usb_serial.c; sourceTree = "<group>"; };
-		3EC7FA5F1A2992D600E7D588 /* usb_serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = usb_serial.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -43,6 +47,7 @@
 		3E13D6241A297F8700B0313D /* xbot2014 */ = {
 			isa = PBXGroup;
 			children = (
+				3E3A36381A819776004B31F4 /* Types */,
 				3E983AE71A7D9ADF0096540F /* Communication */,
 				3E13D6271A297F8700B0313D /* Makefiles */,
 				3E97716C1A479D8500E61884 /* main.c */,
@@ -59,13 +64,22 @@
 			name = Makefiles;
 			sourceTree = "<group>";
 		};
+		3E3A36381A819776004B31F4 /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				3E3A36421A82F997004B31F4 /* pipe.c */,
+				3E3A36431A82F997004B31F4 /* pipe.h */,
+			);
+			name = Types;
+			sourceTree = "<group>";
+		};
 		3E983AE71A7D9ADF0096540F /* Communication */ = {
 			isa = PBXGroup;
 			children = (
-				3E983AE41A7D99340096540F /* psx.c */,
-				3E983AE51A7D99340096540F /* psx.h */,
-				3EC7FA5E1A2992D600E7D588 /* usb_serial.c */,
-				3EC7FA5F1A2992D600E7D588 /* usb_serial.h */,
+				3E3A36451A82F9A3004B31F4 /* psx.c */,
+				3E3A36461A82F9A3004B31F4 /* psx.h */,
+				3E3A36471A82F9A3004B31F4 /* usb_serial.c */,
+				3E3A36481A82F9A3004B31F4 /* usb_serial.h */,
 			);
 			name = Communication;
 			sourceTree = "<group>";
@@ -196,8 +210,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E983AE61A7D99340096540F /* psx.c in Sources */,
 				3E13D6291A297F8700B0313D /* Makefile in Sources */,
+				3E3A36491A82F9A3004B31F4 /* psx.c in Sources */,
+				3E3A36441A82F997004B31F4 /* pipe.c in Sources */,
+				3E3A364A1A82F9A3004B31F4 /* usb_serial.c in Sources */,
 				3E97716D1A479D8500E61884 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
