@@ -64,11 +64,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="PSX\PS2.cpp" />
+    <ClCompile Include="PSX\PlaystationController.cpp" />
     <ClCompile Include="PSX\Serial.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PSX\PS2.h" />
+    <ClInclude Include="PSX\PlaystationController.h" />
     <ClInclude Include="PSX\Serial.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

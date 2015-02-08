@@ -9,8 +9,10 @@
  * entire risk of using the Software.
  *
  * @author Hans de Ruiter
+ * @author John Miller
  *
  * @version 0.1 -- 28 October 2008
+ * @version 0.2 -- 8 February 2015 - Specify com port in constructor call
  */
 
 #ifndef __SERIAL_H__
@@ -27,7 +29,7 @@ private:
 	HANDLE commHandle;
 
 public:
-	Serial(int bitRate = 115200);
+	Serial(const char *comport, int bitRate = 115200);
 
 	virtual ~Serial();
 
@@ -37,7 +39,7 @@ public:
 	 *
 	 * @return int the number of characters written
 	 */
-	int write(const char buffer[]);
+	int write(const char buffer[]) const;
 
 	/** Writes a string of bytes to the serial port.
 	 *
@@ -46,7 +48,7 @@ public:
 	 *
 	 * @return int the number of bytes written
 	 */
-	int write(unsigned char *buffer, int buffLen);
+	int write(const unsigned char *buffer, int buffLen) const;
 
 	/** Reads a string of bytes from the serial port.
 	 *
@@ -56,11 +58,11 @@ public:
 	 *
 	 * @return int the number of bytes read
 	 */
-	int read(char *buffer, int buffLen, bool nullTerminate = true);
+	int read(char *buffer, int buffLen, bool nullTerminate = true) const;
 
 	/** Flushes everything from the serial port's read buffer
 	 */
-	void flush();
+	void flush() const;
 };
 
 #endif

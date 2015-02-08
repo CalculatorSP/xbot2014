@@ -1,23 +1,29 @@
 /** Serial.cpp
- *
- * A very simple serial port control class that does NOT require MFC/AFX.
- *
- * @author Hans de Ruiter
- *
- * @version 0.1 -- 28 October 2008
- */
+*
+* A very simple serial port control class that does NOT require MFC/AFX.
+*
+* License: This source code can be used and/or modified without restrictions.
+* It is provided as is and the author disclaims all warranties, expressed
+* or implied, including, without limitation, the warranties of
+* merchantability and of fitness for any purpose. The user must assume the
+* entire risk of using the Software.
+*
+* @author Hans de Ruiter
+* @author John Miller
+*
+* @version 0.1 -- 28 October 2008
+* @version 0.2 -- 8 February 2015 - Specify com port in constructor call
+*/
 
 #include <iostream>
-
-#define COMPORT L"COM4"
 
 using namespace std;
 
 #include "Serial.h"
 
-Serial::Serial(int bitRate)
+Serial::Serial(const char *comport, int bitRate)
 {
-	commHandle = CreateFile(COMPORT, GENERIC_READ|GENERIC_WRITE, 0,NULL, OPEN_EXISTING, 
+	commHandle = CreateFile(comport, GENERIC_READ|GENERIC_WRITE, 0,NULL, OPEN_EXISTING, 
 		0, NULL);
 
 	if(commHandle == INVALID_HANDLE_VALUE) 
@@ -60,7 +66,7 @@ Serial::~Serial()
 	CloseHandle(commHandle);
 }
 
-int Serial::write(const char *buffer)
+int Serial::write(const char *buffer) const
 {
 	DWORD numWritten;
 	WriteFile(commHandle, buffer, strlen(buffer), &numWritten, NULL); 
@@ -68,7 +74,7 @@ int Serial::write(const char *buffer)
 	return numWritten;
 }
 
-int Serial::write(unsigned char *buffer, int buffLen)
+int Serial::write(const unsigned char *buffer, int buffLen) const
 {
 	DWORD numWritten;
 	WriteFile(commHandle, buffer, buffLen, &numWritten, NULL); 
@@ -76,7 +82,7 @@ int Serial::write(unsigned char *buffer, int buffLen)
 	return numWritten;
 }
 
-int Serial::read(char *buffer, int buffLen, bool nullTerminate)
+int Serial::read(char *buffer, int buffLen, bool nullTerminate) const
 {
 	DWORD numRead;
 	if(nullTerminate)
@@ -101,7 +107,7 @@ int Serial::read(char *buffer, int buffLen, bool nullTerminate)
 
 #define FLUSH_BUFFSIZE 10
 
-void Serial::flush()
+void Serial::flush() const
 {
 	char buffer[FLUSH_BUFFSIZE];
 	int numBytes = read(buffer, FLUSH_BUFFSIZE, false);
