@@ -12,14 +12,13 @@ typedef struct
     void *data;
 } pipe_t;
 
-void _pipe_init(pipe_t *self, uint8_t elt_size, uint8_t num_elts);
-void _pipe_write(pipe_t *self, const void *data);
-void *_pipe_read_ptr(pipe_t *self);
-void _pipe_read_data(pipe_t *self, void *data);
-void *_pipe_peek_ptr(pipe_t *self);
-void _pipe_peek_data(pipe_t *self, void *data);
-uint8_t _pipe_isEmpty(pipe_t *self);
-uint8_t _pipe_isFull(pipe_t *self);
+void pipe_init(pipe_t *self, void *data, uint8_t elt_size, uint8_t num_elts);   // Set up pipe
+void pipe_flush(pipe_t *self);                                                  // Clear data in pipe
+uint8_t pipe_write(pipe_t *self, const void *data); // Returns num bytes written, or 0 if full
+uint8_t pipe_read(pipe_t *self, void *data);        // Returns num bytes read, or 0 if empty
+uint8_t pipe_peek(pipe_t *self, void *data);        // Gets data without removing it from pipe
+uint8_t pipe_isEmpty(pipe_t *self);                 // Checks if pipe contains data
+uint8_t pipe_isFull(pipe_t *self);                  // Checks if pipe has room to write
 
 
 #endif

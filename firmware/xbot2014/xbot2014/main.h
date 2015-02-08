@@ -17,15 +17,14 @@
 #define LED_CONFIG	(DDRD |= (1<<6))
 #define LED_OFF		(PORTD &= ~(1<<6))
 #define LED_ON		(PORTD |= (1<<6))
-#define LED_TOGGLE  (PORTD ^= (1<<6)) // probably broken...
 
 #define DO_NOTHING()
 
 #ifdef __AVR_ATmega32U4__
 #define JUMP_TO_BOOTLOADER() \
-    do              \
-    {               \
-        cli();      \
+    do  \
+    {   \
+        cli();  \
         UDCON = 1;  \
         USBCON = (1<<FRZCLK);   \
         UCSR1B = 0; \
@@ -38,8 +37,5 @@
     } while (0)
 #endif
 
-
-static uint8_t recv_str(char *buf, uint8_t size);
-static void parse_and_execute_command(const char *buf);
 
 #endif

@@ -1,26 +1,11 @@
 /***********************************************************************
  *
+ * main.c
+ *
  * Interface for Communication Between PC and PSX through Serial -> SPI
+ *
  * https://github.com/CalculatorSP/xbot2014
  * Copyright (c) 2014,2015 John Miller
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  *
  ***********************************************************************/
 
@@ -30,7 +15,6 @@
 #include "usb_serial.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <util/delay.h>
@@ -39,10 +23,12 @@
 #define PACKET_SIZE (38)    // Does not include separator
 #define BUFFER_SIZE (64)
 
+static uint8_t recv_str(char *buf, uint8_t size);
+static void parse_and_execute_command(const char *buf);
+
 int main(void)
 {
     char buf[BUFFER_SIZE];
-    char rumbuf[4];
     uint8_t n;
     uint16_t rum;
     
@@ -125,9 +111,14 @@ int main(void)
             // Send rumble data
             usb_serial_putchar('v');
             usb_serial_putchar(':');
-            sprintf(rumbuf, "%04hx", rum);
-            for (uint8_t i = 0; i < 4; ++i)
-                usb_serial_putchar(rumbuf[i]);
+            for (uint8_t i = 12; i >= 0; i -= 4)
+            {
+                uint8_t nibble = (rum >> i) & 0x000F;
+                if (nibble < 0xA)
+                    usb_serial_putchar('0' + nibble);
+                else
+                    usb_serial_putchar('A' + (nibble - 0xA));
+            }
             usb_serial_putchar('\n');
         }
     }
@@ -172,7 +163,7 @@ uint8_t recv_str(char *buf, uint8_t size)
 
 void parse_and_execute_command(const char *buf)
 {
-    uint8_t instr[18];
+    uint8_t instr[19];
     int instr_count = 0;
     
     if (strlen(buf) != PACKET_SIZE)
@@ -195,7 +186,7 @@ void parse_and_execute_command(const char *buf)
             instr_count = buf[1] - '0';
             
             // Parse string into uint8_t's
-            for (int i = 0; i < sizeof(instr); ++i)
+            for (int i = 0; i < sizeof(instr)-1; ++i)
             {
                 char c = buf[(i+1)<<1];
                 if (c >= '0' && c <= '9')
@@ -233,6 +224,9 @@ void parse_and_execute_command(const char *buf)
                     return;
                 }
             }
+            
+            // Last byte is always 0xFF
+            instr[18] = 0xFF;
             
             // Deposit multiple times, depending on second character
             for (uint8_t i = 0; i < instr_count; ++i)

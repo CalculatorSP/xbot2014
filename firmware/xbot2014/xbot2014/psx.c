@@ -1,31 +1,16 @@
 /***********************************************************************
  *
+ * psx.c
+ *
  * API for PSX Controller Emulation
- * https://github.com/CalculatorSP/xbot2014
+ *
  * Copyright (c) 2014,2015 John Miller
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  *
  ***********************************************************************/
 
 #define PSX_PRIVATE_INCLUDE
 #include "psx.h"
+#include "pipe.h"
 
 
 /***********************************************************************
@@ -93,7 +78,7 @@ static volatile uint8_t rumble0_val = 0x00;
 static volatile uint8_t rumble1_val = 0x00;
 
 // Track whether polling data is new
-static volatile bool new_data = false;
+static volatile uint8_t new_data = 0;
 
 // Keep track of which packet we are sending, and how many bytes are in it
 static uint8_t state = PSX_STATE_HEADER;
@@ -106,16 +91,13 @@ static uint8_t bytenum = 0;
 static uint8_t const_num = 0x00;
 
 // Controller data to send (send empty data until we hear from PC)
-static const uint8_t *packet_poll = packet_poll_default;
+static uint8_t packet_poll[19];
 
-// Buffer for controller instructions
+// Buffer for controller instructions (to go in pipe)
 static uint8_t controller_buffer[CONTROLLER_BUFSIZE][19];
 
-// Serial data will be written to this index in controller_buffer
-static uint8_t write_to = 0;
-
-// Index in controller_buffer to send from
-static uint8_t read_from = 0;
+// FIFO pipe for pending instructions
+static pipe_t controller_pipe;
 
 
 /***********************************************************************
@@ -141,30 +123,19 @@ void psx_setup(void)
     SPCR |= (1<<CPOL); // Read on rising edge
     SPCR |= (1<<CPHA); // Clock polarity inverted
     
+    // Initialize pipe
+    pipe_init(&controller_pipe, controller_buffer, 19, CONTROLLER_BUFSIZE);
+    
     // Enable global interrupts
     sei();
 }
 
-bool psx_deposit(const uint8_t *instr)
+uint8_t psx_deposit(const uint8_t *instr)
 {
-    // Make sure buffer is not full
-    // Ensure atomicity to avoid conflicts
-    SPCR &= ~(1<<SPIE);
-    if ((write_to + 1) % CONTROLLER_BUFSIZE == read_from)
-        return false;
-    SPCR |= (1<<SPIE);
+    if (!pipe_write(&controller_pipe, instr))
+        return 0;
     
-    // Copy instruction to controller_buffer (last byte must always be 0xFF)
-    memcpy(controller_buffer[write_to], instr, sizeof(controller_buffer[write_to]) - 1);
-    controller_buffer[write_to][18] = 0xFF;
-    
-    // Increment our write index so the buffered data can be sent
-    // Ensure atomicity to avoid conflicts
-    SPCR &= ~(1<<SPIE);
-    write_to = (write_to + 1) % CONTROLLER_BUFSIZE;
-    SPCR |= (1<<SPIE);
-    
-    return true;
+    return 1;
 }
 
 const uint8_t *psx_get_default(void)
@@ -184,9 +155,9 @@ uint8_t psx_get_devicemode(void)
     return retval;
 }
 
-bool psx_get_rumble(uint16_t *rum)
+uint8_t psx_get_rumble(uint16_t *rum)
 {
-    bool retval;
+    uint8_t retval;
     
     // Ensure atomicity to avoid conflicts
     SPCR &= ~(1<<SPIE);
@@ -196,11 +167,11 @@ bool psx_get_rumble(uint16_t *rum)
     
     if (new_data)
     {
-        new_data = false;
-        retval = true;
+        new_data = 0;
+        retval = 1;
     }
     else
-        retval = false;
+        retval = 0;
     
     SPCR |= (1<<SPIE);
     
@@ -313,15 +284,11 @@ static void handle_next_spi_byte(void)
             }
             if (bytenum == length_to_send)
             {
-                new_data = true;
+                new_data = 1;
                 
                 // If controller instructions are pending, go to next one. Otherwise, resend
                 // the previous one. Only send if PSX is listening for full pressure info
-                if (read_from != write_to && devicemode == PSX_MODE_PRESSURES)
-                {
-                    packet_poll = controller_buffer[read_from];
-                    read_from = (read_from + 1) % CONTROLLER_BUFSIZE;
-                }
+                pipe_read(&controller_pipe, packet_poll);
             }
             break;
             
