@@ -7,7 +7,7 @@ using namespace std;
 
 int main(int argc, const char **argv)
 {
-	VideoCapture cap(1);
+	VideoCapture cap(0);
 
 	if (!cap.isOpened())
 	{

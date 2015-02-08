@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{90aae9a5-c8d1-4ec2-9bdb-cfa95cf97dd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\PSX">
+      <UniqueIdentifier>{6d04d836-0dbb-43cd-8e6b-120bee4492b1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="PSX\PS2.cpp">
+      <Filter>Source\PSX</Filter>
+    </ClCompile>
+    <ClCompile Include="PSX\Serial.cpp">
+      <Filter>Source\PSX</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PSX\PS2.h">
+      <Filter>Source\PSX</Filter>
+    </ClInclude>
+    <ClInclude Include="PSX\Serial.h">
+      <Filter>Source\PSX</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
