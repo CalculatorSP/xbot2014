@@ -11,6 +11,9 @@
     <Filter Include="Source\PSX">
       <UniqueIdentifier>{6d04d836-0dbb-43cd-8e6b-120bee4492b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Tests">
+      <UniqueIdentifier>{3281c4c9-afa4-468f-baa5-c17c980b59b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PSX\Serial.cpp">
@@ -21,6 +24,9 @@
     </ClCompile>
     <ClCompile Include="PSX\XboxController.cpp">
       <Filter>Source\PSX</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Capture.cpp">
+      <Filter>Source\Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

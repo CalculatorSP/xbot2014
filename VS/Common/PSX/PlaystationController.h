@@ -43,14 +43,19 @@ typedef struct
 	uint8_t p_R2;
 } PlaystationButtons_t;
 
+typedef struct
+{
+	uint8_t arr[18];
+} PlaystationPacket_t;
+
 class PlaystationController
 {
 public:
-	static const uint8_t defaultPacket[18];
+	static const PlaystationPacket_t defaultPacket;
 
 	union
 	{
-		uint8_t packet[18];
+		PlaystationPacket_t packet;
 		PlaystationButtons_t physical;
 	} state;
 

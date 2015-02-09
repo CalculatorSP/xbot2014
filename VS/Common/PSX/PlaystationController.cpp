@@ -1,6 +1,6 @@
 #include "PlaystationController.h"
 
-const uint8_t PlaystationController::defaultPacket[18] =
+const PlaystationPacket_t PlaystationController::defaultPacket =
 { 0xFF, 0xFF, 0x7F, 0x7F, 0x7F, 0x7F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 PlaystationController::PlaystationController(const char *comport) : _serialPort(comport)
@@ -10,7 +10,7 @@ PlaystationController::PlaystationController(const char *comport) : _serialPort(
 
 void PlaystationController::reset()
 {
-	std::copy(std::begin(defaultPacket), std::end(defaultPacket), std::begin(state.packet));
+	state.packet = defaultPacket;
 
 	_serialPort.flush();
 }
@@ -22,7 +22,7 @@ void PlaystationController::sendState(int framecount) const
 	serialString[0] = 'c';	// Controller update instruction
 	serialString[1] = '0' + framecount;	// Hold for specified number of frames
 	for (int i = 0; i < sizeof(state.packet); i++)
-		sprintf(serialString + ((i + 1) << 1), "%02hhx", state.packet[i]);
+		sprintf_s(serialString + ((i + 1) << 1), 2, "%02hhx", state.packet.arr[i]);
 	serialString[PACKET_SIZE - 1] = '\n';	// Separator
 
 	_serialPort.write((uint8_t *)serialString, sizeof(serialString));

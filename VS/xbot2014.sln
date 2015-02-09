@@ -4,41 +4,50 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JoystickCalibration", "JoystickCalibration\JoystickCalibration.vcxproj", "{080AE0DC-2A2F-47CB-B306-A7D5687C7957}"
+	ProjectSection(ProjectDependencies) = postProject
+		{556BA3AA-4A77-487C-9225-BABE8EFE501E} = {556BA3AA-4A77-487C-9225-BABE8EFE501E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxproj", "{556BA3AA-4A77-487C-9225-BABE8EFE501E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChessmasterLiveBot", "ChessmasterLiveBot\ChessmasterLiveBot.vcxproj", "{06D0294A-52E7-477F-B883-B97E26948769}"
+	ProjectSection(ProjectDependencies) = postProject
+		{556BA3AA-4A77-487C-9225-BABE8EFE501E} = {556BA3AA-4A77-487C-9225-BABE8EFE501E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64
-		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|Win32 = Release|Win32
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Debug|Win32.ActiveCfg = Debug|Win32
 		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Debug|Win32.Build.0 = Debug|Win32
 		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Debug|x64.ActiveCfg = Debug|x64
 		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Debug|x64.Build.0 = Debug|x64
-		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Release|Win32.ActiveCfg = Release|Win32
 		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Release|Win32.Build.0 = Release|Win32
 		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Release|x64.ActiveCfg = Release|x64
 		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Release|x64.Build.0 = Release|x64
-		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{080AE0DC-2A2F-47CB-B306-A7D5687C7957}.Release|x64.Deploy.0 = Release|x64
 		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Debug|Win32.ActiveCfg = Debug|Win32
 		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Debug|Win32.Build.0 = Debug|Win32
-		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Debug|x64.ActiveCfg = Debug|Win32
-		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Debug|x64.ActiveCfg = Debug|x64
+		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Debug|x64.Build.0 = Debug|x64
 		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Release|Win32.ActiveCfg = Release|Win32
 		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Release|Win32.Build.0 = Release|Win32
-		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Release|x64.ActiveCfg = Release|Win32
+		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Release|x64.ActiveCfg = Release|x64
+		{556BA3AA-4A77-487C-9225-BABE8EFE501E}.Release|x64.Build.0 = Release|x64
+		{06D0294A-52E7-477F-B883-B97E26948769}.Debug|Win32.ActiveCfg = Debug|Win32
+		{06D0294A-52E7-477F-B883-B97E26948769}.Debug|Win32.Build.0 = Debug|Win32
+		{06D0294A-52E7-477F-B883-B97E26948769}.Debug|x64.ActiveCfg = Debug|x64
+		{06D0294A-52E7-477F-B883-B97E26948769}.Debug|x64.Build.0 = Debug|x64
+		{06D0294A-52E7-477F-B883-B97E26948769}.Release|Win32.ActiveCfg = Release|Win32
+		{06D0294A-52E7-477F-B883-B97E26948769}.Release|Win32.Build.0 = Release|Win32
+		{06D0294A-52E7-477F-B883-B97E26948769}.Release|x64.ActiveCfg = Release|x64
+		{06D0294A-52E7-477F-B883-B97E26948769}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

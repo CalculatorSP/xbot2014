@@ -69,7 +69,7 @@ Serial::~Serial()
 int Serial::write(const char *buffer) const
 {
 	DWORD numWritten;
-	WriteFile(commHandle, buffer, strlen(buffer), &numWritten, NULL); 
+	WriteFile(commHandle, buffer, (DWORD)strlen(buffer), &numWritten, NULL); 
 
 	return numWritten;
 }

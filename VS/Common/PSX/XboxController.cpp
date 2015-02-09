@@ -55,8 +55,8 @@ void XboxController::set(XboxButton button, bool pressed)
 	case XboxButton::START:	_playstationController.state.physical.b_START	 = !pressed; break;
 	case XboxButton::BACK:	_playstationController.state.physical.b_SELECT	 = !pressed; break;
 
-	case XboxButton::LT:	_playstationController.state.physical.p_L2		 = pressed ? 0xFF : 0x00; break;
-	case XboxButton::RT:	_playstationController.state.physical.p_R2		 = pressed ? 0xFF : 0x00; break;
+	case XboxButton::LT_D:	_playstationController.state.physical.p_L2		 = pressed ? 0xFF : 0x00; break;
+	case XboxButton::RT_D:	_playstationController.state.physical.p_R2		 = pressed ? 0xFF : 0x00; break;
 
 	case XboxButton::LX_L:	_playstationController.state.physical.joyLX		 = pressed ? 0x00 : 0x7F; break;
 	case XboxButton::LX_R:	_playstationController.state.physical.joyLX		 = pressed ? 0xFF : 0x7F; break;
