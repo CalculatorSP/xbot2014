@@ -19,12 +19,18 @@
     <ClCompile Include="PSX\PlaystationController.cpp">
       <Filter>Source\PSX</Filter>
     </ClCompile>
+    <ClCompile Include="PSX\XboxController.cpp">
+      <Filter>Source\PSX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PSX\Serial.h">
       <Filter>Source\PSX</Filter>
     </ClInclude>
     <ClInclude Include="PSX\PlaystationController.h">
+      <Filter>Source\PSX</Filter>
+    </ClInclude>
+    <ClInclude Include="PSX\XboxController.h">
       <Filter>Source\PSX</Filter>
     </ClInclude>
   </ItemGroup>

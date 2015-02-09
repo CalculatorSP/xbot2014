@@ -56,6 +56,7 @@ public:
 
 	PlaystationController(const char *comport);
 
+	void reset();
 	void sendState(int framecount) const;
 
 private:

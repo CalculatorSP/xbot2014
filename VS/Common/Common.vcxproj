@@ -66,10 +66,12 @@
   <ItemGroup>
     <ClCompile Include="PSX\PlaystationController.cpp" />
     <ClCompile Include="PSX\Serial.cpp" />
+    <ClCompile Include="PSX\XboxController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PSX\PlaystationController.h" />
     <ClInclude Include="PSX\Serial.h" />
+    <ClInclude Include="PSX\XboxController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

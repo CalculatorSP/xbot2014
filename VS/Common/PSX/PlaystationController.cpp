@@ -5,6 +5,11 @@ const uint8_t PlaystationController::defaultPacket[18] =
 
 PlaystationController::PlaystationController(const char *comport) : _serialPort(comport)
 {	
+	reset();
+}
+
+void PlaystationController::reset()
+{
 	std::copy(std::begin(defaultPacket), std::end(defaultPacket), std::begin(state.packet));
 
 	_serialPort.flush();
