@@ -5,22 +5,22 @@ XboxController::XboxController(const char *comport) : _playstationController(com
 	reset();
 }
 
-void XboxController::press(XboxButton button)
+inline void XboxController::press(XboxButton button)
 {
 	set(button, true);
 }
 
-void XboxController::release(XboxButton button)
+inline void XboxController::release(XboxButton button)
 {
 	set(button, false);
 }
 
-void XboxController::release(XboxAnalog analog)
+inline void XboxController::release(XboxAnalog analog)
 {
 	set(analog, 0.0f);
 }
 
-void XboxController::tap(XboxButton button, int framecount)
+inline void XboxController::tap(XboxButton button, int framecount)
 {
 	set(button, true);
 	sendState(framecount);
@@ -28,7 +28,7 @@ void XboxController::tap(XboxButton button, int framecount)
 	sendState(framecount);
 }
 
-void XboxController::tap(XboxAnalog analog, float amount, int framecount)
+inline void XboxController::tap(XboxAnalog analog, float amount, int framecount)
 {
 	set(analog, amount);
 	sendState(framecount);
@@ -97,7 +97,7 @@ void XboxController::reset()
 	_playstationController.state.physical.b_R2 = 0;
 }
 
-void XboxController::sendState(int framecount)
+void XboxController::sendState(int framecount) const
 {
 	// Send the data to the device
 	_playstationController.sendState(framecount);

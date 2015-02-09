@@ -64,7 +64,7 @@ public:
 	void reset();
 
 	// Updates the controller to reflect the current state
-	void sendState(int framecount);
+	void sendState(int framecount) const;
 
 private:
 	PlaystationController _playstationController;
