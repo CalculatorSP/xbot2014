@@ -9,10 +9,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Processors">
+      <UniqueIdentifier>{3f87efa2-0c4b-49a9-95b5-03919f8ec603}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChessmasterLiveBot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Processors\FrameProcessor.cpp">
+      <Filter>Source Files\Processors</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Processors\FrameProcessor.h">
+      <Filter>Source Files\Processors</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

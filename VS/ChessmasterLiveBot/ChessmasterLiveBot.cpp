@@ -1,3 +1,5 @@
+#include "Processors/FrameProcessor.h"
+
 #include "opencv2/opencv.hpp"
 
 #include <iostream>
@@ -16,14 +18,22 @@ int main(int argc, const char **argv)
 	}
 
 	Mat frame;
-	cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
+	Mat processed;
+	FrameProcessor frameProcessor;
+
+	cvNamedWindow("Capture", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("Processed", CV_WINDOW_AUTOSIZE);
 
 	for (;;)
 	{
 		cap >> frame;
 		if (frame.empty())
 			continue;
-		imshow("result", frame);
+
+		processed = frameProcessor.process(frame);
+
+		imshow("Capture", frame);
+		imshow("Processed", processed);
 		if (waitKey(30) == 27)
 			break;
 	}
