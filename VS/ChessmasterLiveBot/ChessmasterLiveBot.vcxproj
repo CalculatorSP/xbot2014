@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ChessManager.cpp" />
     <ClCompile Include="ChessmasterLiveBot.cpp" />
     <ClCompile Include="Processors\FrameProcessor.cpp" />
   </ItemGroup>
@@ -151,6 +152,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ChessManager.h" />
     <ClInclude Include="Processors\FrameProcessor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,4 +1,4 @@
-#include "Processors/FrameProcessor.h"
+#include "ChessManager.h"
 
 #include "opencv2/opencv.hpp"
 
@@ -19,7 +19,7 @@ int main(int argc, const char **argv)
 
 	Mat frame;
 	Mat processed;
-	FrameProcessor frameProcessor;
+	ChessManager chessManager;
 
 	cvNamedWindow("Capture", CV_WINDOW_AUTOSIZE);
 	cvNamedWindow("Processed", CV_WINDOW_AUTOSIZE);
@@ -30,10 +30,11 @@ int main(int argc, const char **argv)
 		if (frame.empty())
 			continue;
 
-		processed = frameProcessor.process(frame);
+		processed = chessManager.depositFrame(frame);
 
 		imshow("Capture", frame);
 		imshow("Processed", processed);
+
 		if (waitKey(30) == 27)
 			break;
 	}

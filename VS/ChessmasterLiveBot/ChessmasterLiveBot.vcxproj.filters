@@ -20,10 +20,16 @@
     <ClCompile Include="Processors\FrameProcessor.cpp">
       <Filter>Source Files\Processors</Filter>
     </ClCompile>
+    <ClCompile Include="ChessManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Processors\FrameProcessor.h">
       <Filter>Source Files\Processors</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessManager.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
