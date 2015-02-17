@@ -6,8 +6,8 @@
 template <typename T, size_t N>
 class WindowedStats
 {
-	ModBuffer _data;
-	RunningStats _stats;
+	ModBuffer<T, N> _data;
+	RunningStats<T> _stats;
 
 public:
 	WindowedStats()
@@ -16,7 +16,7 @@ public:
 	void deposit(const T &item)
 	{
 		if (_data.isFull())
-			_stats.remove(data[0]);
+			_stats.remove(_data[0]);
 
 		_stats.deposit(item);
 		_data.deposit(item);

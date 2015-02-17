@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Collections/WindowedStats.h"
+
 #include "opencv2/opencv.hpp"
 
 using namespace cv;
@@ -8,12 +10,11 @@ class FrameProcessor
 {
 	static const Rect _gameBoardRoi;
 	static const Rect _squareRoi;
-	int _counter;
 
-	Mat _lastFrameBoard;
+	WindowedStats<Mat, 20> frameBuffer;
 
 public:
-	FrameProcessor() : _counter(0)
+	FrameProcessor()
 	{ }
 
 	void process(const Mat& frame, Mat& result);

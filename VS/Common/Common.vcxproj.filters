@@ -51,5 +51,8 @@
     <ClInclude Include="Collections\WindowedStats.h">
       <Filter>Source\Collections</Filter>
     </ClInclude>
+    <ClInclude Include="Collections\FirFilter.h">
+      <Filter>Source\Collections</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

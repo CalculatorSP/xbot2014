@@ -26,7 +26,7 @@ public:
 		_elements[_head++] = item;
 		if (_head >= N)
 		{
-			head = 0;
+			_head = 0;
 			_full = true;
 		}
 	}

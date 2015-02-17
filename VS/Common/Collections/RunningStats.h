@@ -7,12 +7,18 @@ class RunningStats
 	size_t _count;
 
 public:
-	RunningStats() : _sum(0), _count(0)
-	{ }
+	RunningStats()
+	{ 
+		reset();
+	}
 
 	void deposit(const T &item)
 	{
-		_sum += item;
+		if (_count == 0)
+			_sum = item;
+		else
+			_sum += item;
+
 		++_count;
 	}
 
@@ -20,6 +26,11 @@ public:
 	{
 		_sum -= item;
 		--_count;
+	}
+
+	void reset()
+	{
+		_count = 0;
 	}
 	
 	size_t getCount()

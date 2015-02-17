@@ -4,12 +4,15 @@
 
 #include <iostream>
 
+#define WEBCAM	(0)
+#define CAPCARD	(1)
+
 using namespace cv;
 using namespace std;
 
 int main(int argc, const char **argv)
 {
-	VideoCapture cap(1);
+	VideoCapture cap(WEBCAM);
 
 	if (!cap.isOpened())
 	{

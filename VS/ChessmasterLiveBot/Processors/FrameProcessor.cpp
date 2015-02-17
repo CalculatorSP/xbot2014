@@ -5,18 +5,6 @@ const Rect FrameProcessor::_squareRoi(218, 115, (unsigned char)(282 / 8), (unsig
 
 void FrameProcessor::process(const Mat& frame, Mat& result)
 {
-	if (!(_counter % 60))
-	{
-		Mat gameBoard = frame(_gameBoardRoi);
-
-		if (!_lastFrameBoard.empty())
-		{
-			result = abs(gameBoard - _lastFrameBoard);
-		}
-		else
-			result.create(gameBoard.rows, gameBoard.cols, CV_8UC3);
-
-		_lastFrameBoard = gameBoard.clone();
-	}
-	_counter++;
+	frameBuffer.deposit(frame(_gameBoardRoi).clone());
+	result = frameBuffer.getMean().clone();
 }
