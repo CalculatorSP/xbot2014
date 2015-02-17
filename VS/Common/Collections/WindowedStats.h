@@ -3,7 +3,7 @@
 #include "ModBuffer.h"
 #include "RunningStats.h"
 
-template <typename T, size_t N>
+template <typename T, int N>
 class WindowedStats
 {
 	ModBuffer<T, N> _data;
@@ -22,7 +22,7 @@ public:
 		_data.deposit(item);
 	}
 
-	size_t getCount()
+	int getCount()
 	{
 		return _stats.getCount();
 	}

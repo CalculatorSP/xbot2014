@@ -2,17 +2,33 @@
 
 #include "ModBuffer.h"
 
-template <typename T, size_t N>
+template <typename T, int N, typename U=float>
 class FirFilter
 {
-	ModBuffer<float, N> _kernel;
+	ModBuffer<U, N> _kernel;
 	ModBuffer<T, N> _data;
 
 public:
-	FirFilter(const float *weights)
+	FirFilter()
+	{ }
+
+	void setKernel(const ModBuffer<U, N> &kernel)
 	{
-		for (int i = 0; i < N; ++i)
-			_kernel.deposit(weights[i]);
+		_kernel = kernel;
+	}
+
+	T process(const T &item)
+	{
+		_data.deposit(item);
+		if (_data.isFull())
+			return _data.reverseWeightedSum(_kernel);
+		else
+			return item;
+	}
+
+	int getFilterDelay()
+	{
+		return N / 2;
 	}
 
 };

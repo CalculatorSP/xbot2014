@@ -4,7 +4,7 @@ template <typename T>
 class RunningStats
 {
 	T _mean;
-	size_t _count;
+	int _count;
 
 public:
 	RunningStats()
@@ -35,7 +35,7 @@ public:
 		_count = 0;
 	}
 	
-	size_t getCount()
+	int getCount()
 	{
 		return _count;
 	}
