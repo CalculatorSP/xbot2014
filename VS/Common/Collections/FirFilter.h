@@ -5,13 +5,14 @@
 template <typename T, size_t N>
 class FirFilter
 {
-	float _weights[N];
-	ModBuffer _data;
+	ModBuffer<float, N> _kernel;
+	ModBuffer<T, N> _data;
 
 public:
-	FirFilter<T, N>(const float weights[N]) : _weights(weights)
-	{ }
-
-
+	FirFilter(const float *weights)
+	{
+		for (int i = 0; i < N; ++i)
+			_kernel.deposit(weights[i]);
+	}
 
 };

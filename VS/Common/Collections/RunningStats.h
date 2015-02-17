@@ -3,7 +3,7 @@
 template <typename T>
 class RunningStats
 {
-	T _sum;
+	T _mean;
 	size_t _count;
 
 public:
@@ -14,17 +14,19 @@ public:
 
 	void deposit(const T &item)
 	{
-		if (_count == 0)
-			_sum = item;
-		else
-			_sum += item;
-
 		++_count;
+		if (_count == 1)
+			_mean = item;
+		else
+		{
+			_mean = _mean * (1.0 - (1.0 / _count)) + item * (1.0 / _count);
+		}
 	}
 
 	void remove(const T &item)
 	{
-		_sum -= item;
+		_mean -= item * (1.0 / _count);
+		_mean *= (_count / (_count - 1.0));
 		--_count;
 	}
 
@@ -40,6 +42,6 @@ public:
 
 	T getMean()
 	{
-		return _sum * (1.0 / _count);
+		return _mean;
 	}
 };
