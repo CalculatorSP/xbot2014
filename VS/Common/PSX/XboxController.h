@@ -1,7 +1,11 @@
+#pragma once
+
 #include "PlaystationController.h"
 
 class XboxController
 {
+	PlaystationController _playstationController;
+
 public:
 	enum XboxButton
 	{
@@ -66,6 +70,4 @@ public:
 	// Updates the controller to reflect the current state
 	void sendState(int framecount) const;
 
-private:
-	PlaystationController _playstationController;
 };

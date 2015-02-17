@@ -5,9 +5,7 @@ ChessManager::ChessManager()
 
 }
 
-Mat ChessManager::depositFrame(const Mat& frame)
+void ChessManager::depositFrame(const Mat& frame, Mat& result)
 {
-	Mat processedFrame = _frameProcessor.process(frame);
-
-	return processedFrame;
+	_frameProcessor.process(frame, result);
 }

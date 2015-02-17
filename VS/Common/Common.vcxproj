@@ -156,6 +156,9 @@
     <ClCompile Include="Tests\Capture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collections\ModBuffer.h" />
+    <ClInclude Include="Collections\RunningStats.h" />
+    <ClInclude Include="Collections\WindowedStats.h" />
     <ClInclude Include="PSX\PlaystationController.h" />
     <ClInclude Include="PSX\Serial.h" />
     <ClInclude Include="PSX\XboxController.h" />

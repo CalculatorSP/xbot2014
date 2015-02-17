@@ -14,6 +14,9 @@
     <Filter Include="Source\Tests">
       <UniqueIdentifier>{3281c4c9-afa4-468f-baa5-c17c980b59b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Collections">
+      <UniqueIdentifier>{7f7ad9bb-1994-40d9-a0fc-db50ae0e3e3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PSX\Serial.cpp">
@@ -38,6 +41,15 @@
     </ClInclude>
     <ClInclude Include="PSX\XboxController.h">
       <Filter>Source\PSX</Filter>
+    </ClInclude>
+    <ClInclude Include="Collections\ModBuffer.h">
+      <Filter>Source\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Collections\RunningStats.h">
+      <Filter>Source\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Collections\WindowedStats.h">
+      <Filter>Source\Collections</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

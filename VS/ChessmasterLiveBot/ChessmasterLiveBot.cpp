@@ -17,6 +17,11 @@ int main(int argc, const char **argv)
 		return -1;
 	}
 
+	int w = (int)cap.get(CV_CAP_PROP_FRAME_WIDTH);
+	int h = (int)cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+
+	printf("(%d, %d)\n", w, h);
+
 	Mat frame;
 	Mat processed;
 	ChessManager chessManager;
@@ -30,10 +35,11 @@ int main(int argc, const char **argv)
 		if (frame.empty())
 			continue;
 
-		processed = chessManager.depositFrame(frame);
+		chessManager.depositFrame(frame, processed);
 
 		imshow("Capture", frame);
-		imshow("Processed", processed);
+		if (!processed.empty())
+			imshow("Processed", processed);
 
 		if (waitKey(30) == 27)
 			break;

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Serial.h"
 
 #include <stdint.h>
@@ -50,6 +52,8 @@ typedef struct
 
 class PlaystationController
 {
+	Serial _serialPort;
+
 public:
 	static const PlaystationPacket_t defaultPacket;
 
@@ -60,11 +64,7 @@ public:
 	} state;
 
 	PlaystationController(const char *comport);
-
 	void reset();
 	void sendState(int framecount) const;
-
-private:
-	Serial _serialPort;
 
 };
