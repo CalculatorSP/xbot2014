@@ -12,6 +12,7 @@ class ChessManager
 
 public:
 	ChessManager();
+	~ChessManager();
 	void depositFrame(const Mat& frame, Mat& result);	
 
 };

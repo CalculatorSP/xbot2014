@@ -12,6 +12,12 @@
     <Filter Include="Source Files\Processors">
       <UniqueIdentifier>{3f87efa2-0c4b-49a9-95b5-03919f8ec603}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Processors\Stockfish">
+      <UniqueIdentifier>{07ec5050-6008-4506-94ac-5a7b3772d458}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Processors\Stockfish\syzygy">
+      <UniqueIdentifier>{192d789d-1497-400e-bf14-31f0ab3dff0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChessmasterLiveBot.cpp">
@@ -23,6 +29,63 @@
     <ClCompile Include="ChessManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Processors\Stockfish\benchmark.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\bitbase.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\bitboard.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\endgame.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\evaluate.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\material.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\misc.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\movegen.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\movepick.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\pawns.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\position.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\search.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\thread.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\timeman.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\tt.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\uci.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\ucioption.cpp">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\Stockfish\syzygy\tbprobe.cpp">
+      <Filter>Source Files\Processors\Stockfish\syzygy</Filter>
+    </ClCompile>
+    <ClCompile Include="Processors\MoveDetector.cpp">
+      <Filter>Source Files\Processors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Processors\FrameProcessor.h">
@@ -30,6 +93,72 @@
     </ClInclude>
     <ClInclude Include="ChessManager.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\bitboard.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\bitcount.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\endgame.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\evaluate.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\material.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\misc.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\movegen.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\movepick.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\pawns.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\platform.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\position.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\psqtab.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\search.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\thread.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\timeman.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\tt.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\types.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\uci.h">
+      <Filter>Source Files\Processors\Stockfish</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\syzygy\tbcore.h">
+      <Filter>Source Files\Processors\Stockfish\syzygy</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\syzygy\tbprobe.h">
+      <Filter>Source Files\Processors\Stockfish\syzygy</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\Stockfish\syzygy\tbcore3.h">
+      <Filter>Source Files\Processors\Stockfish\syzygy</Filter>
+    </ClInclude>
+    <ClInclude Include="Processors\MoveDetector.h">
+      <Filter>Source Files\Processors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

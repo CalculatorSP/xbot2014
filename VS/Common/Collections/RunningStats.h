@@ -8,9 +8,8 @@ class RunningStats
 
 public:
 	RunningStats()
-	{ 
-		reset();
-	}
+		: _count(0)
+	{ }
 
 	void deposit(const T &item)
 	{
@@ -35,12 +34,12 @@ public:
 		_count = 0;
 	}
 	
-	int getCount()
+	int getCount() const
 	{
 		return _count;
 	}
 
-	T getMean()
+	T getMean() const
 	{
 		return _mean;
 	}

@@ -149,6 +149,25 @@
     <ClCompile Include="ChessManager.cpp" />
     <ClCompile Include="ChessmasterLiveBot.cpp" />
     <ClCompile Include="Processors\FrameProcessor.cpp" />
+    <ClCompile Include="Processors\MoveDetector.cpp" />
+    <ClCompile Include="Processors\Stockfish\benchmark.cpp" />
+    <ClCompile Include="Processors\Stockfish\bitbase.cpp" />
+    <ClCompile Include="Processors\Stockfish\bitboard.cpp" />
+    <ClCompile Include="Processors\Stockfish\endgame.cpp" />
+    <ClCompile Include="Processors\Stockfish\evaluate.cpp" />
+    <ClCompile Include="Processors\Stockfish\material.cpp" />
+    <ClCompile Include="Processors\Stockfish\misc.cpp" />
+    <ClCompile Include="Processors\Stockfish\movegen.cpp" />
+    <ClCompile Include="Processors\Stockfish\movepick.cpp" />
+    <ClCompile Include="Processors\Stockfish\pawns.cpp" />
+    <ClCompile Include="Processors\Stockfish\position.cpp" />
+    <ClCompile Include="Processors\Stockfish\search.cpp" />
+    <ClCompile Include="Processors\Stockfish\syzygy\tbprobe.cpp" />
+    <ClCompile Include="Processors\Stockfish\thread.cpp" />
+    <ClCompile Include="Processors\Stockfish\timeman.cpp" />
+    <ClCompile Include="Processors\Stockfish\tt.cpp" />
+    <ClCompile Include="Processors\Stockfish\uci.cpp" />
+    <ClCompile Include="Processors\Stockfish\ucioption.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
@@ -158,6 +177,28 @@
   <ItemGroup>
     <ClInclude Include="ChessManager.h" />
     <ClInclude Include="Processors\FrameProcessor.h" />
+    <ClInclude Include="Processors\MoveDetector.h" />
+    <ClInclude Include="Processors\Stockfish\bitboard.h" />
+    <ClInclude Include="Processors\Stockfish\bitcount.h" />
+    <ClInclude Include="Processors\Stockfish\endgame.h" />
+    <ClInclude Include="Processors\Stockfish\evaluate.h" />
+    <ClInclude Include="Processors\Stockfish\material.h" />
+    <ClInclude Include="Processors\Stockfish\misc.h" />
+    <ClInclude Include="Processors\Stockfish\movegen.h" />
+    <ClInclude Include="Processors\Stockfish\movepick.h" />
+    <ClInclude Include="Processors\Stockfish\pawns.h" />
+    <ClInclude Include="Processors\Stockfish\platform.h" />
+    <ClInclude Include="Processors\Stockfish\position.h" />
+    <ClInclude Include="Processors\Stockfish\psqtab.h" />
+    <ClInclude Include="Processors\Stockfish\search.h" />
+    <ClInclude Include="Processors\Stockfish\syzygy\tbcore.h" />
+    <ClInclude Include="Processors\Stockfish\syzygy\tbcore3.h" />
+    <ClInclude Include="Processors\Stockfish\syzygy\tbprobe.h" />
+    <ClInclude Include="Processors\Stockfish\thread.h" />
+    <ClInclude Include="Processors\Stockfish\timeman.h" />
+    <ClInclude Include="Processors\Stockfish\tt.h" />
+    <ClInclude Include="Processors\Stockfish\types.h" />
+    <ClInclude Include="Processors\Stockfish\uci.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

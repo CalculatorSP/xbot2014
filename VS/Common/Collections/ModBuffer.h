@@ -52,7 +52,13 @@ public:
 		}
 	}
 
-	bool isFull()
+	void reset()
+	{
+		_head = 0;
+		_full = false;
+	}
+
+	bool isFull() const
 	{
 		return _full;
 	}

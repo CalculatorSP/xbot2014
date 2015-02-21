@@ -13,6 +13,12 @@ public:
 	WindowedStats()
 	{ }
 
+	void reset()
+	{
+		_data.reset();
+		_stats.reset();
+	}
+
 	void deposit(const T &item)
 	{
 		if (_data.isFull())
@@ -22,12 +28,17 @@ public:
 		_data.deposit(item);
 	}
 
-	int getCount()
+	bool isFull() const
+	{
+		return _data.isFull();
+	}
+
+	int getCount() const
 	{
 		return _stats.getCount();
 	}
 
-	T getMean()
+	T getMean() const
 	{
 		return _stats.getMean();
 	}
