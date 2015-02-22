@@ -1,6 +1,6 @@
 /* USB Serial Example for Teensy USB Development Board
- * http://www.pjrc.com/teensy/
- * Copyright (c) 2008,2010 PJRC.COM, LLC
+ * http://www.pjrc.com/teensy/usb_serial.html
+ * Copyright (c) 2008,2010,2011 PJRC.COM, LLC
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@
 // Version 1.4: added usb_serial_write
 // Version 1.5: add support for Teensy 2.0
 // Version 1.6: fix zero length packet bug
+// Version 1.7: fix usb_serial_set_control
 
 #define USB_SERIAL_PRIVATE_INCLUDE
 #include "usb_serial.h"
@@ -41,8 +42,8 @@
 
 // You can change these to give your code its own name.  On Windows,
 // these are only used before an INF file (driver install) is loaded.
-#define STR_MANUFACTURER	L"Your Name"
-#define STR_PRODUCT		L"USB Serial"
+#define STR_MANUFACTURER	L"John Miller"
+#define STR_PRODUCT		L"xbot"
 
 // All USB serial devices are supposed to have a serial number
 // (according to Microsoft).  On windows, a new COM port is created
@@ -145,7 +146,7 @@ static const uint8_t PROGMEM endpoint_config_table[] = {
 // in here should only be done by those who've read chapter 9 of the USB
 // spec and relevant portions of any USB class specifications!
 
-static uint8_t PROGMEM device_descriptor[] = {
+const static uint8_t PROGMEM device_descriptor[] = {
 	18,					// bLength
 	1,					// bDescriptorType
 	0x00, 0x02,				// bcdUSB
@@ -163,7 +164,7 @@ static uint8_t PROGMEM device_descriptor[] = {
 };
 
 #define CONFIG1_DESC_SIZE (9+9+5+5+4+5+7+9+7+7)
-static uint8_t PROGMEM config1_descriptor[CONFIG1_DESC_SIZE] = {
+const static uint8_t PROGMEM config1_descriptor[CONFIG1_DESC_SIZE] = {
 	// configuration descriptor, USB spec 9.6.3, page 264-266, Table 9-10
 	9, 					// bLength;
 	2,					// bDescriptorType;
@@ -247,22 +248,22 @@ struct usb_string_descriptor_struct {
 	uint8_t bDescriptorType;
 	int16_t wString[];
 };
-static struct usb_string_descriptor_struct PROGMEM string0 = {
+const static struct usb_string_descriptor_struct PROGMEM string0 = {
 	4,
 	3,
 	{0x0409}
 };
-static struct usb_string_descriptor_struct PROGMEM string1 = {
+const static struct usb_string_descriptor_struct PROGMEM string1 = {
 	sizeof(STR_MANUFACTURER),
 	3,
 	STR_MANUFACTURER
 };
-static struct usb_string_descriptor_struct PROGMEM string2 = {
+const static struct usb_string_descriptor_struct PROGMEM string2 = {
 	sizeof(STR_PRODUCT),
 	3,
 	STR_PRODUCT
 };
-static struct usb_string_descriptor_struct PROGMEM string3 = {
+const static struct usb_string_descriptor_struct PROGMEM string3 = {
 	sizeof(STR_SERIAL_NUMBER),
 	3,
 	STR_SERIAL_NUMBER
@@ -270,7 +271,7 @@ static struct usb_string_descriptor_struct PROGMEM string3 = {
 
 // This table defines which descriptor data is sent for each specific
 // request from the host (in wValue and wIndex).
-static struct descriptor_list_struct {
+const static struct descriptor_list_struct {
 	uint16_t	wValue;
 	uint16_t	wIndex;
 	const uint8_t	*addr;
@@ -645,7 +646,9 @@ void usb_serial_flush_output(void)
 // communication
 uint32_t usb_serial_get_baud(void)
 {
-	return *(uint32_t *)cdc_line_coding;
+    uint32_t *tmp = (uint32_t *)cdc_line_coding;
+    return *tmp;
+	//return *(uint32_t *)cdc_line_coding;
 }
 uint8_t usb_serial_get_stopbits(void)
 {
@@ -669,8 +672,6 @@ uint8_t usb_serial_get_control(void)
 // it remains buffered (either here or on the host) and can not be
 // lost because you weren't listening at the right time, like it
 // would in real serial communication.
-// TODO: this function is untested.  Does it work?  Please email
-// paul@pjrc.com if you have tried it....
 int8_t usb_serial_set_control(uint8_t signals)
 {
 	uint8_t intr_state;
@@ -695,12 +696,11 @@ int8_t usb_serial_set_control(uint8_t signals)
 	UEDATX = 0x20;
 	UEDATX = 0;
 	UEDATX = 0;
-	UEDATX = 0; // TODO: should this be 1 or 0 ???
+	UEDATX = 0; // 0 seems to work nicely.  what if this is 1??
 	UEDATX = 0;
-	UEDATX = 2;
+	UEDATX = 1;
 	UEDATX = 0;
 	UEDATX = signals;
-	UEDATX = 0;
 	UEINTX = 0x3A;
 	SREG = intr_state;
 	return 0;
