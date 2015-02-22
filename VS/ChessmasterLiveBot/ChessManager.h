@@ -9,8 +9,8 @@
 #include "Processors/Stockfish/tt.h"
 #include "Processors/Stockfish/uci.h"
 #include "Processors/Stockfish/syzygy/tbprobe.h"
-
 #include "opencv2/opencv.hpp"
+#include <time.h>
 
 using namespace cv;
 
@@ -26,10 +26,19 @@ class ChessManager
 
 	FrameProcessor _frameProcessor;
 	Position _pos;
+	String _moveStr;
+
+	std::stringstream _sfIn;
+	std::stringstream _sfOut;
+	std::streambuf* _cout_backup;
+
+	time_t _whiteStartTime;
+	time_t _blackStartTime;
 
 public:
 	ChessManager();
 	~ChessManager();
-	void depositFrame(const Mat& frame);	
+	void depositFrame(const Mat& frame);
+	void reset();
 
 };

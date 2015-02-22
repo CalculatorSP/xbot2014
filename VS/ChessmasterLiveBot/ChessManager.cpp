@@ -2,8 +2,6 @@
 
 ChessManager::ChessManager()
 {
-	std::cout << engine_info() << std::endl;
-
 	UCI::init(Options);
 	Bitboards::init();
 	Position::init();
@@ -15,13 +13,22 @@ ChessManager::ChessManager()
 	Tablebases::init(Options["SyzygyPath"]);
 	TT.resize(Options["Hash"]);
 
-	_pos = Position(_StartFEN, false, Threads.main());
-	_SetupStates = Search::StateStackPtr(new std::stack<StateInfo>());
+	// Redirect cout so we can talk to stockfish more easily
+	_cout_backup = std::cout.rdbuf(_sfOut.rdbuf());
+
+	// Start new game
+	reset();
 }
 
 ChessManager::~ChessManager()
 {
+	// Quit stockfish
+	UCI::loop("quit");
+	Threads.wait_for_think_finished(); // Cannot quit whilst the search is running
 	Threads.exit();
+
+	// Restore cout
+	std::cout.rdbuf(_cout_backup);
 }
 
 void ChessManager::depositFrame(const Mat& frame)
@@ -69,12 +76,109 @@ void ChessManager::depositFrame(const Mat& frame)
 		if (maxProb > 5000.0)
 			mostLikelyMove = MOVE_NONE;
 
+		printf("%f\t%s\n", maxProb, UCI::move(mostLikelyMove, _pos.is_chess960()).c_str());
+
 		if (mostLikelyMove != MOVE_NONE)
 		{
 			_SetupStates->push(StateInfo());
 			_pos.do_move(mostLikelyMove, _SetupStates->top());
-		}
+			_moveStr += " " + UCI::move(mostLikelyMove, _pos.is_chess960());
 
-		std::cout << maxProb << " " << UCI::move(mostLikelyMove, _pos.is_chess960()) << std::endl;
+			if (_whiteStartTime == 0)
+				_whiteStartTime = 600000 + 1000 * time(NULL);
+			if (_blackStartTime == 0)
+				_blackStartTime = 600000 + 1000 * time(NULL);
+
+			UCI::loop("position startpos moves" + _moveStr);
+			char response[1000];
+			while (_sfOut.getline(response, sizeof(response)))
+				printf("%s\n", response);
+			_sfOut.clear();
+
+			if (_pos.side_to_move() == WHITE)
+			{
+				std::ostringstream oss;
+				oss << "go wtime " << _whiteStartTime - 1000 * time(NULL) << "btime " << _blackStartTime + 1000 * time(NULL);
+				UCI::loop(oss.str());
+				String token, bestmove, ponder;
+				while (true)
+				{
+					// Wait for a response
+					while (!_sfOut.getline(response, sizeof(response)))
+						_sfOut.clear();
+
+					printf("%s\n", response);
+					std::istringstream is(response);
+					is >> std::skipws >> token;
+					if (token == "bestmove")
+					{
+						is >> bestmove >> token;
+						if (token == "ponder")
+							is >> ponder;
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+void ChessManager::reset()
+{
+	// Keep track of position independently of stockfish, so we can check for valid moves
+	_pos = Position(_StartFEN, false, Threads.main());
+	_moveStr = "";
+
+	_SetupStates.release();
+	_SetupStates = Search::StateStackPtr(new std::stack<StateInfo>());
+
+	// Start stockfish
+	UCI::loop("uci");
+	char response[1000];
+	while (_sfOut.getline(response, sizeof(response)))
+		printf("%s\n", response);
+	_sfOut.clear();
+
+	UCI::loop("isready");
+	while (_sfOut.getline(response, sizeof(response)))
+		printf("%s\n", response);
+	_sfOut.clear();
+
+	UCI::loop("ucinewgame");
+	while (_sfOut.getline(response, sizeof(response)))
+		printf("%s\n", response);
+	_sfOut.clear();
+
+	// Initialize start times
+	_whiteStartTime = 0;
+	_blackStartTime = 0;
+
+	// Get first move for white
+	UCI::loop("position startpos moves" + _moveStr);
+	while (_sfOut.getline(response, sizeof(response)))
+		printf("%s\n", response);
+	_sfOut.clear();
+
+	if (_pos.side_to_move() == WHITE)
+	{
+		UCI::loop("go wtime 600000 btime 600000");
+		String token, bestmove, ponder;
+		while (true)
+		{
+			// Wait for a response
+			while (!_sfOut.getline(response, sizeof(response)))
+				_sfOut.clear();
+
+			printf("%s\n", response);
+			std::istringstream is(response);
+			is >> std::skipws >> token;
+			if (token == "bestmove")
+			{
+				is >> bestmove >> token;
+				if (token == "ponder")
+					is >> ponder;
+				break;
+			}
+		}
 	}
 }
