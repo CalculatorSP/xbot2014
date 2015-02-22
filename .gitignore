@@ -181,3 +181,38 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+*.bak*
+
+#Xcode files
+#This ignores everything inside a *.xcodeproj except the project.pbxproj
+*.xcodeproj/
+!*.xcodeproj/project.pbxproj
+*.log
+xcuserdata
+
+#Project files
+[Bb]uild/
+
+#Version control files
+.svn
+*.orig
+
+#AVR stuff
+*.cof
+*.hex
+*.obj
+*.elf
+*.conf
+*.o
+*.bin
+*.lst
+*.map
+*.srec
+*.eep
+*.o.d
+*.lss
+*.sym
