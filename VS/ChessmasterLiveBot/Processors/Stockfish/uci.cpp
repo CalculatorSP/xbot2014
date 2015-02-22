@@ -141,71 +141,61 @@ namespace {
 /// run 'bench', once the command is executed the function returns immediately.
 /// In addition to the UCI ones, also some additional debug commands are supported.
 
-void UCI::loop(int argc, char* argv[]) {
+void UCI::loop(std::string cmd) {
 
-  Position pos(StartFEN, false, Threads.main()); // The root position
-  string token, cmd;
+	static Position pos(StartFEN, false, Threads.main()); // The root position
+	string token;
 
-  for (int i = 1; i < argc; ++i)
-      cmd += std::string(argv[i]) + " ";
+    istringstream is(cmd);
 
-  do {
-      if (argc == 1 && !getline(cin, cmd)) // Block here waiting for input or EOF
-          cmd = "quit";
+    token.clear(); // getline() could return empty or blank line
+    is >> skipws >> token;
 
-      istringstream is(cmd);
+    // The GUI sends 'ponderhit' to tell us to ponder on the same move the
+    // opponent has played. In case Signals.stopOnPonderhit is set we are
+    // waiting for 'ponderhit' to stop the search (for instance because we
+    // already ran out of time), otherwise we should continue searching but
+    // switching from pondering to normal search.
+    if (    token == "quit"
+        ||  token == "stop"
+        || (token == "ponderhit" && Search::Signals.stopOnPonderhit))
+    {
+        Search::Signals.stop = true;
+        Threads.main()->notify_one(); // Could be sleeping
+    }
+    else if (token == "ponderhit")
+        Search::Limits.ponder = false; // Switch to normal search
 
-      token.clear(); // getline() could return empty or blank line
-      is >> skipws >> token;
+    else if (token == "uci")
+        sync_cout << "id name " << engine_info(true)
+                << "\n"       << Options
+                << "\nuciok"  << sync_endl;
 
-      // The GUI sends 'ponderhit' to tell us to ponder on the same move the
-      // opponent has played. In case Signals.stopOnPonderhit is set we are
-      // waiting for 'ponderhit' to stop the search (for instance because we
-      // already ran out of time), otherwise we should continue searching but
-      // switching from pondering to normal search.
-      if (    token == "quit"
-          ||  token == "stop"
-          || (token == "ponderhit" && Search::Signals.stopOnPonderhit))
-      {
-          Search::Signals.stop = true;
-          Threads.main()->notify_one(); // Could be sleeping
-      }
-      else if (token == "ponderhit")
-          Search::Limits.ponder = false; // Switch to normal search
+    else if (token == "isready")    sync_cout << "readyok" << sync_endl;
+    else if (token == "ucinewgame") TT.clear();
+    else if (token == "go")         go(pos, is);
+    else if (token == "position")   position(pos, is);
+    else if (token == "setoption")  setoption(is);
 
-      else if (token == "uci")
-          sync_cout << "id name " << engine_info(true)
-                    << "\n"       << Options
-                    << "\nuciok"  << sync_endl;
+    // Additional custom non-UCI commands, useful for debugging
+    else if (token == "flip")       pos.flip();
+    else if (token == "bench")      benchmark(pos, is);
+    else if (token == "d")          sync_cout << pos << sync_endl;
+    else if (token == "eval")       sync_cout << Eval::trace(pos) << sync_endl;
+    else if (token == "perft")
+    {
+        int depth;
+        stringstream ss;
 
-      else if (token == "isready")    sync_cout << "readyok" << sync_endl;
-      else if (token == "ucinewgame") TT.clear();
-      else if (token == "go")         go(pos, is);
-      else if (token == "position")   position(pos, is);
-      else if (token == "setoption")  setoption(is);
+        is >> depth;
+        ss << Options["Hash"]    << " "
+            << Options["Threads"] << " " << depth << " current perft";
 
-      // Additional custom non-UCI commands, useful for debugging
-      else if (token == "flip")       pos.flip();
-      else if (token == "bench")      benchmark(pos, is);
-      else if (token == "d")          sync_cout << pos << sync_endl;
-      else if (token == "eval")       sync_cout << Eval::trace(pos) << sync_endl;
-      else if (token == "perft")
-      {
-          int depth;
-          stringstream ss;
+        benchmark(pos, ss);
+    }
+    else
+        sync_cout << "Unknown command: " << cmd << sync_endl;
 
-          is >> depth;
-          ss << Options["Hash"]    << " "
-             << Options["Threads"] << " " << depth << " current perft";
-
-          benchmark(pos, ss);
-      }
-      else
-          sync_cout << "Unknown command: " << cmd << sync_endl;
-
-  } while (token != "quit" && argc == 1); // Passed args have one-shot behaviour
-
-  Threads.wait_for_think_finished(); // Cannot quit whilst the search is running
 }
 
 

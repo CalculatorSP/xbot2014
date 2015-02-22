@@ -29,7 +29,8 @@ int main(int argc, const char **argv)
 
 	cvNamedWindow("Capture", CV_WINDOW_AUTOSIZE);
 
-	for (;;)
+	bool keepGoing = true;
+	while (keepGoing)
 	{
 		cap >> frame;
 		if (frame.empty())
@@ -39,8 +40,17 @@ int main(int argc, const char **argv)
 
 		imshow("Capture", frame);
 
-		if (waitKey(30) == 27)
+		switch (waitKey(1))
+		{
+		case 'r':
+			chessManager.reset();
 			break;
+		case 27:
+			keepGoing = false;
+			break;
+		default:
+			break;
+		}
 	}
 
 	return 0;
