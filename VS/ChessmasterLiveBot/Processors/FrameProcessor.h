@@ -4,25 +4,27 @@
 #include "Collections/WindowedStats.h"
 #include "opencv2/opencv.hpp"
 
-#define GAMEBOARD_WINDOW	(31)
+#define GAMEBOARD_WINDOW	(11)
 
 using namespace cv;
 
 class FrameProcessor
 {
 	static const Rect _gameBoardRoi;
-	static const Rect _squareRoi;
 
 	WindowedStats<Mat, GAMEBOARD_WINDOW> _gameBoard;
 	Mat _prevBoard;
+
 	MoveDetector _moveDetector;
 
-	int _count = 0;
+	void _getMoveProbabilities(Mat &probabilities) const;
+	bool _lookingForMove;
 
 public:
 	FrameProcessor()
+		: _lookingForMove(false)
 	{ }
 
-	void process(const Mat& frame, Mat& result);
+	bool checkForMoves(const Mat& frame, Mat& result);
 
 };

@@ -10,7 +10,7 @@ using namespace std;
 
 int main(int argc, const char **argv)
 {
-	VideoCapture cap(WEBCAM);
+	VideoCapture cap(CAPCARD);
 
 	if (!cap.isOpened())
 	{

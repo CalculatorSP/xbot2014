@@ -1,6 +1,14 @@
 #pragma once
 
 #include "Processors/FrameProcessor.h"
+#include "Processors/Stockfish/bitboard.h"
+#include "Processors/Stockfish/evaluate.h"
+#include "Processors/Stockfish/position.h"
+#include "Processors/Stockfish/search.h"
+#include "Processors/Stockfish/thread.h"
+#include "Processors/Stockfish/tt.h"
+#include "Processors/Stockfish/uci.h"
+#include "Processors/Stockfish/syzygy/tbprobe.h"
 
 #include "opencv2/opencv.hpp"
 
@@ -8,11 +16,20 @@ using namespace cv;
 
 class ChessManager
 {
+	// FEN string of the initial position, normal chess
+	const char* _StartFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+	// Stack to keep track of the position states along the setup moves (from the
+	// start position to the position just before the search starts). Needed by
+	// 'draw by repetition' detection.
+	Search::StateStackPtr _SetupStates;
+
 	FrameProcessor _frameProcessor;
+	Position _pos;
 
 public:
 	ChessManager();
 	~ChessManager();
-	void depositFrame(const Mat& frame, Mat& result);	
+	void depositFrame(const Mat& frame);	
 
 };

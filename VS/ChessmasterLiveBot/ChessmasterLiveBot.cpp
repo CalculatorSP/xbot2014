@@ -8,7 +8,6 @@
 #define CAPCARD	(1)
 
 using namespace cv;
-using namespace std;
 
 int main(int argc, const char **argv)
 {
@@ -16,7 +15,7 @@ int main(int argc, const char **argv)
 
 	if (!cap.isOpened())
 	{
-		cerr << "Could not open capture device" << endl;
+		std::cerr << "Could not open capture device" << std::endl;
 		return -1;
 	}
 
@@ -26,11 +25,9 @@ int main(int argc, const char **argv)
 	printf("(%d, %d)\n", w, h);
 
 	Mat frame;
-	Mat processed;
 	ChessManager chessManager;
 
 	cvNamedWindow("Capture", CV_WINDOW_AUTOSIZE);
-	cvNamedWindow("Processed", CV_WINDOW_AUTOSIZE);
 
 	for (;;)
 	{
@@ -38,11 +35,9 @@ int main(int argc, const char **argv)
 		if (frame.empty())
 			continue;
 
-		chessManager.depositFrame(frame, processed);
+		chessManager.depositFrame(frame);
 
 		imshow("Capture", frame);
-		if (!processed.empty())
-			imshow("Processed", processed);
 
 		if (waitKey(30) == 27)
 			break;
