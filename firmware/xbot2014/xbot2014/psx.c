@@ -108,6 +108,9 @@ static pipe_t controller_pipe;
 
 void psx_setup(void)
 {
+    // Ensure we don't get an SPI interrupt before we are ready to handle it
+    cli();
+    
     // Set up MISO as output, others as inputs
     PSX_DDR = 0;
     PSX_DDR |= (1<<PSX_MISO);
@@ -125,6 +128,9 @@ void psx_setup(void)
     
     // Initialize pipe
     pipe_init(&controller_pipe, controller_buffer, 19, CONTROLLER_BUFSIZE);
+    
+    // Deposit initial instruction
+    psx_deposit(packet_poll_default);
     
     // Enable global interrupts
     sei();
@@ -287,7 +293,7 @@ static void handle_next_spi_byte(void)
                 new_data = 1;
                 
                 // If controller instructions are pending, go to next one. Otherwise, resend
-                // the previous one. Only send if PSX is listening for full pressure info
+                // the previous one.
                 pipe_read(&controller_pipe, packet_poll);
             }
             break;

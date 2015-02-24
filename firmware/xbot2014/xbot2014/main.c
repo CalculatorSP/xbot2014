@@ -44,13 +44,13 @@ int main(void)
         DO_NOTHING();
         
     _delay_ms(1000.0);
-    
+        
     while (1)
     {
         // Wait for the user to run xbot on PC
         while (!(usb_serial_get_control() & USB_SERIAL_DTR))
             DO_NOTHING();
-        
+                        
         // Discard any garbage from OS
         usb_serial_flush_input();
         
@@ -111,7 +111,7 @@ int main(void)
             // Send rumble data
             usb_serial_putchar('v');
             usb_serial_putchar(':');
-            for (uint8_t i = 12; i >= 0; i -= 4)
+            for (int8_t i = 12; i >= 0; i -= 4)
             {
                 uint8_t nibble = (rum >> i) & 0x000F;
                 if (nibble < 0xA)
