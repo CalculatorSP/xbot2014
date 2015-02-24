@@ -48,26 +48,53 @@ public:
 	// Sets up communication with the controller (Teensy) on serial port comport
 	XboxController(const char *comport);
 
-	// Presses specified button. Must manually call sendState() to see the effect
-	void press(XboxButton button);
-
-	// Releases specified button/analog. Must manually call sendState() to see the effect
-	void release(XboxButton button);
-	void release(XboxAnalog analog);
-
-	// Sets button/analog to specified value. Must manually call sendState() to see the effect
+	// Sets button to specified value. Must manually call sendState() to see the effect
 	void set(XboxButton button, bool pressed);
-	void set(XboxAnalog analog, float amount);
 
-	// Quickly press and release specified button/analog for a set number of frames
-	//  No need to call sendState()
-	void tap(XboxButton button, int framecount);
-	void tap(XboxAnalog analog, float amount, int framecount);
+	// Sets analog to specified value. Must manually call sendState() to see the effect
+	void set(XboxAnalog analog, float amount);
 
 	// Releases all buttons/analogs
 	void reset();
 
 	// Updates the controller to reflect the current state
-	void sendState(int framecount) const;
+	void sendState(int framecount = 4) const;
 
+	// Presses specified button. Must manually call sendState() to see the effect
+	inline void press(XboxButton button)
+	{
+		set(button, true);
+	}
+
+	// Releases specified button. Must manually call sendState() to see the effect
+	inline void release(XboxButton button)
+	{
+		set(button, false);
+	}
+
+	// Releases specified analog. Must manually call sendState() to see the effect
+	inline void release(XboxAnalog analog)
+	{
+		set(analog, 0.0f);
+	}
+
+	// Quickly press and release specified button for a set number of frames
+	//  No need to call sendState()
+	inline void tap(XboxButton button, int framecount = 4)
+	{
+		set(button, true);
+		sendState(framecount);
+		set(button, false);
+		sendState(framecount);
+	}
+
+	// Quickly press and release specified analog for a set number of frames
+	//  No need to call sendState()
+	inline void tap(XboxAnalog analog, float amount, int framecount = 4)
+	{
+		set(analog, amount);
+		sendState(framecount);
+		set(analog, 0.0f);
+		sendState(framecount);
+	}
 };

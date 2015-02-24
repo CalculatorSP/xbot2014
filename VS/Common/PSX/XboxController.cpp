@@ -5,37 +5,6 @@ XboxController::XboxController(const char *comport) : _playstationController(com
 	reset();
 }
 
-inline void XboxController::press(XboxButton button)
-{
-	set(button, true);
-}
-
-inline void XboxController::release(XboxButton button)
-{
-	set(button, false);
-}
-
-inline void XboxController::release(XboxAnalog analog)
-{
-	set(analog, 0.0f);
-}
-
-inline void XboxController::tap(XboxButton button, int framecount)
-{
-	set(button, true);
-	sendState(framecount);
-	set(button, false);
-	sendState(framecount);
-}
-
-inline void XboxController::tap(XboxAnalog analog, float amount, int framecount)
-{
-	set(analog, amount);
-	sendState(framecount);
-	set(analog, 0.0f);
-	sendState(framecount);
-}
-
 void XboxController::set(XboxButton button, bool pressed)
 {
 	switch (button)

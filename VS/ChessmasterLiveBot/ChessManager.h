@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ChessActuator.h"
 #include "Processors/FrameProcessor.h"
 #include "Processors/Stockfish/bitboard.h"
 #include "Processors/Stockfish/evaluate.h"
@@ -24,6 +25,8 @@ class ChessManager
 	// 'draw by repetition' detection.
 	Search::StateStackPtr _SetupStates;
 
+	bool _inGame;
+	ChessActuator _chessActuator;
 	FrameProcessor _frameProcessor;
 	Position _pos;
 	String _moveStr;
@@ -36,9 +39,16 @@ class ChessManager
 	time_t _blackStartTime;
 
 public:
-	ChessManager();
+	ChessManager(const ChessActuator& chessActuator);
 	~ChessManager();
+
+	// Process a game frame
 	void depositFrame(const Mat& frame);
+
+	// Start a new chess game
 	void reset();
+
+	// End current game (if game is going)
+	void endGame();
 
 };

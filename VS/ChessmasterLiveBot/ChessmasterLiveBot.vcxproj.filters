@@ -86,6 +86,9 @@
     <ClCompile Include="Processors\MoveDetector.cpp">
       <Filter>Source Files\Processors</Filter>
     </ClCompile>
+    <ClCompile Include="ChessActuator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Processors\FrameProcessor.h">
@@ -159,6 +162,9 @@
     </ClInclude>
     <ClInclude Include="Processors\MoveDetector.h">
       <Filter>Source Files\Processors</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessActuator.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
