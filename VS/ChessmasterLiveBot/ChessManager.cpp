@@ -1,5 +1,7 @@
 #include "ChessManager.h"
 
+#define GAME_TIME	(600)
+
 ChessManager::ChessManager(const ChessActuator& chessActuator)
 	: _chessActuator(chessActuator), _inGame(false)
 {
@@ -90,9 +92,9 @@ void ChessManager::depositFrame(const Mat& frame)
 
 			// If this is the first move, start the timer
 			if (_whiteStartTime == 0)
-				_whiteStartTime = 600000 + 1000 * time(NULL);
+				_whiteStartTime = 1000 * GAME_TIME + 1000 * time(NULL);
 			if (_blackStartTime == 0)
-				_blackStartTime = 600000 + 1000 * time(NULL);
+				_blackStartTime = 1000 * GAME_TIME + 1000 * time(NULL);
 
 			// Set the position in stockfish
 			UCI::loop("position startpos moves" + _moveStr);
@@ -106,7 +108,8 @@ void ChessManager::depositFrame(const Mat& frame)
 			{
 				// Send "go" command to stockfish
 				std::ostringstream oss;
-				oss << "go wtime " << _whiteStartTime - 1000 * time(NULL) << "btime " << _blackStartTime + 1000 * time(NULL);
+				oss << "go";
+				//oss << "go wtime " << _whiteStartTime - 1000 * time(NULL) << "btime " << _blackStartTime + 1000 * time(NULL);
 				UCI::loop(oss.str());
 				String token, bestmove, ponder;
 				while (true)
@@ -172,28 +175,29 @@ void ChessManager::reset()
 		printf("%s\n", response);
 	_sfOut.clear();
 
-	if (_pos.side_to_move() == WHITE)
+	UCI::loop("go");
+	//UCI::loop("go wtime 1000 * GAME_TIME btime 1000 * GAME_TIME");
+	String token, bestmove, ponder;
+	while (true)
 	{
-		UCI::loop("go wtime 600000 btime 600000");
-		String token, bestmove, ponder;
-		while (true)
-		{
-			// Wait for a response
-			while (!_sfOut.getline(response, sizeof(response)))
-				_sfOut.clear();
+		// Wait for a response
+		while (!_sfOut.getline(response, sizeof(response)))
+			_sfOut.clear();
 
-			printf("%s\n", response);
-			std::istringstream is(response);
-			is >> std::skipws >> token;
-			if (token == "bestmove")
-			{
-				is >> bestmove >> token;
-				if (token == "ponder")
-					is >> ponder;
-				break;
-			}
+		printf("%s\n", response);
+		std::istringstream is(response);
+		is >> std::skipws >> token;
+		if (token == "bestmove")
+		{
+			is >> bestmove >> token;
+			if (token == "ponder")
+				is >> ponder;
+			break;
 		}
 	}
+
+	// Execute the best move
+	_chessActuator.doMove(UCI::to_move(_pos, bestmove));
 }
 
 void ChessManager::endGame()

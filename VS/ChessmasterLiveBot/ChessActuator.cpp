@@ -8,12 +8,12 @@ void ChessActuator::doMove(Move move)
 	// Go to desired piece and pick it up
 	_goToSquare(from_sq(move));
 	_xboxController.tap(XboxController::A);
-	Sleep(125);
+	Sleep(500);
 
 	// Go to destination square and drop piece
 	_goToSquare(to_sq(move));
 	_xboxController.tap(XboxController::A);
-	Sleep(125);
+	Sleep(500);
 }
 
 void ChessActuator::_goHome()
@@ -23,7 +23,7 @@ void ChessActuator::_goHome()
 	{
 		_xboxController.tap(XboxController::LEFT);
 		_xboxController.tap(XboxController::DOWN);
-		Sleep(125);
+		Sleep(500);
 	}
 
 	_currentSquare = SQ_A1;
@@ -31,8 +31,12 @@ void ChessActuator::_goHome()
 
 void ChessActuator::_goToSquare(Square sq)
 {
-	int deltaX = file_of(sq) - file_of(_currentSquare);
-	int deltaY = rank_of(sq) - file_of(_currentSquare);
+	int x1 = file_of(_currentSquare);
+	int x2 = file_of(sq);
+	int y1 = rank_of(_currentSquare);
+	int y2 = rank_of(sq);
+	int deltaX = x2 - x1;
+	int deltaY = y2 - y1;
 
 	// Move towards target square
 	while (!(deltaX == 0 && deltaY == 0))
@@ -57,6 +61,8 @@ void ChessActuator::_goToSquare(Square sq)
 			_xboxController.tap(XboxController::DOWN);
 			++deltaY;
 		}
-		Sleep(125);
+		Sleep(500);
 	}
+
+	_currentSquare = sq;
 }

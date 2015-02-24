@@ -38,6 +38,8 @@ class ChessManager
 	time_t _whiteStartTime;
 	time_t _blackStartTime;
 
+	void _doMove(String move);
+
 public:
 	ChessManager(const ChessActuator& chessActuator);
 	~ChessManager();

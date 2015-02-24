@@ -6,7 +6,7 @@
 
 #define WEBCAM	(0)
 #define CAPCARD	(1)
-//#define COMPORT "COM4"
+#define COMPORT "COM4"
 
 using namespace cv;
 
@@ -26,8 +26,8 @@ int main(int argc, const char **argv)
 	printf("(%d, %d)\n", w, h);
 
 	Mat frame;
-	//ChessActuator chessActuator(COMPORT);
-	//ChessManager chessManager(chessActuator);
+	ChessActuator chessActuator(COMPORT);
+	ChessManager chessManager(chessActuator);
 
 	cvNamedWindow("Capture", CV_WINDOW_AUTOSIZE);
 
@@ -38,17 +38,17 @@ int main(int argc, const char **argv)
 		if (frame.empty())
 			continue;
 
-		//chessManager.depositFrame(frame);
+		chessManager.depositFrame(frame);
 
 		imshow("Capture", frame);
 
 		switch (waitKey(1))
 		{
 		case 'r':
-			//chessManager.reset();
+			chessManager.reset();
 			break;
 		case 'q':
-			//chessManager.endGame();
+			chessManager.endGame();
 			break;
 		case 27:
 			keepGoing = false;
