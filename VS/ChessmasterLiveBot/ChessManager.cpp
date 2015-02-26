@@ -16,6 +16,10 @@ ChessManager::ChessManager(const ChessActuator& chessActuator)
 	Tablebases::init(Options["SyzygyPath"]);
 	TT.resize(Options["Hash"]);
 
+	// Our personal copy of chess position
+	_pos = Position(_StartFEN, false, Threads.main());
+	_SetupStates = Search::StateStackPtr(new std::stack<StateInfo>());
+
 	// Redirect cout so we can talk to stockfish more easily
 	_cout_backup = std::cout.rdbuf(_sfOut.rdbuf());
 }
@@ -108,8 +112,7 @@ void ChessManager::depositFrame(const Mat& frame)
 			{
 				// Send "go" command to stockfish
 				std::ostringstream oss;
-				oss << "go";
-				//oss << "go wtime " << _whiteStartTime - 1000 * time(NULL) << "btime " << _blackStartTime + 1000 * time(NULL);
+				oss << "go wtime " << _whiteStartTime - 1000 * time(NULL) << "btime " << _blackStartTime + 1000 * time(NULL);
 				UCI::loop(oss.str());
 				String token, bestmove, ponder;
 				while (true)
@@ -132,6 +135,18 @@ void ChessManager::depositFrame(const Mat& frame)
 
 				// Execute the best move
 				_chessActuator.doMove(UCI::to_move(_pos, bestmove));
+
+				// Update the position in our private chess pos
+				_SetupStates->push(StateInfo());
+				_pos.do_move(UCI::to_move(_pos, bestmove), _SetupStates->top());
+				_moveStr += " " + bestmove;
+
+				// Set the new position in stockfish
+				UCI::loop("position startpos moves" + _moveStr);
+				char response[1000];
+				while (_sfOut.getline(response, sizeof(response)))
+					printf("%s\n", response);
+				_sfOut.clear();
 			}
 		}
 	}
@@ -139,14 +154,13 @@ void ChessManager::depositFrame(const Mat& frame)
 
 void ChessManager::reset()
 {
+	endGame();
 	_inGame = true;
 
 	// Keep track of position independently of stockfish, so we can check for valid moves
-	_pos = Position(_StartFEN, false, Threads.main());
+	_pos.set(_StartFEN, false, Threads.main());
 	_moveStr = "";
-
-	_SetupStates.release();
-	_SetupStates = Search::StateStackPtr(new std::stack<StateInfo>());
+	_SetupStates.reset(new std::stack<StateInfo>());
 
 	// Start stockfish
 	UCI::loop("uci");
@@ -175,8 +189,9 @@ void ChessManager::reset()
 		printf("%s\n", response);
 	_sfOut.clear();
 
-	UCI::loop("go");
-	//UCI::loop("go wtime 1000 * GAME_TIME btime 1000 * GAME_TIME");
+	std::ostringstream oss;
+	oss << "go wtime " << 1000 * GAME_TIME << "btime " << 1000 * GAME_TIME;
+	UCI::loop(oss.str());
 	String token, bestmove, ponder;
 	while (true)
 	{
@@ -198,10 +213,24 @@ void ChessManager::reset()
 
 	// Execute the best move
 	_chessActuator.doMove(UCI::to_move(_pos, bestmove));
+
+	// Update the position in our private chess pos
+	_SetupStates->push(StateInfo());
+	_pos.do_move(UCI::to_move(_pos, bestmove), _SetupStates->top());
+	_moveStr += " " + bestmove;
+
+	// Set the new position in stockfish
+	UCI::loop("position startpos moves" + _moveStr);
+	while (_sfOut.getline(response, sizeof(response)))
+		printf("%s\n", response);
+	_sfOut.clear();
 }
 
 void ChessManager::endGame()
 {
+	if (!_inGame)
+		return;
+
 	// Quit stockfish
 	UCI::loop("quit");
 	Threads.wait_for_think_finished(); // Cannot quit whilst the search is running
