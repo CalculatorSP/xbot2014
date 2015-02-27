@@ -129,8 +129,8 @@ void psx_setup(void)
     // Initialize pipe
     pipe_init(&controller_pipe, controller_buffer, 19, CONTROLLER_BUFSIZE);
     
-    // Deposit initial instruction
-    psx_deposit(packet_poll_default);
+    // Set initial instruction
+    memcpy(packet_poll, packet_poll_default, 19);
     
     // Enable global interrupts
     sei();

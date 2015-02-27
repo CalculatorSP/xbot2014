@@ -13,7 +13,7 @@
 #include <string.h>
 #include <util/atomic.h>
 
-void pipe_init(pipe_t *self, void *data, uint8_t elt_size, uint8_t num_elts)
+void pipe_init(pipe_t *self, void *data, uint16_t elt_size, uint16_t num_elts)
 {
     self->data = data;
     self->read_from = 0;
@@ -30,43 +30,52 @@ void pipe_flush(pipe_t *self)
     }
 }
 
-uint8_t pipe_write(pipe_t *self, const void *data)
+uint16_t pipe_write(pipe_t *self, const void *data)
 {
+    uint16_t retval = 0;
+    
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
-        if (pipe_isFull(self))
-            return 0;
-        
-        memcpy(self->data + self->write_to * self->elt_size, data, self->elt_size);
-        self->write_to = (self->write_to + 1) % self->num_elts;
+        if (!pipe_isFull(self))
+        {
+            memcpy(self->data + self->write_to * self->elt_size, data, self->elt_size);
+            self->write_to = (self->write_to + 1) % self->num_elts;
+            retval = self->elt_size;
+        }
     }
     
-    return self->elt_size;
+    return retval;
 }
-uint8_t pipe_read(pipe_t *self, void *data)
+uint16_t pipe_read(pipe_t *self, void *data)
 {
+    uint16_t retval = 0;
+    
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
-        if (!pipe_peek(self, data))
-            return 0;
-        
-        self->read_from = (self->read_from + 1) % self->num_elts;
+        if (pipe_peek(self, data))
+        {
+            self->read_from = (self->read_from + 1) % self->num_elts;
+            retval = self->elt_size;
+        }
     }
     
-    return self->elt_size;
+    return retval;
 }
 
-uint8_t pipe_peek(pipe_t *self, void *data)
+uint16_t pipe_peek(pipe_t *self, void *data)
 {
+    uint16_t retval = 0;
+    
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
-        if (pipe_isEmpty(self))
-            return 0;
-        
-        memcpy(data, self->data + self->read_from * self->elt_size, self->elt_size);
+        if (!pipe_isEmpty(self))
+        {
+            memcpy(data, self->data + self->read_from * self->elt_size, self->elt_size);
+            retval = self->elt_size;
+        }
     }
     
-    return self->elt_size;
+    return retval;
 }
 
 uint8_t pipe_isEmpty(pipe_t *self)

@@ -232,6 +232,7 @@ void parse_and_execute_command(const char *buf)
             for (uint8_t i = 0; i < instr_count; ++i)
                 if (!psx_deposit(instr))
                 {
+                    LED_ON;
                     // Buffer full, can't deposit
                     usb_serial_putchar('f');
                     usb_serial_putchar(':');
