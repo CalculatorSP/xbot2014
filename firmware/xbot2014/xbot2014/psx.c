@@ -32,9 +32,6 @@
 #define PSX_MISO (PB3)
 #define PSX_ACK  (PB7)
 
-#define LED_OFF		(PORTD &= ~(1<<6))
-#define LED_ON		(PORTD |= (1<<6))
-
 
 /***********************************************************************
  *
@@ -225,7 +222,6 @@ static inline void handle_next_spi_byte(void)
                 }
                 else // Not a start of packet
                 {
-                    LED_ON;
                     SPDR = 0xFF;
                     state = PSX_STATE_HEADER;
                     bytenum = 0;

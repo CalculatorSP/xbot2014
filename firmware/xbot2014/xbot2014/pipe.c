@@ -19,7 +19,7 @@ void pipe_init(pipe_t *self, void *data, int16_t elt_size, int16_t num_elts)
     self->read_from = 0;
     self->write_to = 0;
     self->elt_size = elt_size;
-    self->num_elts = num_elts;
+    self->total_size = num_elts * elt_size;
 }
 
 void pipe_flush(pipe_t *self)
@@ -33,30 +33,38 @@ void pipe_flush(pipe_t *self)
 int16_t pipe_write(pipe_t *self, const void *data)
 {
     int16_t retval = 0;
+    int16_t tmp_write_to;
     
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
-        if (((self->write_to + 1) % self->num_elts) != self->read_from)
+        tmp_write_to = self->write_to + self->elt_size;
+        if (tmp_write_to >= self->total_size)
+            tmp_write_to = 0;
+        
+        if (tmp_write_to != self->read_from)
         {
-            memcpy(self->data + self->write_to * self->elt_size, data, self->elt_size);
-            self->write_to = (self->write_to + 1) % self->num_elts;
+            memcpy((uint8_t *)self->data + self->write_to, data, self->elt_size);
+            self->write_to = tmp_write_to;
             retval = self->elt_size;
         }
     }
     
     return retval;
 }
+
 int16_t pipe_read(pipe_t *self, void *data)
 {
     int16_t retval = 0;
-    
+
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
         if (self->write_to != self->read_from)
         {
-            memcpy(data, self->data + self->read_from * self->elt_size, self->elt_size);
-            retval = self->elt_size;
-            self->read_from = (self->read_from + 1) % self->num_elts;
+            memcpy(data, (uint8_t *)self->data + self->read_from, self->elt_size);
+            self->read_from += self->elt_size;
+            if (self->read_from >= self->total_size)
+                self->read_from = 0;
+            
             retval = self->elt_size;
         }
     }
@@ -72,7 +80,7 @@ int16_t pipe_peek(pipe_t *self, void *data)
     {
         if (self->write_to != self->read_from)
         {
-            memcpy(data, self->data + self->read_from * self->elt_size, self->elt_size);
+            memcpy(data, (uint8_t *)self->data + self->read_from, self->elt_size);
             retval = self->elt_size;
         }
     }
@@ -95,10 +103,15 @@ uint8_t pipe_isEmpty(pipe_t *self)
 uint8_t pipe_isFull(pipe_t *self)
 {
     uint8_t retval;
+    int16_t tmp_write_to;
     
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
-        retval = (((self->write_to + 1) % self->num_elts) == self->read_from);
+        tmp_write_to = self->write_to + self->elt_size;
+        if (tmp_write_to >= self->total_size)
+            self->write_to = 0;
+        
+        retval = (tmp_write_to == self->read_from);
     }
     
     return retval;

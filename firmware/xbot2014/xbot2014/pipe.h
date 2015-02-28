@@ -8,7 +8,7 @@ typedef struct
     int16_t write_to;
     int16_t read_from;
     int16_t elt_size;
-    int16_t num_elts;
+    int16_t total_size;
     void *data;
 } pipe_t;
 

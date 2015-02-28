@@ -31,7 +31,6 @@ int main(void)
     char buf[BUFFER_SIZE];
     uint8_t n;
     uint16_t rum;
-    const uint8_t* psxdefault;
     
     CPU_PRESCALE(CPU_16MHz);
     LED_CONFIG;
@@ -40,27 +39,13 @@ int main(void)
     psx_setup();
     
     // Initialize USB and wait for communication to PC
-    //usb_init();
-    //while (!usb_configured())
-        //DO_NOTHING();
+    usb_init();
+    while (!usb_configured())
+        DO_NOTHING();
     
     LED_ON;
     _delay_ms(1000.0);
     LED_OFF;
-    
-    psxdefault = psx_get_default();
-    
-    while (1)
-    {
-        for (int i = 0; i < 8; ++i)
-        {
-            if (!psx_deposit(psxdefault))
-            {
-            }
-        }
-
-        _delay_ms(1000.0);
-    }
         
     while (1)
     {
