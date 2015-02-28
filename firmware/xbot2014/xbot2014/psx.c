@@ -20,7 +20,7 @@
  ***********************************************************************/
 
 // Number of controller instructions to buffer
-#define CONTROLLER_BUFSIZE  (32)
+#define CONTROLLER_BUFSIZE  (64)
 
 // Port/pin setup (change this if your hardware configuration is different)
 #define PSX_PORT    (PORTB)
@@ -31,6 +31,9 @@
 #define PSX_MOSI (PB2)
 #define PSX_MISO (PB3)
 #define PSX_ACK  (PB7)
+
+#define LED_OFF		(PORTD &= ~(1<<6))
+#define LED_ON		(PORTD |= (1<<6))
 
 
 /***********************************************************************
@@ -204,7 +207,7 @@ static inline void psx_ack(void)
 }
 
 // Handle one byte of communication with PSX
-static void handle_next_spi_byte(void)
+static inline void handle_next_spi_byte(void)
 {
     // Read data from console
     uint8_t command = SPDR;
@@ -222,6 +225,7 @@ static void handle_next_spi_byte(void)
                 }
                 else // Not a start of packet
                 {
+                    LED_ON;
                     SPDR = 0xFF;
                     state = PSX_STATE_HEADER;
                     bytenum = 0;
@@ -399,20 +403,8 @@ static void handle_next_spi_byte(void)
 // SPI transfer interrupt
 ISR(SPI_STC_vect)
 {
-    while (1)
-    {
-        // Do the communication
-        handle_next_spi_byte();
-        
-        // Clear pending interrupt flag
-        SPSR &= ~(1<<SPIF);
-        
-        // Wait for next SPI transfer, and leave if
-        // ATT is deasserted
-        while (!(SPSR & (1<<SPIF)))
-            if (!(PSX_PORT & (1<<PSX_SS)))
-                return;
-    }
+    // Do the communication
+    handle_next_spi_byte();
 }
 
 

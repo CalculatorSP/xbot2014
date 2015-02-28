@@ -8,7 +8,7 @@ uint8_t psx_deposit(const uint8_t *instr); // set the next controller state
                                         //  returns false if buffer is full (does not deposit)
 const uint8_t *psx_get_default(void);   // get default packet (no buttons)
 uint8_t psx_get_devicemode(void);       // get device mode (digital/analog/pressures)
-uint8_t psx_get_rumble(uint16_t *rum);     // rumble0 is MSB, rumble1 is LSB
+uint8_t psx_get_rumble(uint16_t *rum);  // rumble0 is MSB, rumble1 is LSB
                                         //  return val indicates if data is new
 
 #define PSX_MODE_DIGITAL        (0x41)

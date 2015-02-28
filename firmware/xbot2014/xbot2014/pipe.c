@@ -2,7 +2,7 @@
  *
  * pipe.c
  *
- * Interrupt-safe FIFO pipe for queing arbitrary data structures
+ * Interrupt-safe FIFO pipe for queuing arbitrary data structures
  *
  * Copyright (c) 2014,2015 John Miller
  *
@@ -13,7 +13,7 @@
 #include <string.h>
 #include <util/atomic.h>
 
-void pipe_init(pipe_t *self, void *data, uint16_t elt_size, uint16_t num_elts)
+void pipe_init(pipe_t *self, void *data, int16_t elt_size, int16_t num_elts)
 {
     self->data = data;
     self->read_from = 0;
@@ -30,13 +30,13 @@ void pipe_flush(pipe_t *self)
     }
 }
 
-uint16_t pipe_write(pipe_t *self, const void *data)
+int16_t pipe_write(pipe_t *self, const void *data)
 {
-    uint16_t retval = 0;
+    int16_t retval = 0;
     
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
-        if (!pipe_isFull(self))
+        if (((self->write_to + 1) % self->num_elts) != self->read_from)
         {
             memcpy(self->data + self->write_to * self->elt_size, data, self->elt_size);
             self->write_to = (self->write_to + 1) % self->num_elts;
@@ -46,14 +46,16 @@ uint16_t pipe_write(pipe_t *self, const void *data)
     
     return retval;
 }
-uint16_t pipe_read(pipe_t *self, void *data)
+int16_t pipe_read(pipe_t *self, void *data)
 {
-    uint16_t retval = 0;
+    int16_t retval = 0;
     
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
-        if (pipe_peek(self, data))
+        if (self->write_to != self->read_from)
         {
+            memcpy(data, self->data + self->read_from * self->elt_size, self->elt_size);
+            retval = self->elt_size;
             self->read_from = (self->read_from + 1) % self->num_elts;
             retval = self->elt_size;
         }
@@ -62,13 +64,13 @@ uint16_t pipe_read(pipe_t *self, void *data)
     return retval;
 }
 
-uint16_t pipe_peek(pipe_t *self, void *data)
+int16_t pipe_peek(pipe_t *self, void *data)
 {
-    uint16_t retval = 0;
+    int16_t retval = 0;
     
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
-        if (!pipe_isEmpty(self))
+        if (self->write_to != self->read_from)
         {
             memcpy(data, self->data + self->read_from * self->elt_size, self->elt_size);
             retval = self->elt_size;
