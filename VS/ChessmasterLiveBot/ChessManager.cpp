@@ -2,7 +2,7 @@
 
 #define GAME_TIME	(600)
 
-ChessManager::ChessManager(const ChessActuator& chessActuator)
+ChessManager::ChessManager(ChessActuator* chessActuator)
 	: _chessActuator(chessActuator), _inGame(false)
 {
 	UCI::init(Options);
@@ -134,7 +134,7 @@ void ChessManager::depositFrame(const Mat& frame)
 				}
 
 				// Execute the best move
-				_chessActuator.doMove(UCI::to_move(_pos, bestmove));
+				_chessActuator->doMove(UCI::to_move(_pos, bestmove));
 
 				// Update the position in our private chess pos
 				_SetupStates->push(StateInfo());
@@ -156,6 +156,9 @@ void ChessManager::reset()
 {
 	endGame();
 	_inGame = true;
+
+	// Make sure we start our actuator at a known reference point
+	_chessActuator->goHome();
 
 	// Keep track of position independently of stockfish, so we can check for valid moves
 	_pos.set(_StartFEN, false, Threads.main());
@@ -212,7 +215,7 @@ void ChessManager::reset()
 	}
 
 	// Execute the best move
-	_chessActuator.doMove(UCI::to_move(_pos, bestmove));
+	_chessActuator->doMove(UCI::to_move(_pos, bestmove));
 
 	// Update the position in our private chess pos
 	_SetupStates->push(StateInfo());

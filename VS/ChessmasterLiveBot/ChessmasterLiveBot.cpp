@@ -27,7 +27,7 @@ int main(int argc, const char **argv)
 
 	Mat frame;
 	ChessActuator chessActuator(COMPORT);
-	ChessManager chessManager(chessActuator);
+	ChessManager chessManager(&chessActuator);
 
 	cvNamedWindow("Capture", CV_WINDOW_AUTOSIZE);
 

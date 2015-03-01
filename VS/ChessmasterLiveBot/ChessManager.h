@@ -26,7 +26,7 @@ class ChessManager
 	Search::StateStackPtr _SetupStates;
 
 	bool _inGame;
-	ChessActuator _chessActuator;
+	ChessActuator* _chessActuator;
 	FrameProcessor _frameProcessor;
 	Position _pos;
 	String _moveStr;
@@ -41,7 +41,7 @@ class ChessManager
 	void _doMove(String move);
 
 public:
-	ChessManager(const ChessActuator& chessActuator);
+	ChessManager(ChessActuator* chessActuator);
 	~ChessManager();
 
 	// Process a game frame

@@ -8,14 +8,14 @@ class ChessActuator
 	XboxController _xboxController;
 	Square _currentSquare;
 
-	void _goHome();
 	void _goToSquare(Square sq);
 
 public:
 	ChessActuator(const char *comport)
-		: _xboxController(comport), _currentSquare(SQ_A1)
+		: _xboxController(comport), _currentSquare(SQ_E4)
 	{ }
 
+	void goHome();
 	void doMove(Move move);
 
 };
