@@ -42,8 +42,10 @@ int main(void)
     usb_init();
     while (!usb_configured())
         DO_NOTHING();
-        
+    
+    LED_ON;
     _delay_ms(1000.0);
+    LED_OFF;
         
     while (1)
     {

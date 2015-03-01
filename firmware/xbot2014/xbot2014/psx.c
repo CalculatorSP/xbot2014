@@ -20,7 +20,7 @@
  ***********************************************************************/
 
 // Number of controller instructions to buffer
-#define CONTROLLER_BUFSIZE  (32)
+#define CONTROLLER_BUFSIZE  (64)
 
 // Port/pin setup (change this if your hardware configuration is different)
 #define PSX_PORT    (PORTB)
@@ -129,8 +129,8 @@ void psx_setup(void)
     // Initialize pipe
     pipe_init(&controller_pipe, controller_buffer, 19, CONTROLLER_BUFSIZE);
     
-    // Deposit initial instruction
-    psx_deposit(packet_poll_default);
+    // Set initial instruction
+    memcpy(packet_poll, packet_poll_default, 19);
     
     // Enable global interrupts
     sei();
@@ -204,7 +204,7 @@ static inline void psx_ack(void)
 }
 
 // Handle one byte of communication with PSX
-static void handle_next_spi_byte(void)
+static inline void handle_next_spi_byte(void)
 {
     // Read data from console
     uint8_t command = SPDR;
@@ -399,20 +399,8 @@ static void handle_next_spi_byte(void)
 // SPI transfer interrupt
 ISR(SPI_STC_vect)
 {
-    while (1)
-    {
-        // Do the communication
-        handle_next_spi_byte();
-        
-        // Clear pending interrupt flag
-        SPSR &= ~(1<<SPIF);
-        
-        // Wait for next SPI transfer, and leave if
-        // ATT is deasserted
-        while (!(SPSR & (1<<SPIF)))
-            if (!(PSX_PORT & (1<<PSX_SS)))
-                return;
-    }
+    // Do the communication
+    handle_next_spi_byte();
 }
 
 
