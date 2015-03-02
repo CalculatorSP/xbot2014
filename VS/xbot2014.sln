@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChessmasterLiveBot", "Chess
 		{556BA3AA-4A77-487C-9225-BABE8EFE501E} = {556BA3AA-4A77-487C-9225-BABE8EFE501E}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuitarHeroBot", "GuitarHeroBot\GuitarHeroBot.vcxproj", "{DDA27125-5F6F-4DBE-98AE-27CCC3522146}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -34,6 +36,14 @@ Global
 		{06D0294A-52E7-477F-B883-B97E26948769}.Release|Win32.Build.0 = Release|Win32
 		{06D0294A-52E7-477F-B883-B97E26948769}.Release|x64.ActiveCfg = Release|x64
 		{06D0294A-52E7-477F-B883-B97E26948769}.Release|x64.Build.0 = Release|x64
+		{DDA27125-5F6F-4DBE-98AE-27CCC3522146}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DDA27125-5F6F-4DBE-98AE-27CCC3522146}.Debug|Win32.Build.0 = Debug|Win32
+		{DDA27125-5F6F-4DBE-98AE-27CCC3522146}.Debug|x64.ActiveCfg = Debug|x64
+		{DDA27125-5F6F-4DBE-98AE-27CCC3522146}.Debug|x64.Build.0 = Debug|x64
+		{DDA27125-5F6F-4DBE-98AE-27CCC3522146}.Release|Win32.ActiveCfg = Release|Win32
+		{DDA27125-5F6F-4DBE-98AE-27CCC3522146}.Release|Win32.Build.0 = Release|Win32
+		{DDA27125-5F6F-4DBE-98AE-27CCC3522146}.Release|x64.ActiveCfg = Release|x64
+		{DDA27125-5F6F-4DBE-98AE-27CCC3522146}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

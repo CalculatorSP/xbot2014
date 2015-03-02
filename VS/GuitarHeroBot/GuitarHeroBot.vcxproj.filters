@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GuitarHeroBot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MidiParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="songs\3%27s &amp; 7%27s.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Anarchy in the U.K..mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Avalancha.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Barracuda.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Before I Forget.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Black Magic Woman.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Black Sunshine.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Bulls on Parade.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Can%27t Be Saved.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Cherub Rock.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Cities on Flame with Rock and Roll.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Cliffs of Dover.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Closer.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Cult of Personality.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Don%27t Hold Back.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Down %27N Dirty.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Even Flow.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\F.C.P.R.E.M.I.X..mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Generation Rock.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Go That Far.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Guitar Battle vs. Lou.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Guitar Battle vs. Slash.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Guitar Battle vs. Tom Morello.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Helicopter.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Hier Kommt Alex.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Hit Me with Your Best Shot.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Holiday in Cambodia.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\I%27m in the Band.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Impulse.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\In Love.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\In the Belly of a Shark.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Knights of Cydonia.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Kool Thing.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\La Grange.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Lay Down.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Mauvais Garcon.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Metal Heavy Lady.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Minus Celcius.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Miss Murder.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Mississippi Queen.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Monsters.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\My Curse.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\My Name Is Jonas.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Nothing for Me Here.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\One.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Paint It, Black.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Paranoid.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Prayer of the Refugee.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Pride and Joy.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Radio Song.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Raining Blood.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Reptilia.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Rock and Roll All Nite.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Rock You Like a Hurricane.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Ruby.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Sabotage.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Same Old Song and Dance.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\School%27s Out.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\She Bangs the Drums.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Slow Ride.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Story of My Life.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Stricken.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Suck My Kiss.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Sunshine of Your Love.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Take This Life.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Talk Dirty to Me.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\The Devil Went Down to Georgia.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\The Metal.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\The Number of the Beast.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\The Seeker.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\The Way It Ends.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Through the Fire and Flames.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\Welcome to the Jungle.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="songs\When You Were Young.mid">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MidiParser.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Song.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
