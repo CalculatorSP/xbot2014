@@ -46,6 +46,22 @@ public:
         jobs.push(j);
     }
     
+    template <typename CLAZZ, typename T>
+    void post(typename Job3<CLAZZ, T>::Delegate d, CLAZZ c, T arg)
+    {
+        long ms = getTime();
+        Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(ms, d, c, arg);
+        jobs.push(j);
+    }
+    
+    template <typename CLAZZ, typename T>
+    void post(typename Job4<CLAZZ>::Delegate d, CLAZZ c)
+    {
+        long ms = getTime();
+        Job4<CLAZZ>* j = new Job4<CLAZZ>(ms, d, c);
+        jobs.push(j);
+    }
+    
     void postDelayed(long millisDelay, Job::Runnable d)
     {
         long ms = getTime() + millisDelay;
@@ -61,6 +77,22 @@ public:
         jobs.push(j);
     }
     
+    template <typename CLAZZ, typename T>
+    void postDelayed(long millisDelay, typename Job3<CLAZZ, T>::Delegate d, CLAZZ c, T arg)
+    {
+        long ms = getTime() + millisDelay;
+        Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(ms, d, c, arg);
+        jobs.push(j);
+    }
+    
+    template <typename CLAZZ, typename T>
+    void postDelayed(long millisDelay, typename Job4<CLAZZ>::Delegate d, CLAZZ c)
+    {
+        long ms = getTime() + millisDelay;
+        Job4<CLAZZ>* j = new Job4<CLAZZ>(ms, d, c);
+        jobs.push(j);
+    }
+    
     void postAtTime(long time, Job::Runnable d)
     {
         long ms = time;
@@ -73,6 +105,22 @@ public:
     {
         long ms = time;
         Job2<T>* j = new Job2<T>(ms, d, arg);
+        jobs.push(j);
+    }
+    
+    template <typename CLAZZ, typename T>
+    void postAtTime(long time, typename Job3<CLAZZ, T>::Delegate d, CLAZZ c, T arg)
+    {
+        long ms = time;
+        Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(ms, d, c, arg);
+        jobs.push(j);
+    }
+    
+    template <typename CLAZZ, typename T>
+    void postAtTime(long time, typename Job4<CLAZZ>::Delegate d, CLAZZ c)
+    {
+        long ms = time;
+        Job4<CLAZZ>* j = new Job4<CLAZZ>(ms, d, c);
         jobs.push(j);
     }
     

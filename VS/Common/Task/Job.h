@@ -39,20 +39,37 @@ public:
         d(arg);
     }
 };
-//
-//template <typename IN, typename OUT>
-//class Job
-//{
-//public:
-//    typedef OUT (*Delegate)(IN arg);
-//    Delegate d;
-//    long val;
-//
-//    Job(long val, Delegate d):val(val),d(d){}
-//
-//    OUT operator()(IN arg)
-//    {
-//        return d(arg);
-//    }
-//};
 
+template <typename CLAZZ, typename T>
+class Job3 : public IJob
+{
+public:
+    typedef void (CLAZZ::*Delegate)(T arg);
+    Delegate d;
+    CLAZZ c;
+    T arg;
+    
+    Job3(long time, Delegate d, CLAZZ c, T arg):IJob(time),d(d),arg(arg){}
+    
+    void operator()()
+    {
+        (c.*(d))(arg);
+    }
+};
+
+template <typename CLAZZ>
+class Job4 : public IJob
+{
+public:
+    typedef void (CLAZZ::*Runnable)();
+    Runnable r;
+    CLAZZ c;
+    long val;
+
+    Job4(long val, Runnable r, CLAZZ c):val(val),r(r), c(c){}
+
+    void operator()()
+    {
+        (c.*(r))();
+    }
+};
