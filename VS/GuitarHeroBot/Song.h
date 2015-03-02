@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "Collections/List.h"
 
 enum Instrument
 {
@@ -16,12 +17,21 @@ enum SongDifficulty
 	EXPERT
 };
 
+enum ButtonColor
+{
+	GREEN,
+	RED,
+	YELLOW,
+	BLUE,
+	ORANGE
+};
+
 class NoteEvent
 {
 public:
 	uint64_t timestamp;		// ticks since start of song
-	uint8_t key;			// button value, 0 (green) to 4 (orange)
-	uint8_t press;			// 1 if pressed, 0 if released
+	ButtonColor key;		// button value, 0 (green) to 4 (orange)
+	bool press;				// true if pressed, false if released
 };
 
 typedef List<NoteEvent> Song;

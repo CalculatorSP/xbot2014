@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     List<float> list;
     for (int i = 0; i < 20; i++)
     {
-        list.add(i*3%7);
+        list.add((float)(i*3%7));
     }
     
     for (int i = 0; i < 20; i++)

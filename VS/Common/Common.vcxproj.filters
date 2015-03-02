@@ -28,8 +28,8 @@
     <ClCompile Include="PSX\XboxController.cpp">
       <Filter>Source\PSX</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Capture.cpp">
-      <Filter>Source\Tests</Filter>
+    <ClCompile Include="Collections\collectionTest.cpp">
+      <Filter>Source\Collections</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +52,12 @@
       <Filter>Source\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Collections\FirFilter.h">
+      <Filter>Source\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Collections\Heap.h">
+      <Filter>Source\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Collections\List.h">
       <Filter>Source\Collections</Filter>
     </ClInclude>
   </ItemGroup>
