@@ -221,6 +221,11 @@
     <ClInclude Include="MidiParser.h" />
     <ClInclude Include="Song.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{556ba3aa-4a77-487c-9225-babe8efe501e}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

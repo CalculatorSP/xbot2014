@@ -6,7 +6,6 @@
 #define CAPCARD	(1)
 
 using namespace cv;
-using namespace std;
 
 int main(int argc, const char **argv)
 {
@@ -14,7 +13,7 @@ int main(int argc, const char **argv)
 
 	if (!cap.isOpened())
 	{
-		cerr << "Could not open capture device" << endl;
+		std::cerr << "Could not open capture device" << std::endl;
 		return -1;
 	}
 
