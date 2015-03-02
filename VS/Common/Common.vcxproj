@@ -154,7 +154,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Collections\collectionTest.cpp" />
     <ClCompile Include="PSX\PlaystationController.cpp" />
     <ClCompile Include="PSX\Serial.cpp" />
     <ClCompile Include="PSX\XboxController.cpp" />
@@ -169,6 +168,8 @@
     <ClInclude Include="PSX\PlaystationController.h" />
     <ClInclude Include="PSX\Serial.h" />
     <ClInclude Include="PSX\XboxController.h" />
+    <ClInclude Include="Task\Job.h" />
+    <ClInclude Include="Task\Scheduler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

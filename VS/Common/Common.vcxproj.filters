@@ -17,6 +17,9 @@
     <Filter Include="Source\Collections">
       <UniqueIdentifier>{7f7ad9bb-1994-40d9-a0fc-db50ae0e3e3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Task">
+      <UniqueIdentifier>{2e72c028-de50-4acf-8215-8d0a24d911ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PSX\Serial.cpp">
@@ -27,9 +30,6 @@
     </ClCompile>
     <ClCompile Include="PSX\XboxController.cpp">
       <Filter>Source\PSX</Filter>
-    </ClCompile>
-    <ClCompile Include="Collections\collectionTest.cpp">
-      <Filter>Source\Collections</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +59,12 @@
     </ClInclude>
     <ClInclude Include="Collections\List.h">
       <Filter>Source\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Task\Job.h">
+      <Filter>Source\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="Task\Scheduler.h">
+      <Filter>Source\Task</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

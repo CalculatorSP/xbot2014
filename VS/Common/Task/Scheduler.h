@@ -1,11 +1,10 @@
 #pragma once
 
-#include <sys/time.h>
-#include <unistd.h>
-
-
-#include "Common/Collections/Heap.h"
+#include "Collections/Heap.h"
 #include "Job.h"
+
+#include <time.h>
+#include <Windows.h>
 
 int shouldSwap(IJob* parent, IJob* child)
 {
@@ -26,7 +25,7 @@ public:
     long getTime()
     {
         struct timeval tp;
-        gettimeofday(&tp, NULL);
+        gettimeofday(&tp);
         long int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000; //get current timestamp in milliseconds
         return ms;
     }
@@ -84,11 +83,32 @@ public:
         IJob* j = jobs.pop();
         long time = j->time - getTime();
         if (time >= 0)
-            usleep(time * 1000);
+            Sleep(time);
 
         j->operator()();
         delete j;
         return true;
     }
-};
 
+	static int gettimeofday(struct timeval *tv)
+	{
+		FILETIME ft;
+		unsigned __int64 tmpres = 0;
+
+		if (tv != NULL)
+		{
+			GetSystemTimeAsFileTime(&ft);
+
+			tmpres |= ft.dwHighDateTime;
+			tmpres <<= 32;
+			tmpres |= ft.dwLowDateTime;
+
+			tmpres /= 10;
+
+			tv->tv_sec = (long)(tmpres / 1000000UL);
+			tv->tv_usec = (long)(tmpres % 1000000UL);
+		}
+
+		return 0;
+	}
+};
