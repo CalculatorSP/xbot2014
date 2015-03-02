@@ -57,12 +57,15 @@ class Heap
         int done = false;
         while (!done)
         {
-            if (compare(data[(cur-1)/2], data[cur]))
+            int parent = (cur-1)/2;
+            if (parent == cur)
+                break;
+            if (compare(data[parent], data[cur]))
             {
                 T tmp = data[cur];
-                data[cur] = data[(cur-1)/2];
-                data[(cur-1)/2] = tmp;
-                cur = (cur-1)/2;
+                data[cur] = data[parent];
+                data[parent] = tmp;
+                cur = parent;
             }
             else
             {
@@ -77,9 +80,6 @@ class Heap
     
     T pop()
     {
-        if (size == 0)
-            return (T)0; //Well this should be fun...
-        
         T val = data[0];
         data[0] = data[--size];
         
