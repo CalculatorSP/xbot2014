@@ -17,8 +17,8 @@ class Scheduler
 public:
     Heap<IJob*> jobs;
     
-    Scheduler(int maxJobs)
-        :jobs(maxJobs, shouldSwap)
+    Scheduler()
+        :jobs(shouldSwap)
     {
         
     }
@@ -126,9 +126,8 @@ public:
     
     bool run()
     {
-        if (jobs.size == 0)
+        if (jobs.data.size == 0)
             return false;
-        
         IJob* j = jobs.pop();
         long time = j->time - getTime();
         if (time >= 0)

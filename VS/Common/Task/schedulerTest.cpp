@@ -34,7 +34,7 @@ public:
 
 int main(int argc, char** argv)
 {
-    Scheduler tasks(100);
+    Scheduler tasks;
     
     tasks.post(print);
     
