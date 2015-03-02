@@ -3,13 +3,14 @@
 #include "MidiParser.h"
 #include <iostream>
 #include <Windows.h>
+#include "PSX/XboxController.h"
 
 #define WEBCAM	(0)
 #define CAPCARD	(1)
 
 //using namespace cv;
 
-const char* filename = "C:/Users/John/Source/Repos/xbot2014/VS/GuitarHeroBot/songs/Slow Ride.mid";
+const char* filename = "C:/Users/John/Source/Repos/xbot2014/VS/GuitarHeroBot/songs/Story of My Life.mid";
 
 int main(int argc, const char **argv)
 {
@@ -21,6 +22,8 @@ int main(int argc, const char **argv)
 	//	return -1;
 	//}
 
+	XboxController xboxController("COM4");
+
 	Song* song = MidiParser::parseMidi(filename, GUITAR, EXPERT);
 	if (song == NULL)
 	{
@@ -28,25 +31,54 @@ int main(int argc, const char **argv)
 		return -1;
 	}
 
-	Scheduler scheduler(100000);
+	Scheduler scheduler;
+	int foo;
+	scanf_s("%d", &foo);
 
+	long millisOffset = scheduler.getTime();
 	for (int i = 0; i < song->size; ++i)
 	{
-		scheduler.
+		switch ((*song)[i].key)
+		{
+		case GREEN:
+			if ((*song)[i].press)
+				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::press, &xboxController, XboxController::LT_D);
+			else
+				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::release, &xboxController, XboxController::LT_D);
+			break;
+		case RED:
+			if ((*song)[i].press)
+				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::press, &xboxController, XboxController::LB);
+			else
+				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::release, &xboxController, XboxController::LB);
+			break;
+		case YELLOW:
+			if ((*song)[i].press)
+				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::press, &xboxController, XboxController::RB);
+			else
+				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::release, &xboxController, XboxController::RB);
+			break;
+		case BLUE:
+			if ((*song)[i].press)
+				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::press, &xboxController, XboxController::RT_D);
+			else
+				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::release, &xboxController, XboxController::RT_D);
+			break;
+		case ORANGE:
+			if ((*song)[i].press)
+				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::press, &xboxController, XboxController::A);
+			else
+				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::release, &xboxController, XboxController::A);
+			break;
+		default:
+			break;
+		}
+
+		scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000) + 1, &XboxController::sendState, &xboxController, 3);
 	}
 
-	//Mat frame;
-	//cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
-
-	//for (;;)
-	//{
-	//	cap >> frame;
-	//	if (frame.empty())
-	//		continue;
-	//	imshow("result", frame);
-	//	if (waitKey(30) == 27)
-	//		break;
-	//}
+	while (scheduler.run())
+		printf("foo\n");
 
 	return 0;
 }

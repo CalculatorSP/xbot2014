@@ -66,8 +66,9 @@ void XboxController::reset()
 	_playstationController.state.physical.b_R2 = 0;
 }
 
-void XboxController::sendState(int framecount) const
+void XboxController::sendState(int framecount)
 {
+	printf("xbox send\n");
 	// Send the data to the device
 	_playstationController.sendState(framecount);
 }

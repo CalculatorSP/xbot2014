@@ -46,7 +46,7 @@ public:
     }
     
     template <typename CLAZZ, typename T>
-    void post(typename Job3<CLAZZ, T>::Delegate d, CLAZZ c, T arg)
+    void post(typename Job3<CLAZZ, T>::Delegate d, CLAZZ* c, T arg)
     {
         long ms = getTime();
         Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(ms, d, c, arg);
@@ -54,7 +54,7 @@ public:
     }
     
     template <typename CLAZZ, typename T>
-    void post(typename Job4<CLAZZ>::Delegate d, CLAZZ c)
+    void post(typename Job4<CLAZZ>::Delegate d, CLAZZ* c)
     {
         long ms = getTime();
         Job4<CLAZZ>* j = new Job4<CLAZZ>(ms, d, c);
@@ -77,7 +77,7 @@ public:
     }
     
     template <typename CLAZZ, typename T>
-    void postDelayed(long millisDelay, typename Job3<CLAZZ, T>::Delegate d, CLAZZ c, T arg)
+    void postDelayed(long millisDelay, typename Job3<CLAZZ, T>::Delegate d, CLAZZ* c, T arg)
     {
         long ms = getTime() + millisDelay;
         Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(ms, d, c, arg);
@@ -85,7 +85,7 @@ public:
     }
     
     template <typename CLAZZ, typename T>
-    void postDelayed(long millisDelay, typename Job4<CLAZZ>::Delegate d, CLAZZ c)
+    void postDelayed(long millisDelay, typename Job4<CLAZZ>::Delegate d, CLAZZ* c)
     {
         long ms = getTime() + millisDelay;
         Job4<CLAZZ>* j = new Job4<CLAZZ>(ms, d, c);
@@ -108,7 +108,7 @@ public:
     }
     
     template <typename CLAZZ, typename T>
-    void postAtTime(long time, typename Job3<CLAZZ, T>::Delegate d, CLAZZ c, T arg)
+    void postAtTime(long time, typename Job3<CLAZZ, T>::Delegate d, CLAZZ* c, T arg)
     {
         long ms = time;
         Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(ms, d, c, arg);
@@ -116,7 +116,7 @@ public:
     }
     
     template <typename CLAZZ, typename T>
-    void postAtTime(long time, typename Job4<CLAZZ>::Delegate d, CLAZZ c)
+    void postAtTime(long time, typename Job4<CLAZZ>::Delegate d, CLAZZ* c)
     {
         long ms = time;
         Job4<CLAZZ>* j = new Job4<CLAZZ>(ms, d, c);

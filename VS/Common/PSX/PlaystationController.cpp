@@ -17,6 +17,7 @@ void PlaystationController::reset()
 
 void PlaystationController::sendState(int framecount) const
 {
+	printf("bar\n");
 	char serialString[PACKET_SIZE];
 	char miniString[3];
 

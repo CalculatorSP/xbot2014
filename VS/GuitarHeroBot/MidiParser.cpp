@@ -77,7 +77,7 @@ Song* MidiParser::parseMidi(const char* filename, Instrument instrument, SongDif
 				noteEvent.key = YELLOW;
 			else if (cmd == _blueButton[difficulty])
 				noteEvent.key = BLUE;
-			else if (cmd == _blueButton[difficulty])
+			else if (cmd == _orangeButton[difficulty])
 				noteEvent.key = ORANGE;
 			else
 				goodEvent = false;

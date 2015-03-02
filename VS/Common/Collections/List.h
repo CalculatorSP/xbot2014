@@ -1,3 +1,5 @@
+#pragma once
+
 template <typename T>
 class List
 {
@@ -9,12 +11,12 @@ public:
     List()
     :capacity(10), size(0)
     {
-        data = new T[capacity];
+        data = (T*)malloc(capacity * sizeof(T));
     }
     
     ~List()
     {
-        delete[] data;
+        free(data);
     }
     
     T& operator[](int i)
@@ -32,10 +34,10 @@ public:
         if (size == capacity)
         {
             capacity *= 2;
-            T* newData = new T[capacity];
+            T* newData = (T*)malloc(capacity * sizeof(T));
             for (int i = 0; i < size; i++)
                 newData[i] = data[i];
-            delete[] data;
+            free(data);
             data = newData;
         }
         data[size++] = val;
