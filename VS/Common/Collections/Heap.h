@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+#include "List.h"
+
 template <typename T>
 class Heap
 {
@@ -9,21 +11,12 @@ class Heap
 
     public:
     
-    int capacity;
-    int size;
-    T* data;
+    List<T> data;
     ShouldSwap compare;
 
-    Heap(int maxSize, ShouldSwap swap)
-    :capacity(maxSize), size(0)
+    Heap(ShouldSwap swap)
     {
-        data = new T[maxSize];
         compare = swap;
-    }
-    
-    ~Heap()
-    {
-        delete[] data;
     }
     
     T operator[](int i)
@@ -38,7 +31,7 @@ class Heap
     
     int isValid()
     {
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < data.size; i++)
         {
             if (compare(data[(i-1)/2], data[i]))
                 return false;
@@ -48,11 +41,8 @@ class Heap
     
     int push(T t)
     {
-        if (size >= capacity)
-            return false;
-        
-        int cur = size;
-        data[size++] = t;
+        int cur = data.size;
+        data.add(t);
         
         int done = false;
         while (!done)
@@ -81,7 +71,8 @@ class Heap
     T pop()
     {
         T val = data[0];
-        data[0] = data[--size];
+        data[0] = data[data.size-1];
+        data.remove(data.size-1);
         
         int cur = 0;
         bool done = false;
@@ -91,9 +82,9 @@ class Heap
             int right = cur * 2 + 2;
             int next;
             
-            bool leftVsCur = left < size && compare(data[cur],data[left]);
-            bool rightVsCur = right < size && compare(data[cur],data[right]);
-            bool leftVsRight = left < size && right < size && compare(data[left],data[right]);
+            bool leftVsCur = left < data.size && compare(data[cur],data[left]);
+            bool rightVsCur = right < data.size && compare(data[cur],data[right]);
+            bool leftVsRight = left < data.size && right < data.size && compare(data[left],data[right]);
             
             if (!leftVsCur && !rightVsCur)
             {

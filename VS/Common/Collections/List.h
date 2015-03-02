@@ -17,7 +17,7 @@ public:
         delete[] data;
     }
     
-    T operator[](int i)
+    T& operator[](int i)
     {
         return data[i];
     }
