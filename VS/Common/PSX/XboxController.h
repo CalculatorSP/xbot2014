@@ -63,14 +63,12 @@ public:
 	// Presses specified button. Must manually call sendState() to see the effect
 	inline void press(XboxButton button)
 	{
-		printf("press\n");
 		set(button, true);
 	}
 
 	// Releases specified button. Must manually call sendState() to see the effect
 	inline void release(XboxButton button)
 	{
-		printf("release\n");
 		set(button, false);
 	}
 

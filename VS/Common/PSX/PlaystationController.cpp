@@ -17,9 +17,11 @@ void PlaystationController::reset()
 
 void PlaystationController::sendState(int framecount) const
 {
-	printf("bar\n");
 	char serialString[PACKET_SIZE];
 	char miniString[3];
+	FILE* fp;
+	if (fopen_s(&fp, "C:/Users/John/Desktop/xbot.txt", "a"))
+		return;
 
 	serialString[0] = 'c';	// Controller update instruction
 	serialString[1] = '0' + framecount;	// Hold for specified number of frames
@@ -32,4 +34,8 @@ void PlaystationController::sendState(int framecount) const
 	serialString[PACKET_SIZE - 1] = '\n';	// Separator
 
 	_serialPort.write((uint8_t *)serialString, sizeof(serialString));
+
+	fwrite(serialString, PACKET_SIZE, 1, fp);
+
+	fclose(fp);
 }

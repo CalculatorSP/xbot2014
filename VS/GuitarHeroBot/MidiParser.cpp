@@ -36,10 +36,12 @@ Song* MidiParser::parseMidi(const char* filename, Instrument instrument, SongDif
 
 	// Parse instrument track
 	long endPos = ftell(fp) + trackLen;
+	uint64_t lastUsedTimestamp = 0;
 	while (ftell(fp) < endPos)
 	{
 		// Update running timestamp
-		currentTimestamp += (uint64_t)_readVariableLen(fp) * microsPerTick;
+		uint64_t deltaTime = (uint64_t)(_readVariableLen(fp)) * microsPerTick;
+		currentTimestamp += deltaTime;
 		uint8_t cmd;
 		fread_s(&cmd, 1, 1, 1, fp);
 
@@ -52,7 +54,8 @@ Song* MidiParser::parseMidi(const char* filename, Instrument instrument, SongDif
 		else
 		{
 			NoteEvent noteEvent;
-			noteEvent.timestamp = currentTimestamp;
+			noteEvent.timestamp = currentTimestamp - 500;	// Make sure PREPARE happens before ACTUATE
+			noteEvent.type = PREPARE;
 			bool goodEvent = true;
 
 			// Check if button is pressed or released
@@ -83,7 +86,22 @@ Song* MidiParser::parseMidi(const char* filename, Instrument instrument, SongDif
 				goodEvent = false;
 
 			if (goodEvent)
+			{
+				// If we have a new timestamp, we need to have an actuation of the previous note
+				if (currentTimestamp > lastUsedTimestamp)
+				{
+					NoteEvent actuateEvent;
+					actuateEvent.timestamp = lastUsedTimestamp;
+					actuateEvent.type = ACTUATE;
+					actuateEvent.key = GREEN;
+					actuateEvent.press = false;
+
+					song->add(actuateEvent);
+					lastUsedTimestamp = currentTimestamp;
+				}
+
 				song->add(noteEvent);
+			}
 
 			// Skip velocity
 			fseek(fp, 1, SEEK_CUR);

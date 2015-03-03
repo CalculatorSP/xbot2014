@@ -35,50 +35,53 @@ int main(int argc, const char **argv)
 	int foo;
 	scanf_s("%d", &foo);
 
-	long millisOffset = scheduler.getTime();
+	uint64_t microsOffset = scheduler.getTime();
 	for (int i = 0; i < song->size; ++i)
 	{
-		switch ((*song)[i].key)
+		if ((*song)[i].type == PREPARE)
 		{
-		case GREEN:
-			if ((*song)[i].press)
-				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::press, &xboxController, XboxController::LT_D);
-			else
-				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::release, &xboxController, XboxController::LT_D);
-			break;
-		case RED:
-			if ((*song)[i].press)
-				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::press, &xboxController, XboxController::LB);
-			else
-				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::release, &xboxController, XboxController::LB);
-			break;
-		case YELLOW:
-			if ((*song)[i].press)
-				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::press, &xboxController, XboxController::RB);
-			else
-				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::release, &xboxController, XboxController::RB);
-			break;
-		case BLUE:
-			if ((*song)[i].press)
-				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::press, &xboxController, XboxController::RT_D);
-			else
-				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::release, &xboxController, XboxController::RT_D);
-			break;
-		case ORANGE:
-			if ((*song)[i].press)
-				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::press, &xboxController, XboxController::A);
-			else
-				scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000), &XboxController::release, &xboxController, XboxController::A);
-			break;
-		default:
-			break;
+			switch ((*song)[i].key)
+			{
+			case GREEN:
+				if ((*song)[i].press)
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxController::LT_D);
+				else
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxController::LT_D);
+				break;
+			case RED:
+				if ((*song)[i].press)
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxController::LB);
+				else
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxController::LB);
+				break;
+			case YELLOW:
+				if ((*song)[i].press)
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxController::RB);
+				else
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxController::RB);
+				break;
+			case BLUE:
+				if ((*song)[i].press)
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxController::RT_D);
+				else
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxController::RT_D);
+				break;
+			case ORANGE:
+				if ((*song)[i].press)
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxController::A);
+				else
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxController::A);
+				break;
+			default:
+				break;
+			}
 		}
+		else
+			scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::sendState, &xboxController, 3);
 
-		scheduler.postAtTime((long)(millisOffset + (*song)[i].timestamp / 1000) + 1, &XboxController::sendState, &xboxController, 3);
 	}
 
-	while (scheduler.run())
-		printf("foo\n");
+	while (scheduler.run());
 
 	return 0;
 }

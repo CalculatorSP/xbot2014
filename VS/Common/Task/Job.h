@@ -1,10 +1,12 @@
 #pragma once
 
+#include <stdint.h>
+
 class IJob
 {
     public:
-    long time;
-    IJob(long time):time(time){}
+    uint64_t time;
+    IJob(uint64_t time):time(time){}
     virtual ~IJob(){}
     virtual void operator()() = 0;
 };
@@ -15,7 +17,7 @@ public:
     typedef void (*Runnable)();
     Runnable r;
     
-    Job(long time, Runnable r)
+    Job(uint64_t time, Runnable r)
     :IJob(time), r(r){}
     
     void operator()()
@@ -32,7 +34,7 @@ public:
     Delegate d;
     T arg;
     
-    Job2(long time, Delegate d, T arg):IJob(time),d(d),arg(arg){}
+    Job2(uint64_t time, Delegate d, T arg):IJob(time),d(d),arg(arg){}
     
     void operator()()
     {
@@ -49,7 +51,7 @@ public:
     CLAZZ* c;
     T arg;
     
-    Job3(long time, Delegate d, CLAZZ* c, T arg):IJob(time),d(d),c(c),arg(arg){}
+    Job3(uint64_t time, Delegate d, CLAZZ* c, T arg):IJob(time),d(d),c(c),arg(arg){}
     
     void operator()()
     {

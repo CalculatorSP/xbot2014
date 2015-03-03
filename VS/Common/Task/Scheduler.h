@@ -22,104 +22,100 @@ public:
         
     }
     
-    long getTime()
+    uint64_t getTime()
     {
         struct timeval tp;
         gettimeofday(&tp);
-        long int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000; //get current timestamp in milliseconds
-        return ms;
+        uint64_t us = (uint64_t)(tp.tv_sec) * 1000000 + (uint64_t)tp.tv_usec; //get current timestamp in microseconds
+        return us;
     }
     
     void post(Job::Runnable d)
     {
-        long ms = getTime();
-        Job* j = new Job(ms,d);
+        uint64_t us = getTime();
+        Job* j = new Job(us,d);
         jobs.push(j);
     }
     
     template <typename T>
     void post(typename Job2<T>::Delegate d, T arg)
     {
-        long ms = getTime();
-        Job2<T>* j = new Job2<T>(ms, d, arg);
+        uint64_t us = getTime();
+        Job2<T>* j = new Job2<T>(us, d, arg);
         jobs.push(j);
     }
     
     template <typename CLAZZ, typename T>
     void post(typename Job3<CLAZZ, T>::Delegate d, CLAZZ* c, T arg)
     {
-        long ms = getTime();
-        Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(ms, d, c, arg);
+        uint64_t us = getTime();
+        Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(us, d, c, arg);
         jobs.push(j);
     }
     
     template <typename CLAZZ, typename T>
     void post(typename Job4<CLAZZ>::Delegate d, CLAZZ* c)
     {
-        long ms = getTime();
-        Job4<CLAZZ>* j = new Job4<CLAZZ>(ms, d, c);
+        uint64_t us = getTime();
+        Job4<CLAZZ>* j = new Job4<CLAZZ>(us, d, c);
         jobs.push(j);
     }
     
-    void postDelayed(long millisDelay, Job::Runnable d)
+    void postDelayed(uint64_t microsDelay, Job::Runnable d)
     {
-        long ms = getTime() + millisDelay;
-        Job* j = new Job(ms, d);
+        uint64_t us = getTime() + microsDelay;
+        Job* j = new Job(us, d);
         jobs.push(j);
     }
     
     template <typename T>
-    void postDelayed(long millisDelay, typename Job2<T>::Delegate d, T arg)
+    void postDelayed(uint64_t microsDelay, typename Job2<T>::Delegate d, T arg)
     {
-        long ms = getTime() + millisDelay;
-        Job2<T>* j = new Job2<T>(ms, d, arg);
+		uint64_t us = getTime() + microsDelay;
+		Job2<T>* j = new Job2<T>(us, d, arg);
         jobs.push(j);
     }
     
     template <typename CLAZZ, typename T>
-    void postDelayed(long millisDelay, typename Job3<CLAZZ, T>::Delegate d, CLAZZ* c, T arg)
+    void postDelayed(uint64_t microsDelay, typename Job3<CLAZZ, T>::Delegate d, CLAZZ* c, T arg)
     {
-        long ms = getTime() + millisDelay;
-        Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(ms, d, c, arg);
+		uint64_t us = getTime() + microsDelay;
+		Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(us, d, c, arg);
         jobs.push(j);
     }
     
     template <typename CLAZZ, typename T>
-    void postDelayed(long millisDelay, typename Job4<CLAZZ>::Delegate d, CLAZZ* c)
+    void postDelayed(uint64_t microsDelay, typename Job4<CLAZZ>::Delegate d, CLAZZ* c)
     {
-        long ms = getTime() + millisDelay;
-        Job4<CLAZZ>* j = new Job4<CLAZZ>(ms, d, c);
+		uint64_t us = getTime() + microsDelay;
+		Job4<CLAZZ>* j = new Job4<CLAZZ>(us, d, c);
         jobs.push(j);
     }
     
-    void postAtTime(long time, Job::Runnable d)
+    void postAtTime(uint64_t time, Job::Runnable d)
     {
-        long ms = time;
         Job* j = new Job(time, d);
         jobs.push(j);
     }
     
     template <typename T>
-    void postAtTime(long time, typename Job2<T>::Delegate d, T arg)
+    void postAtTime(uint64_t time, typename Job2<T>::Delegate d, T arg)
     {
-        long ms = time;
-        Job2<T>* j = new Job2<T>(ms, d, arg);
+        Job2<T>* j = new Job2<T>(time, d, arg);
         jobs.push(j);
     }
     
     template <typename CLAZZ, typename T>
-    void postAtTime(long time, typename Job3<CLAZZ, T>::Delegate d, CLAZZ* c, T arg)
+    void postAtTime(uint64_t time, typename Job3<CLAZZ, T>::Delegate d, CLAZZ* c, T arg)
     {
-        long ms = time;
-        Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(ms, d, c, arg);
+        Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(time, d, c, arg);
         jobs.push(j);
     }
     
     template <typename CLAZZ, typename T>
-    void postAtTime(long time, typename Job4<CLAZZ>::Delegate d, CLAZZ* c)
+    void postAtTime(uint64_t time, typename Job4<CLAZZ>::Delegate d, CLAZZ* c)
     {
-        long ms = time;
-        Job4<CLAZZ>* j = new Job4<CLAZZ>(ms, d, c);
+        Job4<CLAZZ>* j = new Job4<CLAZZ>(time, d, c);
         jobs.push(j);
     }
     
@@ -128,9 +124,8 @@ public:
         if (jobs.data.size == 0)
             return false;
         IJob* j = jobs.pop();
-        long time = j->time - getTime();
-        if (time >= 0)
-            Sleep(time);
+
+        while (getTime() < j->time);
 
         j->operator()();
         delete j;
