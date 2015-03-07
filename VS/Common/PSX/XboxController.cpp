@@ -68,6 +68,32 @@ void XboxController::reset()
 
 void XboxController::sendState(int framecount)
 {
+	//bool press = false;
+	//if (_playstationController.state.physical.p_L2 == 0xFF)
+	//{
+	//	printf("G");
+	//	press = true;
+	//}
+	//if (_playstationController.state.physical.b_L1 == 0)
+	//{
+	//	printf("R");
+	//	press = true;
+	//}	if (_playstationController.state.physical.b_R1 == 0)
+	//{
+	//	printf("Y");
+	//	press = true;
+	//}	if (_playstationController.state.physical.p_R2 == 0xFF)
+	//{
+	//	printf("B");
+	//	press = true;
+	//}	if (_playstationController.state.physical.b_CROSS == 0)
+	//{
+	//	printf("O");
+	//	press = true;
+	//}
+	//if (press)
+	//	printf("\n");
+
 	// Send the data to the device
 	_playstationController.sendState(framecount);
 }

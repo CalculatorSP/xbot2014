@@ -125,7 +125,8 @@ public:
             return false;
         IJob* j = jobs.pop();
 
-        while (getTime() < j->time);
+		//printf("%lld\n", j->time - getTime());
+		while (getTime() < j->time);
 
         j->operator()();
         delete j;

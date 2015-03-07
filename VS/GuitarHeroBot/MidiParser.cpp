@@ -54,7 +54,6 @@ Song* MidiParser::parseMidi(const char* filename, Instrument instrument, SongDif
 		else
 		{
 			NoteEvent noteEvent;
-			noteEvent.timestamp = currentTimestamp - 500;	// Make sure PREPARE happens before ACTUATE
 			noteEvent.type = PREPARE;
 			bool goodEvent = true;
 
@@ -70,6 +69,11 @@ Song* MidiParser::parseMidi(const char* filename, Instrument instrument, SongDif
 				fread_s(&cmd, 1, 1, 1, fp);
 			}
 			noteEvent.press = press;
+
+			if (press)
+				noteEvent.timestamp = currentTimestamp - 250;	// PREPARE needs to happen before ACTUATE
+			else
+				noteEvent.timestamp = currentTimestamp - 750;	// Release needs to happen before press
 			
 			// Get key based on difficulty
 			if (cmd == _greenButton[difficulty])
@@ -88,16 +92,16 @@ Song* MidiParser::parseMidi(const char* filename, Instrument instrument, SongDif
 			if (goodEvent)
 			{
 				// If we have a new timestamp, we need to have an actuation of the previous note
-				if (currentTimestamp > lastUsedTimestamp)
+				if (noteEvent.timestamp > lastUsedTimestamp)
 				{
 					NoteEvent actuateEvent;
-					actuateEvent.timestamp = lastUsedTimestamp;
+					actuateEvent.timestamp = lastUsedTimestamp + 250;
 					actuateEvent.type = ACTUATE;
 					actuateEvent.key = GREEN;
 					actuateEvent.press = false;
 
 					song->add(actuateEvent);
-					lastUsedTimestamp = currentTimestamp;
+					lastUsedTimestamp = noteEvent.timestamp;
 				}
 
 				song->add(noteEvent);

@@ -10,7 +10,7 @@
 
 //using namespace cv;
 
-const char* filename = "C:/Users/John/Source/Repos/xbot2014/VS/GuitarHeroBot/songs/Story of My Life.mid";
+const char* filename = "C:/Users/John/Source/Repos/xbot2014/VS/GuitarHeroBot/songs/Holiday In Cambodia.mid";
 
 int main(int argc, const char **argv)
 {
