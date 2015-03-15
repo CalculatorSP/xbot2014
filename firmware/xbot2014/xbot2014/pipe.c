@@ -109,7 +109,7 @@ uint8_t pipe_isFull(pipe_t *self)
     {
         tmp_write_to = self->write_to + self->elt_size;
         if (tmp_write_to >= self->total_size)
-            tmp_write_to = 0;
+            self->write_to = 0;
         
         retval = (tmp_write_to == self->read_from);
     }
