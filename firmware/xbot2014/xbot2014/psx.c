@@ -32,6 +32,10 @@
 #define PSX_MISO (PB3)
 #define PSX_ACK  (PB7)
 
+#define LED_CONFIG	(DDRD |= (1<<6))
+#define LED_OFF		(PORTD &= ~(1<<6))
+#define LED_ON		(PORTD |= (1<<6))
+
 
 /***********************************************************************
  *
@@ -74,11 +78,11 @@ static uint8_t packet_byteset[7] =
 static volatile uint8_t devicemode = PSX_MODE_DIGITAL;
 
 // Current intensity of rumble motors
-static volatile uint8_t rumble0_val = 0x00;
-static volatile uint8_t rumble1_val = 0x00;
+//static volatile uint8_t rumble0_val = 0x00;
+//static volatile uint8_t rumble1_val = 0x00;
 
 // Track whether polling data is new
-static volatile uint8_t new_data = 0;
+//static volatile uint8_t new_data = 0;
 
 // Keep track of which packet we are sending, and how many bytes are in it
 static uint8_t state = PSX_STATE_HEADER;
@@ -91,10 +95,10 @@ static uint8_t bytenum = 0;
 static uint8_t const_num = 0x00;
 
 // Controller data to send (send empty data until we hear from PC)
-static uint8_t packet_poll[19];
+static uint8_t packet_poll[20];
 
 // Buffer for controller instructions (to go in pipe)
-static uint8_t controller_buffer[CONTROLLER_BUFSIZE][19];
+static uint8_t controller_buffer[CONTROLLER_BUFSIZE][20];
 
 // FIFO pipe for pending instructions
 static pipe_t controller_pipe;
@@ -127,10 +131,11 @@ void psx_setup(void)
     SPCR |= (1<<CPHA); // Clock polarity inverted
     
     // Initialize pipe
-    pipe_init(&controller_pipe, controller_buffer, 19, CONTROLLER_BUFSIZE);
+    pipe_init(&controller_pipe, controller_buffer, 20, CONTROLLER_BUFSIZE);
     
     // Set initial instruction
     memcpy(packet_poll, packet_poll_default, 19);
+    packet_poll[19] = 3;
     
     // Enable global interrupts
     sei();
@@ -144,45 +149,45 @@ uint8_t psx_deposit(const uint8_t *instr)
     return 1;
 }
 
-const uint8_t *psx_get_default(void)
-{
-    return packet_poll_default;
-}
+//const uint8_t *psx_get_default(void)
+//{
+//    return packet_poll_default;
+//}
 
-uint8_t psx_get_devicemode(void)
-{
-    uint8_t retval;
-    
-    // Ensure atomicity to avoid conflicts
-    SPCR &= ~(1<<SPIE);
-    retval = devicemode;
-    SPCR |= (1<<SPIE);
-    
-    return retval;
-}
+//uint8_t psx_get_devicemode(void)
+//{
+//    uint8_t retval;
+//    
+//    // Ensure atomicity to avoid conflicts
+//    SPCR &= ~(1<<SPIE);
+//    retval = devicemode;
+//    SPCR |= (1<<SPIE);
+//    
+//    return retval;
+//}
 
-uint8_t psx_get_rumble(uint16_t *rum)
-{
-    uint8_t retval;
-    
-    // Ensure atomicity to avoid conflicts
-    SPCR &= ~(1<<SPIE);
-    
-    if (rum != NULL)
-        *rum = (((uint16_t)rumble1_val)<<8) | (uint16_t)rumble0_val;
-    
-    if (new_data)
-    {
-        new_data = 0;
-        retval = 1;
-    }
-    else
-        retval = 0;
-    
-    SPCR |= (1<<SPIE);
-    
-    return retval;
-}
+//uint8_t psx_get_rumble(uint16_t *rum)
+//{
+//    uint8_t retval;
+//    
+//    // Ensure atomicity to avoid conflicts
+//    SPCR &= ~(1<<SPIE);
+//    
+//    if (rum != NULL)
+//        *rum = (((uint16_t)rumble1_val)<<8) | (uint16_t)rumble0_val;
+//    
+//    if (new_data)
+//    {
+//        new_data = 0;
+//        retval = 1;
+//    }
+//    else
+//        retval = 0;
+//    
+//    SPCR |= (1<<SPIE);
+//    
+//    return retval;
+//}
 
 
 /***********************************************************************
@@ -222,6 +227,7 @@ static inline void handle_next_spi_byte(void)
                 }
                 else // Not a start of packet
                 {
+                    //LED_ON;
                     SPDR = 0xFF;
                     state = PSX_STATE_HEADER;
                     bytenum = 0;
@@ -259,6 +265,7 @@ static inline void handle_next_spi_byte(void)
                 }
                 else // Got a config-only command while not in config mode
                 {
+                    //LED_ON;
                     SPDR = 0xFF;
                     state = PSX_STATE_HEADER;
                     bytenum = 0;
@@ -281,20 +288,23 @@ static inline void handle_next_spi_byte(void)
         // Main polling command
         case (PSX_STATE_POLL):
             SPDR = packet_poll[bytenum];
-            if (bytenum > 0 && bytenum < sizeof(packet_vibrate))
-            {
-                if (packet_vibrate[bytenum-1] == 0x00)
-                    rumble0_val = command;
-                else if (packet_vibrate[bytenum-1] == 0x01)
-                    rumble1_val = command;
-            }
+//            if (bytenum > 0 && bytenum < sizeof(packet_vibrate))
+//            {
+//                if (packet_vibrate[bytenum-1] == 0x00)
+//                    rumble0_val = command;
+//                else if (packet_vibrate[bytenum-1] == 0x01)
+//                    rumble1_val = command;
+//            }
             if (bytenum == length_to_send)
             {
-                new_data = 1;
+                //new_data = 1;
                 
                 // If controller instructions are pending, go to next one. Otherwise, resend
                 // the previous one.
-                pipe_read(&controller_pipe, packet_poll);
+                if (packet_poll[19] > 1)
+                    packet_poll[19]--;
+                else
+                    pipe_read(&controller_pipe, packet_poll);
             }
             break;
             
@@ -376,6 +386,7 @@ static inline void handle_next_spi_byte(void)
             
         // Bad state, just reset
         default:
+            //LED_ON;
             SPDR = 0xFF;
             state = PSX_STATE_HEADER;
             bytenum = 0;

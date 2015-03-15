@@ -57,8 +57,8 @@ int main(void)
         usb_serial_flush_input();
         
         // Indicate ready
-        usb_serial_putchar('r');
-        usb_serial_putchar('\n');
+        //usb_serial_putchar('r');
+        //usb_serial_putchar('\n');
         
         // Listen for commands and process them
         while (1)
@@ -69,7 +69,7 @@ int main(void)
             // Check for missing delimeter
             if (n == BUFFER_SIZE)
             {
-                LED_ON;
+                //LED_ON;
                 usb_serial_putchar('d');
                 usb_serial_putchar(':');
                 for (uint8_t i = 0; i < BUFFER_SIZE; ++i)
@@ -166,12 +166,11 @@ uint8_t recv_str(char *buf, uint8_t size)
 
 void parse_and_execute_command(const char *buf)
 {
-    uint8_t instr[19];
-    int instr_count = 0;
+    uint8_t instr[20];
     
     if (strlen(buf) != PACKET_SIZE)
     {
-        LED_ON;
+        //LED_ON;
         // Size error
         usb_serial_putchar('s');
         usb_serial_putchar(':');
@@ -187,10 +186,10 @@ void parse_and_execute_command(const char *buf)
         // Controller instruction: deposit in PSX
         case 'c':
             // Second character determines how many times to deposit instr
-            instr_count = buf[1] - '0';
+            instr[19] = buf[1] - '0';
             
             // Parse string into uint8_t's
-            for (int i = 0; i < sizeof(instr)-1; ++i)
+            for (int i = 0; i < sizeof(instr)-2; ++i)
             {
                 char c = buf[(i+1)<<1];
                 if (c >= '0' && c <= '9')
@@ -201,7 +200,7 @@ void parse_and_execute_command(const char *buf)
                     instr[i] = (c - 'a' + 0xA) << 4;
                 else
                 {
-                    LED_ON;
+                    //LED_ON;
                     // Parse error
                     usb_serial_putchar('p');
                     usb_serial_putchar(':');
@@ -220,7 +219,7 @@ void parse_and_execute_command(const char *buf)
                     instr[i] |= (c - 'a' + 0xA);
                 else
                 {
-                    LED_ON;
+                    //LED_ON;
                     // Parse error
                     usb_serial_putchar('p');
                     usb_serial_putchar(':');
@@ -234,18 +233,15 @@ void parse_and_execute_command(const char *buf)
             // Last byte is always 0xFF
             instr[18] = 0xFF;
             
-            // Deposit multiple times, depending on second character
-            for (uint8_t i = 0; i < instr_count; ++i)
-                if (!psx_deposit(instr))
-                {
-                    //LED_ON;
-                    // Buffer full, can't deposit
-                    usb_serial_putchar('f');
-                    usb_serial_putchar(':');
-                    usb_serial_putchar('0'+i);
-                    usb_serial_putchar('\n');
-                    return;
-                }
+            // Deposit once only!
+            if (!psx_deposit(instr))
+            {
+                //LED_ON;
+                // Buffer full, can't deposit
+                usb_serial_putchar('f');
+                usb_serial_putchar('\n');
+                return;
+            }
             
             // Instruction ok
             //usb_serial_putchar('k');
@@ -258,7 +254,7 @@ void parse_and_execute_command(const char *buf)
             
         // Program device: jump to bootloader
         case 'p':
-            LED_ON;
+            //LED_ON;
             // Downloading
             usb_serial_putchar('d');
             usb_serial_putchar('\n');
@@ -267,7 +263,7 @@ void parse_and_execute_command(const char *buf)
             
         // Unknown instruction
         default:
-            LED_ON;
+            //LED_ON;
             // Header error
             usb_serial_putchar('h');
             usb_serial_putchar(':');
