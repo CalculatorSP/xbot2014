@@ -20,7 +20,7 @@
  ***********************************************************************/
 
 // Number of controller instructions to buffer
-#define CONTROLLER_BUFSIZE  (64)
+#define CONTROLLER_BUFSIZE  (120)
 
 // Port/pin setup (change this if your hardware configuration is different)
 #define PSX_PORT    (PORTB)
