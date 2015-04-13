@@ -58,7 +58,7 @@ public:
 	void reset();
 
 	// Updates the controller to reflect the current state
-	void sendState(int framecount = 4);
+	void sendState(int framecount = 3);
 
 	// Presses specified button. Must manually call sendState() to see the effect
 	inline void press(XboxButton button)
@@ -80,7 +80,7 @@ public:
 
 	// Quickly press and release specified button for a set number of frames
 	//  No need to call sendState()
-	inline void tap(XboxButton button, int framecount = 4)
+	inline void tap(XboxButton button, int framecount = 3)
 	{
 		set(button, true);
 		sendState(framecount);
@@ -90,7 +90,7 @@ public:
 
 	// Quickly press and release specified analog for a set number of frames
 	//  No need to call sendState()
-	inline void tap(XboxAnalog analog, float amount, int framecount = 4)
+	inline void tap(XboxAnalog analog, float amount, int framecount = 3)
 	{
 		set(analog, amount);
 		sendState(framecount);

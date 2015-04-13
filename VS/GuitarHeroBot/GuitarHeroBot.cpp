@@ -10,7 +10,7 @@
 
 //using namespace cv;
 
-const char* filename = "C:/Users/John/Source/Repos/xbot2014/VS/GuitarHeroBot/songs/Holiday In Cambodia.mid";
+const char* filename = "C:/Users/John/Source/Repos/xbot2014/VS/GuitarHeroBot/songs/Through the Fire and Flames.mid";
 
 int main(int argc, const char **argv)
 {
@@ -77,7 +77,7 @@ int main(int argc, const char **argv)
 			}
 		}
 		else
-			scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::sendState, &xboxController, 3);
+			scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::sendState, &xboxController, 2);
 
 	}
 
