@@ -17,11 +17,35 @@ public:
 		_kernel = kernel;
 	}
 
+	void deposit(const T &item)
+	{
+		_data.deposit(item);
+	}
+
+	T compute()
+	{
+		return _data.reverseWeightedSum(_kernel);
+	}
+
+	T compute2()
+	{
+		return _data.weightedSum(_kernel);
+	}
+
 	T process(const T &item)
 	{
 		_data.deposit(item);
 		if (_data.isFull())
 			return _data.reverseWeightedSum(_kernel);
+		else
+			return item;
+	}
+
+	T process2(const T &item)
+	{
+		_data.deposit(item);
+		if (_data.isFull())
+			return _data.weightedSum(_kernel);
 		else
 			return item;
 	}

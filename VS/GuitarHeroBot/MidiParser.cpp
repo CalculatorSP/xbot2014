@@ -14,7 +14,10 @@ Song* MidiParser::parseMidi(const char* filename, Instrument instrument, SongDif
 	Song* song = new Song();
 	FILE* fp;
 	uint64_t currentTimestamp = 0;
+	NoteEvent* lastStage = NULL;
 	bool press = false;
+	bool lastEventPress = false;
+	bool stagedForRelease[5] = { false, false, false, false, false };
 
 	if (fopen_s(&fp, filename, "rb"))
 		return NULL;
@@ -91,20 +94,50 @@ Song* MidiParser::parseMidi(const char* filename, Instrument instrument, SongDif
 
 			if (goodEvent)
 			{
+				bool isChord = false;
+
 				// If we have a new timestamp, we need to have an actuation of the previous note
 				if (noteEvent.timestamp > lastUsedTimestamp)
 				{
 					NoteEvent actuateEvent;
 					actuateEvent.timestamp = lastUsedTimestamp + 250;
-					actuateEvent.type = ACTUATE;
 					actuateEvent.key = GREEN;
 					actuateEvent.press = false;
+					if (lastEventPress)
+					{
+						actuateEvent.type = ACTUATE;
+						for (int i = 0; i < 5; ++i)
+							stagedForRelease[i] = false;
+						lastStage = NULL;
+					}
+					else
+						actuateEvent.type = STAGE;
 
 					song->add(actuateEvent);
+
+					if (actuateEvent.type == STAGE)
+						lastStage = &(*song)[song->size - 1];
+
 					lastUsedTimestamp = noteEvent.timestamp;
+				}
+				else
+					isChord = true;
+
+				// If this buttonpress is staged for release, we need to commit the previous actuate event first
+				if ((isChord || (noteEvent.press && stagedForRelease[noteEvent.key])) && lastStage != NULL)
+				{
+					lastStage->type = ACTUATE;
+					for (int i = 0; i < 5; ++i)
+						stagedForRelease[i] = false;
+					lastStage = NULL;
 				}
 
 				song->add(noteEvent);
+
+				if (!noteEvent.press)
+					stagedForRelease[noteEvent.key] = true;
+
+				lastEventPress = noteEvent.press;
 			}
 
 			// Skip velocity

@@ -29,7 +29,8 @@ enum ButtonColor
 enum EventType
 {
 	PREPARE,
-	ACTUATE
+	ACTUATE,
+	STAGE
 };
 
 class NoteEvent
