@@ -24,12 +24,18 @@ public:
 
 	T compute()
 	{
-		return _data.reverseWeightedSum(_kernel);
+		if (_data.isFull())
+			return _data.reverseWeightedSum(_kernel);
+		else
+			return (T)0;
 	}
 
 	T compute2()
 	{
-		return _data.weightedSum(_kernel);
+		if (_data.isFull())
+			return _data.weightedSum(_kernel);
+		else
+			return (T)0;
 	}
 
 	T process(const T &item)
