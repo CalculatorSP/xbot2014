@@ -22,6 +22,25 @@ Song* MidiParser::parseMidi(const char* filename, Instrument instrument, SongDif
 	if (fopen_s(&fp, filename, "rb"))
 		return NULL;
 
+	// Add release at beginning of song
+	NoteEvent initialEvent;
+	initialEvent.timestamp = 0;
+	initialEvent.key = GREEN;
+	initialEvent.press = false;
+	initialEvent.type = PREPARE;
+	song->add(initialEvent);
+	initialEvent.key = RED;
+	song->add(initialEvent);
+	initialEvent.key = YELLOW;
+	song->add(initialEvent);
+	initialEvent.key = BLUE;
+	song->add(initialEvent);
+	initialEvent.key = ORANGE;
+	song->add(initialEvent);
+	initialEvent.timestamp = 250;
+	initialEvent.type = ACTUATE;
+	song->add(initialEvent);
+
 	// Get tempo from header track
 	uint64_t microsPerTick = _parseHeader(fp);
 
@@ -144,6 +163,14 @@ Song* MidiParser::parseMidi(const char* filename, Instrument instrument, SongDif
 			fseek(fp, 1, SEEK_CUR);
 		}
 	}
+
+	// Add release at end of song
+	NoteEvent finalEvent;
+	finalEvent.timestamp = lastUsedTimestamp + 250;
+	finalEvent.key = GREEN;
+	finalEvent.press = false;
+	finalEvent.type = ACTUATE;
+	song->add(finalEvent);
 
 	return song;
 }
