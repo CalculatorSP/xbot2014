@@ -140,8 +140,6 @@
   <ItemGroup>
     <ClCompile Include="GuitarHeroBot.cpp" />
     <ClCompile Include="MidiParser.cpp" />
-    <ClCompile Include="paex_record.c" />
-    <ClCompile Include="pa_devs.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="songs\3%27s &amp; 7%27s.mid" />

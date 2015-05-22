@@ -66,5 +66,8 @@
     <ClInclude Include="Task\Scheduler.h">
       <Filter>Source\Task</Filter>
     </ClInclude>
+    <ClInclude Include="Collections\IirFilter.h">
+      <Filter>Source\Collections</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

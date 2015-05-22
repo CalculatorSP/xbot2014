@@ -17,12 +17,6 @@
     <ClCompile Include="MidiParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pa_devs.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="paex_record.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="songs\3%27s &amp; 7%27s.mid">

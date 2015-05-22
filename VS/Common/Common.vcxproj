@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="Collections\FirFilter.h" />
     <ClInclude Include="Collections\Heap.h" />
+    <ClInclude Include="Collections\IirFilter.h" />
     <ClInclude Include="Collections\List.h" />
     <ClInclude Include="Collections\ModBuffer.h" />
     <ClInclude Include="Collections\RunningStats.h" />
