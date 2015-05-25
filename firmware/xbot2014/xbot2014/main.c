@@ -57,8 +57,8 @@ int main(void)
         usb_serial_flush_input();
         
         // Indicate ready
-        //usb_serial_putchar('r');
-        //usb_serial_putchar('\n');
+        usb_serial_putchar('r');
+        usb_serial_putchar('\n');
         
         // Listen for commands and process them
         while (1)
@@ -67,16 +67,13 @@ int main(void)
             n = recv_str(buf, sizeof(buf));
             
             // Check for missing delimeter
-            if (n == BUFFER_SIZE)
-            {
-                //LED_ON;
-                usb_serial_putchar('d');
-                usb_serial_putchar(':');
-                for (uint8_t i = 0; i < BUFFER_SIZE; ++i)
-                    usb_serial_putchar(buf[i]);
-                usb_serial_putchar('\n');
-                continue;
-            }
+//            if (n == BUFFER_SIZE)
+//            {
+//                //LED_ON;
+//                usb_serial_putchar('d');
+//                usb_serial_putchar('\n');
+//                continue;
+//            }
             
             // Check for disconnect
             if (n == 255)
@@ -150,7 +147,7 @@ uint8_t recv_str(char *buf, uint8_t size)
             if (r >= '!' && r <= '~')
             {
                 *buf++ = r;
-                count++;
+                ++count;
             }
             else
             {
@@ -168,75 +165,46 @@ void parse_and_execute_command(const char *buf)
 {
     uint8_t instr[20];
     
-    if (strlen(buf) != PACKET_SIZE)
-    {
-        //LED_ON;
-        // Size error
-        usb_serial_putchar('s');
-        usb_serial_putchar(':');
-        for (uint8_t j = 0; j < strlen(buf); ++j)
-            usb_serial_putchar(buf[j]);
-        usb_serial_putchar('\n');
-        return;
-    }
+//    if (strlen(buf) != PACKET_SIZE)
+//    {
+//        //LED_ON;
+//        // Size error
+//        usb_serial_putchar('s');
+//        usb_serial_putchar('\n');
+//        return;
+//    }
     
     // First character is header (instruction)
-    switch (buf[0])
+    switch (*(buf++))
     {
         // Controller instruction: deposit in PSX
         case 'c':
             // Second character determines how many times to deposit instr
-            instr[19] = buf[1] - '0';
+            instr[19] = *(buf++) - '0';
             
             // Parse string into uint8_t's
-            for (int i = 0; i < sizeof(instr)-2; ++i)
+            for (uint8_t i = 0; i < sizeof(instr)-2; ++i)
             {
-                char c = buf[(i+1)<<1];
-                if (c >= '0' && c <= '9')
+                char c = *(buf++);
+                if (c <= '9')
                     instr[i] = (c - '0') << 4;
-                else if (c >= 'A' && c <= 'F')
-                    instr[i] = (c - 'A' + 0xA) << 4;
-                else if (c >= 'a' && c <= 'f')
+                else
                     instr[i] = (c - 'a' + 0xA) << 4;
-                else
-                {
-                    //LED_ON;
-                    // Parse error
-                    usb_serial_putchar('p');
-                    usb_serial_putchar(':');
-                    for (uint8_t j = 0; j < strlen(buf); ++j)
-                        usb_serial_putchar(buf[j]);
-                    usb_serial_putchar('\n');
-                    return;
-                }
                 
-                c = buf[((i+1)<<1)+1];
-                if (c >= '0' && c <= '9')
-                    instr[i] |= (c - '0');
-                else if (c >= 'A' && c <= 'F')
-                    instr[i] |= (c - 'A' + 0xA);
-                else if (c >= 'a' && c <= 'f')
-                    instr[i] |= (c - 'a' + 0xA);
+                c = *(buf++);
+                if (c <= '9')
+                    instr[i] += (c - '0');
                 else
-                {
-                    //LED_ON;
-                    // Parse error
-                    usb_serial_putchar('p');
-                    usb_serial_putchar(':');
-                    for (uint8_t j = 0; j < strlen(buf); ++j)
-                        usb_serial_putchar(buf[j]);
-                    usb_serial_putchar('\n');
-                    return;
-                }
+                    instr[i] += (c - 'a' + 0xA);
             }
-            
-            // Last byte is always 0xFF
+
+            // Second-to-last byte is always 0xFF
             instr[18] = 0xFF;
             
             // Deposit once only!
             if (!psx_deposit(instr))
             {
-                //LED_ON;
+                LED_ON;
                 // Buffer full, can't deposit
                 usb_serial_putchar('f');
                 usb_serial_putchar('\n');
@@ -244,8 +212,7 @@ void parse_and_execute_command(const char *buf)
             }
             
             // Instruction ok
-            //usb_serial_putchar('k');
-            //usb_serial_putchar('\n');
+
             break;
             
         // Get vibration data only (no new instruction)
@@ -266,9 +233,6 @@ void parse_and_execute_command(const char *buf)
             //LED_ON;
             // Header error
             usb_serial_putchar('h');
-            usb_serial_putchar(':');
-            for (uint8_t j = 0; j < strlen(buf); ++j)
-                usb_serial_putchar(buf[j]);
             usb_serial_putchar('\n');
             break;
     }

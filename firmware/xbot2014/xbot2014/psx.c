@@ -11,6 +11,7 @@
 #define PSX_PRIVATE_INCLUDE
 #include "psx.h"
 #include "pipe.h"
+#include "usb_serial.h"
 
 
 /***********************************************************************
@@ -20,7 +21,7 @@
  ***********************************************************************/
 
 // Number of controller instructions to buffer
-#define CONTROLLER_BUFSIZE  (120)
+#define CONTROLLER_BUFSIZE  (100)
 
 // Port/pin setup (change this if your hardware configuration is different)
 #define PSX_PORT    (PORTB)
@@ -98,7 +99,7 @@ static uint8_t const_num = 0x00;
 static uint8_t packet_poll[20];
 
 // Buffer for controller instructions (to go in pipe)
-static uint8_t controller_buffer[CONTROLLER_BUFSIZE][20];
+static uint8_t controller_buffer[CONTROLLER_BUFSIZE * 20];
 
 // FIFO pipe for pending instructions
 static pipe_t controller_pipe;
@@ -302,9 +303,17 @@ static inline void handle_next_spi_byte(void)
                 // If controller instructions are pending, go to next one. Otherwise, resend
                 // the previous one.
                 if (packet_poll[19] > 1)
-                    packet_poll[19]--;
+                    --packet_poll[19];
                 else
                     pipe_read(&controller_pipe, packet_poll);
+//                {
+////                    for (uint8_t i = 0; i < sizeof(packet_poll); ++i)
+////                    {
+////                        usb_serial_putchar(packet_poll[i]/16 + 'A');
+////                        usb_serial_putchar((packet_poll[i]&15) + 'a');
+////                    }
+////                    usb_serial_putchar('\n');
+//                }
             }
             break;
             

@@ -13,7 +13,7 @@
 #include <string.h>
 #include <util/atomic.h>
 
-void pipe_init(pipe_t *self, void *data, int16_t elt_size, int16_t num_elts)
+void pipe_init(pipe_t *self, uint8_t *data, int16_t elt_size, int16_t num_elts)
 {
     self->data = data;
     self->read_from = 0;
@@ -30,7 +30,7 @@ void pipe_flush(pipe_t *self)
     }
 }
 
-int16_t pipe_write(pipe_t *self, const void *data)
+int16_t pipe_write(pipe_t *self, const uint8_t *data)
 {
     int16_t retval = 0;
     int16_t tmp_write_to;
@@ -43,7 +43,7 @@ int16_t pipe_write(pipe_t *self, const void *data)
         
         if (tmp_write_to != self->read_from)
         {
-            memcpy((uint8_t *)self->data + self->write_to, data, self->elt_size);
+            memcpy(self->data + self->write_to, data, self->elt_size);
             self->write_to = tmp_write_to;
             retval = self->elt_size;
         }
@@ -52,7 +52,7 @@ int16_t pipe_write(pipe_t *self, const void *data)
     return retval;
 }
 
-int16_t pipe_read(pipe_t *self, void *data)
+int16_t pipe_read(pipe_t *self, uint8_t *data)
 {
     int16_t retval = 0;
 
@@ -60,7 +60,7 @@ int16_t pipe_read(pipe_t *self, void *data)
     {
         if (self->write_to != self->read_from)
         {
-            memcpy(data, (uint8_t *)self->data + self->read_from, self->elt_size);
+            memcpy(data, self->data + self->read_from, self->elt_size);
             self->read_from += self->elt_size;
             if (self->read_from >= self->total_size)
                 self->read_from = 0;
@@ -72,7 +72,7 @@ int16_t pipe_read(pipe_t *self, void *data)
     return retval;
 }
 
-int16_t pipe_peek(pipe_t *self, void *data)
+int16_t pipe_peek(const pipe_t *self, uint8_t *data)
 {
     int16_t retval = 0;
     
@@ -80,7 +80,7 @@ int16_t pipe_peek(pipe_t *self, void *data)
     {
         if (self->write_to != self->read_from)
         {
-            memcpy(data, (uint8_t *)self->data + self->read_from, self->elt_size);
+            memcpy(data, self->data + self->read_from, self->elt_size);
             retval = self->elt_size;
         }
     }
@@ -88,7 +88,7 @@ int16_t pipe_peek(pipe_t *self, void *data)
     return retval;
 }
 
-uint8_t pipe_isEmpty(pipe_t *self)
+uint8_t pipe_isEmpty(const pipe_t *self)
 {
     uint8_t retval;
     
@@ -100,7 +100,7 @@ uint8_t pipe_isEmpty(pipe_t *self)
     return retval;
 }
 
-uint8_t pipe_isFull(pipe_t *self)
+uint8_t pipe_isFull(const pipe_t *self)
 {
     uint8_t retval;
     int16_t tmp_write_to;
