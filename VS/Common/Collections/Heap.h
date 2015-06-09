@@ -15,9 +15,10 @@ class Heap
     ShouldSwap compare;
 
     Heap(ShouldSwap swap)
+		: data(), compare(swap)
     {
-        compare = swap;
-    }
+
+	}
     
     T operator[](int i)
     {

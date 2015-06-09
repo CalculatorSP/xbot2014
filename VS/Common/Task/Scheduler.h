@@ -6,7 +6,7 @@
 #include <time.h>
 #include <Windows.h>
 
-int shouldSwap(IJob* parent, IJob* child)
+static int shouldSwap(IJob* parent, IJob* child)
 {
     return parent->time >= child->time;
 }
@@ -84,8 +84,8 @@ public:
         jobs.push(j);
     }
     
-    template <typename CLAZZ, typename T>
-    void postDelayed(uint64_t microsDelay, typename Job4<CLAZZ>::Delegate d, CLAZZ* c)
+    template <typename CLAZZ>
+    void postDelayed(uint64_t microsDelay, typename Job4<CLAZZ>::Runnable d, CLAZZ* c)
     {
 		uint64_t us = getTime() + microsDelay;
 		Job4<CLAZZ>* j = new Job4<CLAZZ>(us, d, c);
@@ -112,8 +112,8 @@ public:
         jobs.push(j);
     }
     
-    template <typename CLAZZ, typename T>
-    void postAtTime(uint64_t time, typename Job4<CLAZZ>::Delegate d, CLAZZ* c)
+    template <typename CLAZZ>
+    void postAtTime(uint64_t time, typename Job4<CLAZZ>::Runnable d, CLAZZ* c)
     {
         Job4<CLAZZ>* j = new Job4<CLAZZ>(time, d, c);
         jobs.push(j);
@@ -127,10 +127,9 @@ public:
 
 		//printf("%lld\n", j->time - getTime());
 		while (getTime() < j->time);
-
-        j->operator()();
-        delete j;
-        return true;
+		j->operator()();
+		delete j;
+		return true;
     }
 
 	static int gettimeofday(struct timeval *tv)

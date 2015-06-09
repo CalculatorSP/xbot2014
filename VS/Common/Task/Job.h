@@ -66,9 +66,8 @@ public:
     typedef void (CLAZZ::*Runnable)();
     Runnable r;
     CLAZZ* c;
-    long val;
 
-    Job4(long val, Runnable r, CLAZZ* c):val(val),r(r), c(c){}
+    Job4(uint64_t time, Runnable r, CLAZZ* c):IJob(time),r(r), c(c){}
 
     void operator()()
     {

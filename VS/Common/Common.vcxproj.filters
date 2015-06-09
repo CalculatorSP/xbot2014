@@ -20,6 +20,9 @@
     <Filter Include="Source\Task">
       <UniqueIdentifier>{2e72c028-de50-4acf-8215-8d0a24d911ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Util">
+      <UniqueIdentifier>{3b8107d3-cdf7-479b-961e-76514f7a4f46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PSX\Serial.cpp">
@@ -30,6 +33,9 @@
     </ClCompile>
     <ClCompile Include="PSX\XboxController.cpp">
       <Filter>Source\PSX</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\ScreenGrabber.cpp">
+      <Filter>Source\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="Collections\IirFilter.h">
       <Filter>Source\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\ScreenGrabber.h">
+      <Filter>Source\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

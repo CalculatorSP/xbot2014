@@ -12,6 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChessmasterLiveBot", "Chess
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuitarHeroBot", "GuitarHeroBot\GuitarHeroBot.vcxproj", "{DDA27125-5F6F-4DBE-98AE-27CCC3522146}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JoystickCalibration", "JoystickCalibration\JoystickCalibration.vcxproj", "{06AC5362-E522-468A-8DE0-43120931460C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -44,6 +46,14 @@ Global
 		{DDA27125-5F6F-4DBE-98AE-27CCC3522146}.Release|Win32.Build.0 = Release|Win32
 		{DDA27125-5F6F-4DBE-98AE-27CCC3522146}.Release|x64.ActiveCfg = Release|x64
 		{DDA27125-5F6F-4DBE-98AE-27CCC3522146}.Release|x64.Build.0 = Release|x64
+		{06AC5362-E522-468A-8DE0-43120931460C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{06AC5362-E522-468A-8DE0-43120931460C}.Debug|Win32.Build.0 = Debug|Win32
+		{06AC5362-E522-468A-8DE0-43120931460C}.Debug|x64.ActiveCfg = Debug|x64
+		{06AC5362-E522-468A-8DE0-43120931460C}.Debug|x64.Build.0 = Debug|x64
+		{06AC5362-E522-468A-8DE0-43120931460C}.Release|Win32.ActiveCfg = Release|Win32
+		{06AC5362-E522-468A-8DE0-43120931460C}.Release|Win32.Build.0 = Release|Win32
+		{06AC5362-E522-468A-8DE0-43120931460C}.Release|x64.ActiveCfg = Release|x64
+		{06AC5362-E522-468A-8DE0-43120931460C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

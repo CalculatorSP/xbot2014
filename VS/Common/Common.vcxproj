@@ -70,20 +70,24 @@
     <TargetExt>.lib</TargetExt>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>C:\Users\John\Source\Repos\xbot2014\VS\Common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <TargetExt>.lib</TargetExt>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>C:\Users\John\Source\Repos\xbot2014\VS\Common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <TargetExt>.lib</TargetExt>
+    <IncludePath>C:\Users\John\Source\Repos\xbot2014\VS\Common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <TargetExt>.lib</TargetExt>
+    <IncludePath>C:\Users\John\Source\Repos\xbot2014\VS\Common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -157,6 +161,7 @@
     <ClCompile Include="PSX\PlaystationController.cpp" />
     <ClCompile Include="PSX\Serial.cpp" />
     <ClCompile Include="PSX\XboxController.cpp" />
+    <ClCompile Include="Util\ScreenGrabber.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collections\FirFilter.h" />
@@ -171,6 +176,7 @@
     <ClInclude Include="PSX\XboxController.h" />
     <ClInclude Include="Task\Job.h" />
     <ClInclude Include="Task\Scheduler.h" />
+    <ClInclude Include="Util\ScreenGrabber.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
