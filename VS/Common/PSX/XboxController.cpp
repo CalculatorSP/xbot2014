@@ -1,8 +1,14 @@
 #include "XboxController.h"
 
-XboxController::XboxController(const char *comport) : _playstationController(comport)
-{ 
+XboxController::XboxController(const char *comport)
+{
+	_playstationController.connect(comport);
 	reset();
+}
+
+bool XboxController::isConnected() const
+{
+	return _playstationController.isConnected();
 }
 
 void XboxController::set(XboxButton button, bool pressed)

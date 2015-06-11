@@ -3,16 +3,52 @@
 const PlaystationPacket_t PlaystationController::defaultPacket =
 { 0xFF, 0xFF, 0x7F, 0x7F, 0x7F, 0x7F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-PlaystationController::PlaystationController(const char *comport) : _serialPort(comport)
+PlaystationController::PlaystationController() : _serialPort(NULL)
 {	
 	reset();
+}
+
+PlaystationController::~PlaystationController()
+{
+	disconnect();
+}
+
+bool PlaystationController::isConnected() const
+{
+	return _serialPort != NULL;
+}
+
+bool PlaystationController::connect(const char* comport)
+{
+	if (isConnected())
+		return false;
+
+	try
+	{
+		_serialPort = new Serial(comport);
+	}
+	catch (...)
+	{
+		_serialPort = NULL;
+		return false;
+	}
+
+	_serialPort->flush();
+	return true;
+}
+
+void PlaystationController::disconnect()
+{
+	if (!isConnected())
+		return;
+
+	delete _serialPort;
+	_serialPort = NULL;
 }
 
 void PlaystationController::reset()
 {
 	state.packet = defaultPacket;
-
-	_serialPort.flush();
 }
 
 void PlaystationController::sendState(int framecount) const
@@ -33,7 +69,8 @@ void PlaystationController::sendState(int framecount) const
 	}
 	serialString[PACKET_SIZE - 1] = '\n';	// Separator
 
-	_serialPort.write((uint8_t *)serialString, sizeof(serialString));
+	if (isConnected())
+		_serialPort->write((uint8_t *)serialString, sizeof(serialString));
 
 	//fwrite(serialString, PACKET_SIZE, 1, fp);
 

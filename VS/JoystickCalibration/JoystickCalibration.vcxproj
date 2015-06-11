@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JoystickCalibration.cpp" />
+    <ClCompile Include="Processing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Processing.h" />

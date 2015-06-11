@@ -48,6 +48,9 @@ public:
 	// Sets up communication with the controller (Teensy) on serial port comport
 	XboxController(const char *comport);
 
+	// Checks if serial port has been opened successfully
+	bool isConnected() const;
+
 	// Sets button to specified value. Must manually call sendState() to see the effect
 	void set(XboxButton button, bool pressed);
 

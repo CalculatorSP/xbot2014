@@ -18,6 +18,9 @@
     <ClCompile Include="JoystickCalibration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Processing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Processing.h">

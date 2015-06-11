@@ -2,29 +2,23 @@
 
 #include "opencv2/opencv.hpp"
 
-class FrameDisplay : public FrameProcessor
-{
-public:
-	void processFrame(cv::Mat& frame)
-	{
-		imshow("result", frame);
-	}
-};
+#include "PSX/XboxController.h"
+#include "Task/Scheduler.h"
+#include "Util/ScreenGrabber.h"
 
-class InputMonitor : public KeyHandler
+class JoystickCalibrationAppManager : public FrameProcessor, public KeyHandler
 {
-public:
-	bool keepGoing = true;
+	Scheduler* _scheduler;
+	XboxController* _controller;
+	bool _keepGoing;
 
-	void handleKey(int key)
-	{
-		switch (key)
-		{
-		case 27:
-			keepGoing = false;
-			return;
-		default:
-			return;
-		}
-	}
+public:
+	JoystickCalibrationAppManager(Scheduler* scheduler, XboxController* controller)
+		: _scheduler(scheduler), _controller(controller), _keepGoing(true)
+	{ }
+
+	void run();
+	void processFrame(cv::Mat& frame);
+	void handleKey(int key);
+
 };

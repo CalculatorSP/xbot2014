@@ -11,24 +11,30 @@
 
 using namespace cv;
 
+const char* comport = "COM4";
+
 int main(int argc, const char **argv)
 {
-	Scheduler scheduler;
-	FrameDisplay frameDisplay;
-	InputMonitor inputMonitor;
-	ScreenGrabber grabber(WEBCAM, 30, &scheduler, &frameDisplay, &inputMonitor);
-	//XboxController xboxController("COM4");
-	
+	Scheduler						scheduler;
+	XboxController					xboxController(comport);
+	JoystickCalibrationAppManager	appManager(&scheduler, &xboxController);
+	ScreenGrabber					grabber(WEBCAM, 30, &scheduler, &appManager, &appManager);
+
 	if (!grabber.cap.isOpened())
 	{
 		std::cerr << "Could not open capture device" << std::endl;
 		return -1;
 	}
 
+	//if (!xboxController.isConnected())
+	//{
+	//	std::cerr << "Could not open serial port " << comport << std::endl;
+	//	return -1;
+	//}
+
 	cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
 
-	while (inputMonitor.keepGoing)
-		scheduler.run();
+	appManager.run();
 
 	return 0;
 }

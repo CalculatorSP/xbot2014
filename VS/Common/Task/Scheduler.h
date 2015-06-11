@@ -16,11 +16,14 @@ class Scheduler
 public:
     Heap<IJob*> jobs;
     
-    Scheduler()
-        :jobs(shouldSwap)
-    {
-        
-    }
+    Scheduler() : jobs(shouldSwap)
+    { }
+
+	~Scheduler()
+	{
+		while (jobs.data.size > 0)
+			delete jobs.pop();
+	}
     
     uint64_t getTime()
     {

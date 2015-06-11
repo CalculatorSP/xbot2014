@@ -33,4 +33,3 @@ public:
 	ScreenGrabber(int captureDevice, int fps, Scheduler* scheduler, FrameProcessor* frameProcessor, KeyHandler* keyHandler);
 
 };
-

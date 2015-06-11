@@ -52,7 +52,7 @@ typedef struct
 
 class PlaystationController
 {
-	Serial _serialPort;
+	Serial* _serialPort;
 
 public:
 	static const PlaystationPacket_t defaultPacket;
@@ -63,7 +63,11 @@ public:
 		PlaystationButtons_t physical;
 	} state;
 
-	PlaystationController(const char *comport);
+	PlaystationController();
+	~PlaystationController();
+	bool connect(const char* comport);
+	void disconnect();
+	bool isConnected() const;
 	void reset();
 	void sendState(int framecount) const;
 
