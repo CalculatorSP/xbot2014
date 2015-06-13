@@ -4,12 +4,12 @@ void ChessActuator::doMove(Move move)
 {
 	// Go to desired piece and pick it up
 	_goToSquare(from_sq(move));
-	_xboxController.tap(XboxController::A);
+	_xboxController.tap(XboxButton::A);
 	Sleep(500);
 
 	// Go to destination square and drop piece
 	_goToSquare(to_sq(move));
-	_xboxController.tap(XboxController::A);
+	_xboxController.tap(XboxButton::A);
 	Sleep(500);
 }
 
@@ -18,8 +18,8 @@ void ChessActuator::goHome()
 	// Move to A1
 	for (int i = 0; i < 8; ++i)
 	{
-		_xboxController.tap(XboxController::LEFT);
-		_xboxController.tap(XboxController::DOWN);
+		_xboxController.tap(XboxButton::LEFT);
+		_xboxController.tap(XboxButton::DOWN);
 		Sleep(500);
 	}
 
@@ -40,22 +40,22 @@ void ChessActuator::_goToSquare(Square sq)
 	{
 		if (deltaX > 0)
 		{
-			_xboxController.tap(XboxController::RIGHT);
+			_xboxController.tap(XboxButton::RIGHT);
 			--deltaX;
 		}
 		if (deltaX < 0)
 		{
-			_xboxController.tap(XboxController::LEFT);
+			_xboxController.tap(XboxButton::LEFT);
 			++deltaX;
 		}
 		if (deltaY > 0)
 		{
-			_xboxController.tap(XboxController::UP);
+			_xboxController.tap(XboxButton::UP);
 			--deltaY;
 		}
 		if (deltaY < 0)
 		{
-			_xboxController.tap(XboxController::DOWN);
+			_xboxController.tap(XboxButton::DOWN);
 			++deltaY;
 		}
 		Sleep(500);

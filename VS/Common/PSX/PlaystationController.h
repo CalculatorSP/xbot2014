@@ -43,11 +43,13 @@ typedef struct
 	uint8_t p_R1;
 	uint8_t p_L2;
 	uint8_t p_R2;
+
 } PlaystationButtons_t;
 
 typedef struct
 {
 	uint8_t arr[18];
+
 } PlaystationPacket_t;
 
 class PlaystationController
@@ -61,6 +63,7 @@ public:
 	{
 		PlaystationPacket_t packet;
 		PlaystationButtons_t physical;
+
 	} state;
 
 	PlaystationController();

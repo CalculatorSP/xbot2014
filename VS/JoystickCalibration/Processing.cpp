@@ -16,7 +16,7 @@ void JoystickCalibrationAppManager::handleKey(int key)
 		return;
 
 	case 'g':
-		// DO STUFF
+		_measure();
 		return;
 
 	default:
@@ -28,4 +28,9 @@ void JoystickCalibrationAppManager::run()
 {
 	while (_keepGoing)
 		_scheduler->run();
+}
+
+void JoystickCalibrationAppManager::_measure()
+{
+
 }

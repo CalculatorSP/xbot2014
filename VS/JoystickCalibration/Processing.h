@@ -12,6 +12,8 @@ class JoystickCalibrationAppManager : public FrameProcessor, public KeyHandler
 	XboxController* _controller;
 	bool _keepGoing;
 
+	void _measure();
+
 public:
 	JoystickCalibrationAppManager(Scheduler* scheduler, XboxController* controller)
 		: _scheduler(scheduler), _controller(controller), _keepGoing(true)

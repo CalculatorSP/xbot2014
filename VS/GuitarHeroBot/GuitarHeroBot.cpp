@@ -137,33 +137,33 @@ int main(int argc, const char **argv)
 			{
 			case GREEN:
 				if ((*song)[i].press)
-					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxController::LT_D);
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxButton::LEFT_TRIGGER);
 				else
-					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxController::LT_D);
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxButton::LEFT_TRIGGER);
 				break;
 			case RED:
 				if ((*song)[i].press)
-					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxController::LB);
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxButton::LEFT_BUMPER);
 				else
-					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxController::LB);
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxButton::LEFT_BUMPER);
 				break;
 			case YELLOW:
 				if ((*song)[i].press)
-					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxController::RB);
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxButton::RIGHT_BUMPER);
 				else
-					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxController::RB);
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxButton::RIGHT_BUMPER);
 				break;
 			case BLUE:
 				if ((*song)[i].press)
-					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxController::RT_D);
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxButton::RIGHT_TRIGGER);
 				else
-					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxController::RT_D);
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxButton::RIGHT_TRIGGER);
 				break;
 			case ORANGE:
 				if ((*song)[i].press)
-					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxController::A);
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::press, &xboxController, XboxButton::A);
 				else
-					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxController::A);
+					scheduler.postAtTime(microsOffset + (*song)[i].timestamp, &XboxController::release, &xboxController, XboxButton::A);
 				break;
 			default:
 				break;

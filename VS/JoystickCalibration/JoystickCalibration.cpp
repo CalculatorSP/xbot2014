@@ -26,11 +26,11 @@ int main(int argc, const char **argv)
 		return -1;
 	}
 
-	//if (!xboxController.isConnected())
-	//{
-	//	std::cerr << "Could not open serial port " << comport << std::endl;
-	//	return -1;
-	//}
+	if (!xboxController.isConnected())
+	{
+		std::cerr << "Could not open serial port " << comport << std::endl;
+		//return -1;
+	}
 
 	cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
 

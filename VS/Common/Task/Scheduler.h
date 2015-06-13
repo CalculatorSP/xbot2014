@@ -19,11 +19,11 @@ public:
     Scheduler() : jobs(shouldSwap)
     { }
 
-	~Scheduler()
-	{
-		while (jobs.data.size > 0)
-			delete jobs.pop();
-	}
+    ~Scheduler()
+    {
+        while (jobs.data.size > 0)
+            delete jobs.pop();
+    }
     
     uint64_t getTime()
     {
@@ -74,24 +74,24 @@ public:
     template <typename T>
     void postDelayed(uint64_t microsDelay, typename Job2<T>::Delegate d, T arg)
     {
-		uint64_t us = getTime() + microsDelay;
-		Job2<T>* j = new Job2<T>(us, d, arg);
+        uint64_t us = getTime() + microsDelay;
+        Job2<T>* j = new Job2<T>(us, d, arg);
         jobs.push(j);
     }
     
     template <typename CLAZZ, typename T>
     void postDelayed(uint64_t microsDelay, typename Job3<CLAZZ, T>::Delegate d, CLAZZ* c, T arg)
     {
-		uint64_t us = getTime() + microsDelay;
-		Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(us, d, c, arg);
+        uint64_t us = getTime() + microsDelay;
+        Job3<CLAZZ, T>* j = new Job3<CLAZZ, T>(us, d, c, arg);
         jobs.push(j);
     }
     
     template <typename CLAZZ>
     void postDelayed(uint64_t microsDelay, typename Job4<CLAZZ>::Runnable d, CLAZZ* c)
     {
-		uint64_t us = getTime() + microsDelay;
-		Job4<CLAZZ>* j = new Job4<CLAZZ>(us, d, c);
+        uint64_t us = getTime() + microsDelay;
+        Job4<CLAZZ>* j = new Job4<CLAZZ>(us, d, c);
         jobs.push(j);
     }
     
@@ -128,32 +128,32 @@ public:
             return false;
         IJob* j = jobs.pop();
 
-		//printf("%lld\n", j->time - getTime());
-		while (getTime() < j->time);
-		j->operator()();
-		delete j;
-		return true;
+        //printf("%lld\n", j->time - getTime());
+        while (getTime() < j->time);
+        j->operator()();
+        delete j;
+        return true;
     }
 
-	static int gettimeofday(struct timeval *tv)
-	{
-		FILETIME ft;
-		unsigned __int64 tmpres = 0;
+    static int gettimeofday(struct timeval *tv)
+    {
+        FILETIME ft;
+        unsigned __int64 tmpres = 0;
 
-		if (tv != NULL)
-		{
-			GetSystemTimeAsFileTime(&ft);
+        if (tv != NULL)
+        {
+            GetSystemTimeAsFileTime(&ft);
 
-			tmpres |= ft.dwHighDateTime;
-			tmpres <<= 32;
-			tmpres |= ft.dwLowDateTime;
+            tmpres |= ft.dwHighDateTime;
+            tmpres <<= 32;
+            tmpres |= ft.dwLowDateTime;
 
-			tmpres /= 10;
+            tmpres /= 10;
 
-			tv->tv_sec = (long)(tmpres / 1000000UL);
-			tv->tv_usec = (long)(tmpres % 1000000UL);
-		}
+            tv->tv_sec = (long)(tmpres / 1000000UL);
+            tv->tv_usec = (long)(tmpres % 1000000UL);
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 };
