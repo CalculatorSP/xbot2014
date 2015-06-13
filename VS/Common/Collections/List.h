@@ -9,7 +9,7 @@ public:
     T* data;
     
     List()
-    :capacity(10), size(0)
+        :capacity(10), size(0)
     {
         data = (T*)malloc(capacity * sizeof(T));
     }
@@ -34,11 +34,7 @@ public:
         if (size == capacity)
         {
             capacity *= 2;
-            T* newData = (T*)malloc(capacity * sizeof(T));
-            for (int i = 0; i < size; i++)
-                newData[i] = data[i];
-            free(data);
-            data = newData;
+            data = (T*)realloc(data, capacity * sizeof(T));
         }
         data[size++] = val;
     }
