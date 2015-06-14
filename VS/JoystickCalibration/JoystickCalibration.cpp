@@ -15,26 +15,26 @@ const char* comport = "COM4";
 
 int main(int argc, const char **argv)
 {
-	Scheduler						scheduler;
-	XboxController					xboxController(comport);
-	JoystickCalibrationAppManager	appManager(&scheduler, &xboxController);
-	ScreenGrabber					grabber(WEBCAM, 30, &scheduler, &appManager, &appManager);
+    Scheduler						scheduler;
+    XboxController					xboxController(comport);
+    JoystickCalibrationAppManager	appManager(&scheduler, &xboxController);
+    ScreenGrabber					grabber(WEBCAM, 30, &scheduler, &appManager, &appManager);
 
-	if (!grabber.cap.isOpened())
-	{
-		std::cerr << "Could not open capture device" << std::endl;
-		return -1;
-	}
+    if (!grabber.cap.isOpened())
+    {
+        std::cerr << "Could not open capture device" << std::endl;
+        return -1;
+    }
 
-	if (!xboxController.isConnected())
-	{
-		std::cerr << "Could not open serial port " << comport << std::endl;
-		//return -1;
-	}
+    if (!xboxController.isConnected())
+    {
+        std::cerr << "Could not open serial port " << comport << std::endl;
+        //return -1;
+    }
 
-	cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
+    cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
 
-	appManager.run();
+    appManager.run();
 
-	return 0;
+    return 0;
 }

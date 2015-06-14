@@ -13,7 +13,7 @@ public:
     {
         data = (T*)malloc(capacity * sizeof(T));
     }
-    
+
     ~List()
     {
         free(data);

@@ -9,16 +9,14 @@ class Heap
 {
     typedef int (*ShouldSwap)(T parent, T child);
 
-    public:
+public:
     
     List<T> data;
     ShouldSwap compare;
 
     Heap(ShouldSwap swap)
-		: data(), compare(swap)
-    {
-
-	}
+        : data(), compare(swap)
+    { }
     
     T operator[](int i)
     {

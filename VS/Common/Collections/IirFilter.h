@@ -10,7 +10,7 @@ class IirFilter
 	ModBuffer<T, P> _x;
 	ModBuffer<T, Q> _y;
 
-	T _compute(void)
+	T _compute() const
 	{
 		if (!_x.isFull() || !_y.isFull())
 			return (T)0;

@@ -22,7 +22,7 @@ public:
 		_data.deposit(item);
 	}
 
-	T compute()
+	T compute() const
 	{
 		if (_data.isFull())
 			return _data.reverseWeightedSum(_kernel);
@@ -30,7 +30,7 @@ public:
 			return (T)0;
 	}
 
-	T compute2()
+	T compute2() const
 	{
 		if (_data.isFull())
 			return _data.weightedSum(_kernel);
@@ -56,7 +56,7 @@ public:
 			return item;
 	}
 
-	int getFilterDelay()
+	int getFilterDelay() const
 	{
 		return N / 2;
 	}
