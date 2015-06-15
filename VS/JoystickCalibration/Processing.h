@@ -2,7 +2,6 @@
 
 #include "opencv2/opencv.hpp"
 
-#include "Collections/WindowedStats.h"
 #include "PSX/XboxController.h"
 #include "Task/Scheduler.h"
 #include "Util/ScreenGrabber.h"
@@ -13,17 +12,17 @@ class JoystickCalibrationAppManager : public FrameProcessor, public KeyHandler
 {
     Scheduler* _scheduler;
     XboxController* _controller;
-    WindowedStats<cv::Mat, SMOOTH_SIZE> _smoother;
-    Mat _oldScreen, _newScreen;
+    cv::Mat _prevFrame;
     bool _keepGoing;
-    int _state;
+    bool _running;
     int _frameCounter;
+    FILE* _outfile;
 
-    void _computeFlow(const Mat& oldImg, const Mat& newImg);
+    static int _computeFlow(const cv::Mat& oldImg, const cv::Mat& newImg);
 
 public:
     JoystickCalibrationAppManager(Scheduler* scheduler, XboxController* controller)
-        : _scheduler(scheduler), _controller(controller), _keepGoing(true), _state(0), _frameCounter(0)
+        : _scheduler(scheduler), _controller(controller), _keepGoing(true), _running(false), _frameCounter(0), _outfile(NULL)
     { }
 
     void run();

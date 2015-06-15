@@ -1,27 +1,27 @@
 #include "ScreenGrabber.h"
 
 ScreenGrabber::ScreenGrabber(int captureDevice, int fps, Scheduler* scheduler, FrameProcessor* frameProcessor, KeyHandler* keyHandler)
-	: cap(captureDevice), _framePeriod(1000000UL / fps), _scheduler(scheduler), _frameProcessor(frameProcessor), _keyHandler(keyHandler)
+    : cap(captureDevice), _framePeriod(1000000UL / fps), _scheduler(scheduler), _frameProcessor(frameProcessor), _keyHandler(keyHandler)
 {
-	if (!cap.isOpened())
-		return;
+    if (!cap.isOpened())
+        return;
 
-	_scheduleGrab();
+    _scheduleGrab();
 }
 
 void ScreenGrabber::_grab()
 {
-	cv::Mat frame;
-	cap >> frame;
-	if (!frame.empty())
-		_frameProcessor->processFrame(frame);
+    _scheduleGrab();
 
-	_keyHandler->handleKey(cvWaitKey(1));
+    cv::Mat frame;
+    cap >> frame;
+    if (!frame.empty())
+        _frameProcessor->processFrame(frame);
 
-	_scheduleGrab();
+    _keyHandler->handleKey(cvWaitKey(1));
 }
 
 void ScreenGrabber::_scheduleGrab()
 {
-	_scheduler->postDelayed(_framePeriod, &ScreenGrabber::_grab, this);
+    _scheduler->postDelayed(_framePeriod, &ScreenGrabber::_grab, this);
 }

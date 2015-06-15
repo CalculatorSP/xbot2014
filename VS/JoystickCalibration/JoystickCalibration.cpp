@@ -18,7 +18,7 @@ int main(int argc, const char **argv)
     Scheduler						scheduler;
     XboxController					xboxController(comport);
     JoystickCalibrationAppManager	appManager(&scheduler, &xboxController);
-    ScreenGrabber					grabber(WEBCAM, 30, &scheduler, &appManager, &appManager);
+    ScreenGrabber					grabber(WEBCAM, 12, &scheduler, &appManager, &appManager);
 
     if (!grabber.cap.isOpened())
     {
