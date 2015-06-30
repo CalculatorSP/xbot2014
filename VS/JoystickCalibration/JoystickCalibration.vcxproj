@@ -147,10 +147,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FlowCalculator.cpp" />
     <ClCompile Include="JoystickCalibration.cpp" />
     <ClCompile Include="Processing.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FlowCalculator.h" />
     <ClInclude Include="Processing.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
