@@ -18,10 +18,29 @@ float degrees(float radians);
 // Converts an angle from radians to degrees
 double degrees(double radians);
 
-// Computes the radius of the view sphere in pixels based on screen resolution and
-//  field of view angle (in radians)
-float getGlobalRadius(int screenWidth, float fieldOfViewRadians);
-
 // Converts a point from spherical coordinates (radius, azimuth, polar)
 //  to Cartesian coordinates (x, y, z)
 cv::Point3f fromSpherical(float r, float theta, float phi);
+
+// Converts a point from spherical coordinates (radius, azimuth, polar) in radians
+//  to Cartesian coordinates (x, y, z)
+cv::Point3d fromSpherical(double r, double theta, double phi);
+
+
+class GlobalRadius
+{
+public:
+    // Radius in pixels
+    const float radius;
+
+    GlobalRadius(int screenWidth, float fieldOfViewRadians);
+
+    float toRadians(float pixels) const;
+    double toRadians(double pixels) const;
+
+    float toDegrees(float pixels) const;
+    double toDegrees(double pixels) const;
+
+    cv::Point3f toCartesian(float screenX, float screenY) const;
+    cv::Point3d toCartesian(double screenX, double screenY) const;
+};

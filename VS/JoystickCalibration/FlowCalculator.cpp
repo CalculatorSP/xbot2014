@@ -1,9 +1,8 @@
-#include "Math/GlobalMath.h"
 #include "FlowCalculator.h"
 #include <stdint.h>
 
 FlowCalculator::FlowCalculator(int screenWidth, float fieldOfViewDegrees)
-    : _globalRadius(getGlobalRadius(screenWidth, radians(fieldOfViewDegrees))),
+    : _globalRadius(screenWidth, radians(fieldOfViewDegrees)),
     
     _maxCorners(100),
     _qualityLevel(0.3),
@@ -30,7 +29,7 @@ void FlowCalculator::calculate()
     vector<Point3f> r0;
     vector<Point3f> r1;
 
-    Mat rot, rod;
+    Mat rot;
 
     // Iterate through frames
     for (int i = 0; i < _frames.size() - 1; ++i)
@@ -51,13 +50,15 @@ void FlowCalculator::calculate()
 
             // Convert from spherical to Cartesian coordinates
             //  (double y since screen was cut in half to handle interlacing)
-            r0.push_back(fromSpherical(_globalRadius, p0[j].x, 2.0f * p0[j].y));
-            r1.push_back(fromSpherical(_globalRadius, p1[j].x, 2.0f * p1[j].y));
+            r0.push_back(_globalRadius.toCartesian(p0[i].x, 2.0f * p0[i].y));
+            r1.push_back(_globalRadius.toCartesian(p1[i].x, 2.0f * p1[i].y));
 
             // Compute optimal rotation between point clouds in Rodrigues form
             _computeRotationMatrix(r0, r1, rot);
-            Rodrigues(rot, rod);
-            rodriguesVectors.push_back(rod.clone());
+            float beta = asinf(rot.at<float>(0, 2));
+            float gamma = acosf(rot.at<float>(0, 0) / cosf(beta));
+            float alpha = acosf(rot.at<float>(2, 2) / cosf(beta));
+            gammaBetaAlphaRotations.push_back(Point3f(gamma, beta, alpha));
         }
     }
 }

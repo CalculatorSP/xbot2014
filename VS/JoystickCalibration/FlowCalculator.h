@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Math/GlobalMath.h"
 #include "opencv2/opencv.hpp"
 
 using namespace cv;
@@ -10,7 +11,7 @@ class FlowCalculator
     SVD _svd;
 
     // Global Params
-    const float _globalRadius;
+    const GlobalRadius _globalRadius;
 
     // Feature Params
     const int _maxCorners;
@@ -26,7 +27,7 @@ class FlowCalculator
     void _computeRotationMatrix(const vector<Point3f>& r0, const vector<Point3f>& r1, Mat& r);
 
 public:
-    vector<Mat> rodriguesVectors;
+    vector<Point3f> gammaBetaAlphaRotations;
 
     FlowCalculator(int screenWidth, float fieldOfViewDegrees);
 

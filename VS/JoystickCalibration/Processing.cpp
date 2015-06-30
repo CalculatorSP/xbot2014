@@ -35,8 +35,15 @@ void JoystickCalibrationAppManager::processFrame(Mat& frame)
             // Print the results to a file
             if (_outFile.is_open())
             {
-                for (int i = 0; i < _flowCalculator.rodriguesVectors.size(); ++i)
-                    _outFile << _flowCalculator.rodriguesVectors[i] << std::endl;
+                _outFile << "time,gamma,beta,alpha" << std::endl;
+                for (int i = 0; i < _flowCalculator.gammaBetaAlphaRotations.size(); ++i)
+                {
+                    _outFile <<
+                        i << "," <<
+                        _flowCalculator.gammaBetaAlphaRotations[i].x << "," <<
+                        _flowCalculator.gammaBetaAlphaRotations[i].y << "," <<
+                        _flowCalculator.gammaBetaAlphaRotations[i].z << std::endl;
+                }
 
                 _outFile.close();
             }
