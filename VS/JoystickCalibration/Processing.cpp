@@ -1,8 +1,10 @@
 #include "Processing.h"
 
 #define KEY_ESC	            (27)
-#define FIELD_OF_VIEW_DEG   (78.0f)
+#define FIELD_OF_VIEW_DEG   (61.0f)
 #define SCREEN_WIDTH        (640)
+
+const Rect JoystickCalibrationAppManager::_flowRoi(150, 40, 280, 100);
 
 JoystickCalibrationAppManager::JoystickCalibrationAppManager(Scheduler* scheduler, XboxController* controller)
     : _scheduler(scheduler),
@@ -21,9 +23,9 @@ void JoystickCalibrationAppManager::processFrame(Mat& frame)
     if (_running)
     {
         resize(frame, frame, Size(), 1.0, 0.5, INTER_NEAREST);
-        _flowCalculator.depositFrame(frame);
+        _flowCalculator.depositFrame(frame(_flowRoi));
 
-        if (_frameCounter >= 90)
+        if (++_frameCounter >= 90)
         {
             // Release the joystick
             _controller->release(XboxAnalog::RIGHT_STICK_X);
@@ -77,7 +79,7 @@ void JoystickCalibrationAppManager::handleKey(int key)
         if (!_running)
         {
             _outFile.open("C:\\Users\\John\\Desktop\\75.csv");
-            _controller->set(XboxAnalog::RIGHT_STICK_X, 0.75f);
+            _controller->set(XboxAnalog::RIGHT_STICK_X, 0.90f);
             _controller->sendState();
             _frameCounter = 0;
             _running = true;

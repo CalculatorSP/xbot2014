@@ -71,3 +71,13 @@ cv::Point3d GlobalRadius::toCartesian(double screenX, double screenY) const
 {
     return fromSpherical((double)radius, toRadians(screenX), toRadians(screenY));
 }
+
+float GlobalRadius::toPixels(float radians) const
+{
+    return radians * radius;
+}
+
+double GlobalRadius::toPixels(double radians) const
+{
+    return radians * radius;
+}

@@ -17,6 +17,8 @@ class JoystickCalibrationAppManager : public FrameProcessor, public KeyHandler
     FlowCalculator _flowCalculator;
     std::ofstream _outFile;
 
+    static const Rect _flowRoi;
+
     bool _keepGoing;
     bool _running;
     int _frameCounter;

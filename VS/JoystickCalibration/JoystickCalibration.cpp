@@ -33,7 +33,8 @@ int main(int argc, const char **argv)
     }
 
     cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
-    cvNamedWindow("flow", CV_WINDOW_AUTOSIZE);
+    cvNamedWindow("flow1", CV_WINDOW_AUTOSIZE);
+    cvNamedWindow("flow2", CV_WINDOW_AUTOSIZE);
 
     appManager.run();
 

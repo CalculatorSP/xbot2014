@@ -43,4 +43,7 @@ public:
 
     cv::Point3f toCartesian(float screenX, float screenY) const;
     cv::Point3d toCartesian(double screenX, double screenY) const;
+
+    float toPixels(float radians) const;
+    double toPixels(double radians) const;
 };
