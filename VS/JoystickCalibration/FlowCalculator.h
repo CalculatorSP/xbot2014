@@ -8,7 +8,6 @@ using namespace cv;
 class FlowCalculator
 {
     vector<Mat> _frames;
-    SVD _svd;
 
     // Global Params
     const GlobalRadius _globalRadius;
@@ -24,10 +23,11 @@ class FlowCalculator
     const int _maxLevel;
     const TermCriteria _termCrit;
 
-    void _computeRotationMatrix(const vector<Point3f>& r0, const vector<Point3f>& r1, Mat& r);
+    template<typename T>
+    static T _getMedian(vector<T>& vals);
 
 public:
-    vector<Point3f> gammaBetaAlphaRotations;
+    vector<Point2f> gammaAlphaRotations;
 
     FlowCalculator(int screenWidth, float fieldOfViewDegrees);
 
