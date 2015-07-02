@@ -21,8 +21,7 @@ public:
 
     ~Scheduler()
     {
-        while (jobs.data.size > 0)
-            delete jobs.pop();
+        clear();
     }
     
     uint64_t getTime()
@@ -135,7 +134,13 @@ public:
         return true;
     }
 
-    static int gettimeofday(struct timeval *tv)
+    void clear()
+    {
+        while (jobs.data.size > 0)
+            delete jobs.pop();
+    }
+
+    static void gettimeofday(struct timeval *tv)
     {
         FILETIME ft;
         unsigned __int64 tmpres = 0;
@@ -153,7 +158,5 @@ public:
             tv->tv_sec = (long)(tmpres / 1000000UL);
             tv->tv_usec = (long)(tmpres % 1000000UL);
         }
-
-        return 0;
     }
 };

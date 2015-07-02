@@ -8,13 +8,13 @@ FlowCalculator::FlowCalculator(int screenWidth, float fieldOfViewDegrees)
     : _globalRadius(screenWidth, radians(fieldOfViewDegrees)),
     
     _maxCorners(50),
-    _qualityLevel(0.1),
+    _qualityLevel(0.2),
     _minDistance(15),
     _blockSize(15),
 
-    _winSize(63, 31),
-    _maxLevel(5),
-    _termCrit(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 40, 0.001)
+    _winSize(31, 15),
+    _maxLevel(6),
+    _termCrit(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 80, 0.0001)
 { }
 
 void FlowCalculator::depositFrame(const Mat& frame)
@@ -49,7 +49,7 @@ void FlowCalculator::calculate()
             continue;
 
         // Track them into the next frame
-        calcOpticalFlowPyrLK(_frames[i], _frames[i + 1], p0, p1, status, err, _winSize, _maxLevel, _termCrit, 0, 0.000001);
+        calcOpticalFlowPyrLK(_frames[i], _frames[i + 1], p0, p1, status, err, _winSize, _maxLevel, _termCrit, 0, 0.00001);
 
         _frames[i].copyTo(copy1);
         _frames[i + 1].copyTo(copy2);

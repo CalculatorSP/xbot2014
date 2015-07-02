@@ -11,13 +11,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="JoystickCalibration.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Processing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FlowCalculator.cpp">
+    <ClCompile Include="HaloAimBot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RedTriangleHunter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PursuitController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MotionModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -25,7 +31,13 @@
     <ClInclude Include="Processing.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="FlowCalculator.h">
+    <ClInclude Include="RedTriangleHunter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PursuitController.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MotionModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -110,8 +110,8 @@ void JoystickCalibrationAppManager::handleKey(int key)
             // Move the joysticks and compute the optical flow
             if (!_running)
             {
-                _xRate = -0.49f;
-                _yRate = -0.58f;
+                _xRate = -0.2f;
+                _yRate = -0.8f;
                 printf("\n-----------------------------\n%f, %f\n-----------------------------\n", _xRate, _yRate);
                 _controller->set(XboxAnalog::RIGHT_STICK_X, _xRate);
                 _controller->set(XboxAnalog::RIGHT_STICK_Y, _yRate);

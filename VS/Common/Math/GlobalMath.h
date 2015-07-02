@@ -26,7 +26,6 @@ cv::Point3f fromSpherical(float r, float theta, float phi);
 //  to Cartesian coordinates (x, y, z)
 cv::Point3d fromSpherical(double r, double theta, double phi);
 
-
 class GlobalRadius
 {
 public:

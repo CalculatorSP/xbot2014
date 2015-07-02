@@ -87,5 +87,8 @@
     <ClInclude Include="Math\GlobalMath.h">
       <Filter>Source\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Math\InvertibleFunction.h">
+      <Filter>Source\Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
