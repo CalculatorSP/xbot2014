@@ -26,6 +26,12 @@ cv::Point3f fromSpherical(float r, float theta, float phi);
 //  to Cartesian coordinates (x, y, z)
 cv::Point3d fromSpherical(double r, double theta, double phi);
 
+// Computes the average of several angles in degrees
+float angleAverageDegrees(cv::vector<float> angles);
+
+// Computes the difference of two angles in degrees
+float angleDifferenceDegrees(float finalAngle, float initialAngle);
+
 class GlobalRadius
 {
 public:

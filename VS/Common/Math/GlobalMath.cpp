@@ -38,6 +38,33 @@ cv::Point3d fromSpherical(double r, double theta, double phi)
         );
 }
 
+float angleAverageDegrees(cv::vector<float> angles)
+{
+    float cosAvg = 0.0f;
+    float sinAvg = 0.0f;
+
+    for (int i = 0; i < angles.size(); ++i)
+    {
+        float rad = radians(angles[i]);
+        cosAvg += cosf(rad);
+        sinAvg += sinf(rad);
+    }
+
+    return degrees(atan2f(sinAvg, cosAvg));
+}
+
+float angleDifferenceDegrees(float finalAngle, float initialAngle)
+{
+    float diff = fmodf(finalAngle - initialAngle, 360.0f);
+
+    if (diff > 180.0f)
+        return diff - 360.0f;
+    if (diff < -180.0f)
+        return diff + 360.0f;
+
+    return diff;
+}
+
 GlobalRadius::GlobalRadius(int screenWidth, float fieldOfViewRadians)
     : radius(screenWidth / fieldOfViewRadians)
 { }
