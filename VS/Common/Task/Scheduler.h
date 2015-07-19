@@ -24,7 +24,7 @@ public:
         clear();
     }
     
-    uint64_t getTime()
+    static uint64_t getTime()
     {
         struct timeval tp;
         gettimeofday(&tp);

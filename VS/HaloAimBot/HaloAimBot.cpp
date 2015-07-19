@@ -18,7 +18,7 @@ int main(int argc, const char **argv)
     Scheduler						scheduler;
     XboxController					xboxController(comport);
     HaloAimBotAppManager	        appManager(&scheduler, &xboxController);
-    ScreenGrabber					grabber(WEBCAM, 15, &scheduler, &appManager, &appManager);
+    ScreenGrabber					grabber(CAPCARD, 30, &scheduler, &appManager, &appManager);
 
     if (!grabber.cap.isOpened())
     {
@@ -32,7 +32,7 @@ int main(int argc, const char **argv)
         //return -1;
     }
 
-    cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
+    namedWindow("result", CV_WINDOW_AUTOSIZE);
 
     appManager.run();
 

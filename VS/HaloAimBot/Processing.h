@@ -30,6 +30,10 @@ class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
     bool _screenshot;
     int _ssCounter;
 
+    Mat _template;
+    const Rect _searchRegion;
+    const Point _templateCenter;
+
     void _quit();
     void _preprocess(Mat& frame);
     void _updateStateMachine(const Mat& frame);
