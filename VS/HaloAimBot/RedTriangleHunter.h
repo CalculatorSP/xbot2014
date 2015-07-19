@@ -6,10 +6,13 @@ using namespace cv;
 
 class RedTriangleHunter
 {
+    Mat _template;
+    const Rect _searchRegion;
+    const Point _templateCenter;
 
 public:
     RedTriangleHunter();
 
-    bool findTarget(const Mat& frame, Point2f& target);
+    bool findTarget(Mat& frame, Point2f& target, bool modifyFrame);
 
 };
