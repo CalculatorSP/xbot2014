@@ -8,7 +8,7 @@
 
 RedTriangleHunter::RedTriangleHunter()
     :
-    _template(imread("C:/Users/John/Desktop/cap/template.png", CV_LOAD_IMAGE_GRAYSCALE)),
+    _template(imread("C:/Users/John/Source/Repos/xbot2014/VS/HaloAimBot/template.png", CV_LOAD_IMAGE_GRAYSCALE)),
     _searchRegion(50, 25, 220, 190),
     _templateCenter(23, 9)
 {
@@ -16,7 +16,7 @@ RedTriangleHunter::RedTriangleHunter()
     threshold(_template, _template, 100.0, 255.0, CV_THRESH_BINARY);
 }
 
-bool RedTriangleHunter::findTarget(Mat& frame, Point2f& target, bool modifyFrame)
+bool RedTriangleHunter::findTarget(Mat& frame, Point& target, bool modifyFrame)
 {
     Mat proc;
 

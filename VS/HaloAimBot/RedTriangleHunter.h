@@ -13,6 +13,6 @@ class RedTriangleHunter
 public:
     RedTriangleHunter();
 
-    bool findTarget(Mat& frame, Point2f& target, bool modifyFrame);
+    bool findTarget(Mat& frame, Point& target, bool modifyFrame);
 
 };

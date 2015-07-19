@@ -3,7 +3,7 @@
 #include "Collections/ModBuffer.h"
 #include "opencv2/opencv.hpp"
 
-#define MOTION_HISTORY_SIZE (3)
+#define MOTION_HISTORY_SIZE (4)
 
 using namespace cv;
 

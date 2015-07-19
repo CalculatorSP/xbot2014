@@ -10,7 +10,7 @@ public:
     X inverse(Y y, X guess, D eps)
     {
         D err = operator()(guess) - y;
-        while (err > eps)
+        while (err > eps || err < -eps)
         {
             D derivative = derivativeAt(guess);
 

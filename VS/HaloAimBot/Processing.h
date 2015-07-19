@@ -27,8 +27,11 @@ class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
     } _state;
 
     bool _eDetect;
+    bool _pMode;
     bool _screenshot;
     int _ssCounter;
+    Point _crosshairLocation;
+    Point2f _target;
 
     void _quit();
     void _updateStateMachine(Mat& frame);
