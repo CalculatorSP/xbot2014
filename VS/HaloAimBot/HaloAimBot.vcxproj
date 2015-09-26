@@ -153,7 +153,6 @@
   <ItemGroup>
     <ClCompile Include="HaloAimBot.cpp" />
     <ClCompile Include="MotionModel.cpp" />
-    <ClCompile Include="MotionTracker.cpp" />
     <ClCompile Include="Processing.cpp" />
     <ClCompile Include="PursuitController.cpp" />
     <ClCompile Include="RedTriangleHunter.cpp" />

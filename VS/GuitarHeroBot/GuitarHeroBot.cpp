@@ -27,7 +27,7 @@ typedef float SAMPLE;
 
 // Algorithm parameters
 #define THUMP_THRESH	(0.15f)		// Threshold for thump detection
-#define THUMP_DELAY		(0L)	// Delay for detecting thump (us)
+#define THUMP_DELAY		(0L)	    // Delay for detecting thump (us)
 
 static int _recordCallback(
 	const void *inputBuffer,

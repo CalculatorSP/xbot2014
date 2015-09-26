@@ -4,7 +4,7 @@
 #define MAX_FRAMES_IN_FUTURE    (10)
 #define AIM_THRESHOLD           (5.0f)
 
-PursuitController::PursuitController(Scheduler* scheduler, XboxController* xboxController, MotionTracker* motionTracker)
+PursuitController::PursuitController(Scheduler* scheduler, XboxController* xboxController, MotionTracker<FRAME_DELAY>* motionTracker)
     :
     _scheduler(scheduler),
     _xboxController(xboxController),

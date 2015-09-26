@@ -13,10 +13,10 @@ using namespace cv;
 
 class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
 {
-    Scheduler*          _scheduler;
-    MotionTracker       _motionTracker;
-    RedTriangleHunter   _hunter;
-    PursuitController   _pursuitController;
+    Scheduler*                  _scheduler;
+    MotionTracker<FRAME_DELAY>  _motionTracker;
+    RedTriangleHunter           _hunter;
+    PursuitController           _pursuitController;
 
     enum
     {
@@ -26,14 +26,17 @@ class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
 
     } _state;
 
+    bool _autoAim;
     bool _eDetect;
-    bool _pMode;
     bool _screenshot;
     int _ssCounter;
-    Point _crosshairLocation;
-    Point2f _target;
+    bool _recording;
+    vector<Mat> _frames;
+
+    const Point _crosshairLocation;
 
     void _quit();
+    void _saveRecording();
     void _updateStateMachine(Mat& frame);
 
 public:

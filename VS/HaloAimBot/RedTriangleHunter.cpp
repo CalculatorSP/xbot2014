@@ -9,7 +9,7 @@
 RedTriangleHunter::RedTriangleHunter()
     :
     _template(imread("C:/Users/John/Source/Repos/xbot2014/VS/HaloAimBot/template.png", CV_LOAD_IMAGE_GRAYSCALE)),
-    _searchRegion(50, 25, 220, 190),
+    _searchRegion(50, 25, 220, 170),
     _templateCenter(23, 9)
 {
     resize(_template, _template, Size(), 0.5, 0.5, INTER_NEAREST);
@@ -31,19 +31,19 @@ bool RedTriangleHunter::findTarget(Mat& frame, Point& target, bool modifyFrame)
     // Filter hue channel
     absdiff(hsv[0], RED_OPPOSITE / 2, hsv[0]);
     blur(hsv[0], hsv[0], Size(2, 2));
-    threshold(hsv[0], hsv[0], 70.0, 255.0, CV_THRESH_BINARY);
+    threshold(hsv[0], hsv[0], 75.0, 255.0, CV_THRESH_BINARY);
 
     // Filter saturation channel
-    blur(hsv[1], hsv[1], Size(2, 2));
-    threshold(hsv[1], hsv[1], 70.0, 255.0, CV_THRESH_BINARY);
+    blur(hsv[1], hsv[1], Size(1, 1));
+    threshold(hsv[1], hsv[1], 100.0, 255.0, CV_THRESH_BINARY);
 
     // Filter value channel
-    blur(hsv[2], hsv[2], Size(2, 2));
-    threshold(hsv[2], hsv[2], 70.0, 255.0, CV_THRESH_BINARY);
+    blur(hsv[2], hsv[2], Size(1, 1));
+    threshold(hsv[2], hsv[2], 100.0, 255.0, CV_THRESH_BINARY);
 
     // Mix filtered hsv channels
     bitwise_and(hsv[0], hsv[1], proc);
-    bitwise_and(hsv[2], proc, proc);
+    bitwise_and(hsv[2], proc, proc);;
 
     // Show filtered image if requested
     if (modifyFrame)

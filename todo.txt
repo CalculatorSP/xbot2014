@@ -1,0 +1,4 @@
+TODO
+- Test trajectory tracking
+- Auto detect frame delay
+- Implement visual object tracking
