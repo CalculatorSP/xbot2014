@@ -1,7 +1,7 @@
 #include "MoveDetector.h"
 
 const Rect MoveDetector::_whiteRoi(55, 225, 100, 105);
-const Rect MoveDetector::_blackRoi(560, 225, 100, 105);
+const Rect MoveDetector::_blackRoi(485, 225, 100, 105);
 
 bool MoveDetector::detectWhiteMove(const Mat& frame)
 {
