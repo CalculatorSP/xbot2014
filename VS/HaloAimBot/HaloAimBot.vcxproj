@@ -159,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MotionModel.h" />
-    <ClInclude Include="MotionTracker.h" />
     <ClInclude Include="Processing.h" />
     <ClInclude Include="PursuitController.h" />
     <ClInclude Include="RedTriangleHunter.h" />

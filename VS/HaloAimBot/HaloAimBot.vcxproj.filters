@@ -40,8 +40,5 @@
     <ClInclude Include="MotionModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="MotionTracker.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
