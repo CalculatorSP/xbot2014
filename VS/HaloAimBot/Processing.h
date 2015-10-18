@@ -25,7 +25,6 @@ class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
     } _state;
 
     bool _autoAim;
-    int _aaCounter;
     bool _eDetect;
     bool _screenshot;
     int _ssCounter;

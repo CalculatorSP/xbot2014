@@ -7,10 +7,9 @@
 HaloAimBotAppManager::HaloAimBotAppManager(Scheduler* scheduler, XboxController* controller)
     :
     _scheduler(scheduler),
-    _pursuitController(scheduler, controller),
+    _pursuitController(controller),
     _state(HUNTING),
     _autoAim(false),
-    _aaCounter(0),
     _eDetect(false),
     _screenshot(false),
     _ssCounter(0),
@@ -24,47 +23,14 @@ HaloAimBotAppManager::~HaloAimBotAppManager()
     _quit();
 }
 
-static float getVal(int t)
-{
-    int s = t % 24;
-    if (s >= 12)
-        s = 24 - s;
-
-    return 300.0f * (s / 12.0f - 0.5f);
-}
-
 void HaloAimBotAppManager::processFrame(Mat& frame)
 {
-    ++_aaCounter;
-    Point2f target(getVal(_aaCounter), getVal(_aaCounter));
-    Point2f target1(getVal(_aaCounter + 1), getVal(_aaCounter + 1));
-    Point2f curTarget(getVal(_aaCounter + 2), getVal(_aaCounter + 2));
-
-    Point2f c(25.0f, 25.0f);
-
-    //_updateStateMachine(frame);
+    _updateStateMachine(frame);
 
     resize(frame, frame, Size(), 1.0, 0.5, INTER_NEAREST);
     resize(frame, frame, Size(), 1.0, 2.0, INTER_NEAREST);
 
-    //circle(frame, _crosshairLocation, 8, Scalar(0, 255, 255));
-
-    circle(frame, Point2f(_crosshairLocation.x, _crosshairLocation.y) + target, 4, Scalar(0, 255, 0));
-    circle(frame, Point2f(_crosshairLocation.x, _crosshairLocation.y) + target1, 4, Scalar(0, 255, 0));
-    circle(frame, Point2f(_crosshairLocation.x, _crosshairLocation.y) + curTarget, 4, Scalar(0, 255, 0));
-
-    if (_autoAim)
-    {
-        _pursuitController._control.at<float>(0) = c.x;
-        _pursuitController._control.at<float>(1) = c.y;
-        _pursuitController.updateWithTarget(target);
-        circle(frame, Point2f(_crosshairLocation.x, _crosshairLocation.y) + Point2f(_pursuitController._curPrediction.at<float>(0), _pursuitController._curPrediction.at<float>(1)), 4, Scalar(0, 0, 255));
-        circle(frame, Point2f(_crosshairLocation.x, _crosshairLocation.y) + Point2f(_pursuitController._curPrediction.at<float>(2), _pursuitController._curPrediction.at<float>(3)), 4, Scalar(0, 0, 255));
-        circle(frame, Point2f(_crosshairLocation.x, _crosshairLocation.y) + Point2f(_pursuitController._curPrediction.at<float>(4), _pursuitController._curPrediction.at<float>(5)), 4, Scalar(0, 0, 255));
-        circle(frame, Point2f(_crosshairLocation.x, _crosshairLocation.y) + Point2f(_pursuitController._curEstimate.at<float>(0), _pursuitController._curPrediction.at<float>(1)), 4, Scalar(255, 0, 0));
-        circle(frame, Point2f(_crosshairLocation.x, _crosshairLocation.y) + Point2f(_pursuitController._curEstimate.at<float>(2), _pursuitController._curPrediction.at<float>(3)), 4, Scalar(255, 0, 0));
-        circle(frame, Point2f(_crosshairLocation.x, _crosshairLocation.y) + Point2f(_pursuitController._curEstimate.at<float>(4), _pursuitController._curPrediction.at<float>(5)), 4, Scalar(255, 0, 0));
-    }
+    circle(frame, _crosshairLocation, 8, Scalar(0, 255, 255));
 
     imshow("result", frame);
 
@@ -93,13 +59,6 @@ void HaloAimBotAppManager::handleKey(int key)
 
     case 'a':
         _autoAim = !_autoAim;
-        if (_autoAim)
-        {
-            _pursuitController.startPursuing(Point2f(100, 100));
-            _aaCounter = 0;
-        }
-        else
-            _pursuitController.reset();
         break;
 
     case 'e':
