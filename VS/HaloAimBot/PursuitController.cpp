@@ -17,7 +17,20 @@ PursuitController::~PursuitController()
 bool PursuitController::startPursuing(Point2f target)
 {
     reset();
-    return updateWithTarget(target);
+    _kalmanFilter.statePre.at<float>(0) = target.x;
+    _kalmanFilter.statePre.at<float>(2) = target.x;
+    _kalmanFilter.statePre.at<float>(4) = target.x;
+    _kalmanFilter.statePre.at<float>(1) = target.y;
+    _kalmanFilter.statePre.at<float>(3) = target.y;
+    _kalmanFilter.statePre.at<float>(5) = target.y;
+
+    _kalmanFilter.statePost.at<float>(0) = target.x;
+    _kalmanFilter.statePost.at<float>(2) = target.x;
+    _kalmanFilter.statePost.at<float>(4) = target.x;
+    _kalmanFilter.statePost.at<float>(1) = target.y;
+    _kalmanFilter.statePost.at<float>(3) = target.y;
+    _kalmanFilter.statePost.at<float>(5) = target.y;
+    return updateWithoutTarget();
 }
 
 bool PursuitController::updateWithTarget(Point2f newTarget)
@@ -90,10 +103,12 @@ bool PursuitController::_updateControl()
 
     // Start by checking current location
     Mat_<float> curState(_curEstimate);
+    std::cout << "starting at: " << _curEstimate << std::endl;
     for (int i = 0; i < 10; ++i)
     {
         Point2f curTarget(curState.at<float>(4), curState.at<float>(5));
         Point2f joystickVals;
+        std:: cout << "trying: " << curState << std::endl;
         if (_iCanHit(curTarget, i, joystickVals))
         {
             if (i == 0)
@@ -101,8 +116,13 @@ bool PursuitController::_updateControl()
                 // Fire in the hole!
                 printf("ENGAGING TARGET\n");
                 _xboxController->tap(XboxButton::RIGHT_TRIGGER);
+                _xboxController->set(XboxAnalog::RIGHT_STICK_X, 0.0f);
+                _xboxController->set(XboxAnalog::RIGHT_STICK_Y, 0.0f);
+                _xboxController->sendState(2);
                 return false;
             }
+
+            printf("INTERSECTION IN %d\n", i);
 
             // Set controls for Kalman filter
             Point2f pixelMovement = MotionModel::getRotationRate(joystickVals);
