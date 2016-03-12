@@ -156,12 +156,15 @@
     <ClCompile Include="Processing.cpp" />
     <ClCompile Include="PursuitController.cpp" />
     <ClCompile Include="RedTriangleHunter.cpp" />
+    <ClCompile Include="TargetTracker.cpp" />
+    <ClCompile Include="TargetTrackingTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MotionModel.h" />
     <ClInclude Include="Processing.h" />
     <ClInclude Include="PursuitController.h" />
     <ClInclude Include="RedTriangleHunter.h" />
+    <ClInclude Include="TargetTracker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
