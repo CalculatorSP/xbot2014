@@ -1,12 +1,16 @@
 #include "opencv2/highgui/highgui.hpp"
 
+#include "Collections/ModBuffer.h"
+
 #include "MotionModel.h"
 #include "TargetTracker.h"
+
+#define FRAME_DELAY (2)
 
 using namespace cv;
 
 static void mouseCallback(int evt, int x, int y, int flags, void* usrData);
-static void drawFrame(Mat& img, bool startedTracking, bool pullTrigger, Point2f target);
+static void drawFrame(Mat& img, bool startedTracking, Point2f target);
 
 static bool haveTarget = false;
 static Point2f mouseSelection(0.0f, 0.0f);
@@ -15,58 +19,89 @@ static const Point2f CROSSHAIR_LOCATION(318.0f, 294.0f);
 int main(int argc, const char **argv)
 {
     TargetTracker targetTracker;
-    TargetTrackerOutput control;
+    ModBuffer<TargetTrackerOutput, FRAME_DELAY> controlHist;
+    for (int i = 0; i < FRAME_DELAY; ++i)
+        controlHist.deposit(TargetTrackerOutput());
+
     Mat img(Size(640, 480), CV_8UC3);
     Point2f target(0.0f, 0.0f);
 
     namedWindow("result", CV_WINDOW_AUTOSIZE);
     setMouseCallback("result", mouseCallback, NULL);
 
+    bool shooting = false;
+    bool reset = false;
     bool startedTracking = false;
     bool keepGoing = true;
     while (keepGoing)
     {
-        if (control.giveUp)
+        if (reset)
         {
-            printf("gave up...\n");
-            control = TargetTrackerOutput();
+            printf("resetting\n");
+            shooting = false;
+            reset = false;
             haveTarget = false;
             startedTracking = false;
             targetTracker.reset();
+            for (int i = 0; i < FRAME_DELAY; ++i)
+                controlHist.deposit(TargetTrackerOutput());
         }
 
-        drawFrame(img, startedTracking, control.pullTrigger, target);
+        drawFrame(img, startedTracking, target);
         imshow("result", img);
         
         switch (waitKey(10))
         {
         case 's':
-            if (control.pullTrigger)
+            printf("\n------------------------------------------\n");
+            if (shooting)
             {
-                control.giveUp = true;
+                printf("Here we go!\n");
+                Point2f rotationRate = MotionModel::getRotationRate(controlHist[0].joystickVals);
+                std::cout << "Rotation rate: " << rotationRate << std::endl;
+                target -= rotationRate;
+                if (controlHist[0].pullTrigger)
+                {
+                    printf("FIRE!!!! (Press key...)\n");
+                    waitKey();
+                    shooting = false;
+                    reset = true;
+                }
+                controlHist.deposit(TargetTrackerOutput());
             }
             else if (startedTracking)
             {
+                TargetTrackerOutput control;
                 targetTracker.trackWithTarget(target - CROSSHAIR_LOCATION, control);
-                target -= MotionModel::getRotationRate(control.joystickVals);
+                if (control.pullTrigger)
+                {
+                    shooting = true;
+                    printf("gonna shoot...\n");
+                }
+                if (control.giveUp)
+                {
+                    reset = true;
+                    printf("gave up.\n");
+                }
+                printf("Press key to continue...\n");
+                waitKey();
+                Point2f rotationRate = MotionModel::getRotationRate(controlHist[0].joystickVals);
+                std::cout << "Rotation rate: " << rotationRate << std::endl;
+                target -= rotationRate;
+                controlHist.deposit(control);
             }
             else if (haveTarget)
             {
                 target = mouseSelection;
                 startedTracking = true;
-            }
-            break;
-
-        case 'b':
-            if (startedTracking)
-            {
-                targetTracker.trackWithoutTarget(control);
-                target -= MotionModel::getRotationRate(control.joystickVals);
+                controlHist.reset();
+                for (int i = 0; i < FRAME_DELAY; ++i)
+                    controlHist.deposit(TargetTrackerOutput());
             }
             break;
 
         case 'r':
-            control.giveUp = true;
+            reset = true;
             break;
 
         case 27:
@@ -99,7 +134,7 @@ static void mouseCallback(int evt, int x, int y, int flags, void* usrData)
     }
 }
 
-static void drawFrame(Mat& img, bool startedTracking, bool pullTrigger, Point2f target)
+static void drawFrame(Mat& img, bool startedTracking, Point2f target)
 {
     img.setTo(Scalar(0));
 
@@ -108,8 +143,5 @@ static void drawFrame(Mat& img, bool startedTracking, bool pullTrigger, Point2f 
     else if (haveTarget)
         circle(img, Point((int)mouseSelection.x, (int)mouseSelection.y), 5, Scalar(255, 0, 0));
 
-    if (pullTrigger)
-        circle(img, Point((int)CROSSHAIR_LOCATION.x, (int)CROSSHAIR_LOCATION.y), 3, Scalar(0, 255, 0));
-    else
-        circle(img, Point((int)CROSSHAIR_LOCATION.x, (int)CROSSHAIR_LOCATION.y), 3, Scalar(255, 255, 255));
+    circle(img, Point((int)CROSSHAIR_LOCATION.x, (int)CROSSHAIR_LOCATION.y), 3, Scalar(255, 255, 255));
 }
