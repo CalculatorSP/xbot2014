@@ -10,10 +10,12 @@
 using namespace cv;
 
 static void mouseCallback(int evt, int x, int y, int flags, void* usrData);
-static void drawFrame(Mat& img, bool startedTracking, Point2f target);
+static Point2f getInitialVelocity();
+static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, Point2f targetVelocity);
 
 static bool haveTarget = false;
 static Point2f mouseSelection(0.0f, 0.0f);
+static Point2f velocitySelection(0.0f, 0.0f);
 static const Point2f CROSSHAIR_LOCATION(318.0f, 294.0f);
 
 int main(int argc, const char **argv)
@@ -24,7 +26,8 @@ int main(int argc, const char **argv)
         controlHist.deposit(TargetTrackerOutput());
 
     Mat img(Size(640, 480), CV_8UC3);
-    Point2f target(0.0f, 0.0f);
+    Point2f targetPosition(0.0f, 0.0f);
+    Point2f targetVelocity(0.0f, 0.0f);
 
     namedWindow("result", CV_WINDOW_AUTOSIZE);
     setMouseCallback("result", mouseCallback, NULL);
@@ -47,7 +50,7 @@ int main(int argc, const char **argv)
                 controlHist.deposit(TargetTrackerOutput());
         }
 
-        drawFrame(img, startedTracking, target);
+        drawFrame(img, startedTracking, targetPosition, targetVelocity);
         imshow("result", img);
         
         switch (waitKey(10))
@@ -59,7 +62,8 @@ int main(int argc, const char **argv)
                 printf("Here we go!\n");
                 Point2f rotationRate = MotionModel::getRotationRate(controlHist[0].joystickVals);
                 std::cout << "Rotation rate: " << rotationRate << std::endl;
-                target -= rotationRate;
+                targetPosition -= rotationRate;
+                targetVelocity += targetVelocity;
                 if (controlHist[0].pullTrigger)
                 {
                     printf("FIRE!!!! (Press key...)\n");
@@ -72,7 +76,7 @@ int main(int argc, const char **argv)
             else if (startedTracking)
             {
                 TargetTrackerOutput control;
-                targetTracker.trackWithTarget(target - CROSSHAIR_LOCATION, control);
+                targetTracker.trackWithTarget(targetPosition - CROSSHAIR_LOCATION, control);
                 if (control.pullTrigger)
                 {
                     shooting = true;
@@ -87,12 +91,14 @@ int main(int argc, const char **argv)
                 waitKey();
                 Point2f rotationRate = MotionModel::getRotationRate(controlHist[0].joystickVals);
                 std::cout << "Rotation rate: " << rotationRate << std::endl;
-                target -= rotationRate;
+                targetPosition -= rotationRate;
+                targetPosition += targetVelocity;
                 controlHist.deposit(control);
             }
             else if (haveTarget)
             {
-                target = mouseSelection;
+                targetPosition = mouseSelection;
+                targetVelocity = velocitySelection;
                 startedTracking = true;
                 controlHist.reset();
                 for (int i = 0; i < FRAME_DELAY; ++i)
@@ -123,6 +129,8 @@ static void mouseCallback(int evt, int x, int y, int flags, void* usrData)
     case EVENT_LBUTTONUP:
         haveTarget = true;
         mouseSelection = Point2f((float)x, (float)y);
+        velocitySelection = getInitialVelocity();
+        std::cout << "YOU CHOSE: " << velocitySelection << std::endl;
         break;
 
     case EVENT_RBUTTONUP:
@@ -134,14 +142,36 @@ static void mouseCallback(int evt, int x, int y, int flags, void* usrData)
     }
 }
 
-static void drawFrame(Mat& img, bool startedTracking, Point2f target)
+static Point2f getInitialVelocity()
+{
+    float x = 0.0f;
+    float y = 0.0f;
+    printf("X Velocity: ");
+    scanf("%f", &x);
+    printf("Y Velocity: ");
+    scanf("%f", &y);
+
+    return Point2f(x, y);
+}
+
+static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, Point2f targetVelocity)
 {
     img.setTo(Scalar(0));
 
     if (startedTracking)
-        circle(img, Point((int)target.x, (int)target.y), 5, Scalar(0, 0, 255));
+    {
+        Point p1 = Point((int)targetPosition.x, (int)targetPosition.y);
+        Point p2 = p1 + Point((int)targetVelocity.x, (int)targetVelocity.y);
+        circle(img, p1, 5, Scalar(0, 0, 255));
+        arrowedLine(img, p1, p2, Scalar(0, 0, 255));
+    }
     else if (haveTarget)
-        circle(img, Point((int)mouseSelection.x, (int)mouseSelection.y), 5, Scalar(255, 0, 0));
+    {
+        Point p1 = Point((int)mouseSelection.x, (int)mouseSelection.y);
+        Point p2 = p1 + Point((int)velocitySelection.x, (int)velocitySelection.y);
+        circle(img, p1, 5, Scalar(255, 0, 0));
+        arrowedLine(img, p1, p2, Scalar(255, 0, 0));
+    }
 
     circle(img, Point((int)CROSSHAIR_LOCATION.x, (int)CROSSHAIR_LOCATION.y), 3, Scalar(255, 255, 255));
 }
