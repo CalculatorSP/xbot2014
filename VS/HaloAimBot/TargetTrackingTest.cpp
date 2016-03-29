@@ -63,7 +63,7 @@ int main(int argc, const char **argv)
                 Point2f rotationRate = MotionModel::getRotationRate(controlHist[0].joystickVals);
                 std::cout << "Rotation rate: " << rotationRate << std::endl;
                 targetPosition -= rotationRate;
-                targetVelocity += targetVelocity;
+                targetPosition += targetVelocity;
                 if (controlHist[0].pullTrigger)
                 {
                     printf("FIRE!!!! (Press key...)\n");
