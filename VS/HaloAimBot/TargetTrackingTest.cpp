@@ -11,7 +11,7 @@ using namespace cv;
 
 static void mouseCallback(int evt, int x, int y, int flags, void* usrData);
 static Point2f getInitialVelocity();
-static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, Point2f targetVelocity);
+static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, Point2f targetVelocity, const std::vector<Point2f>& targetHist);
 
 static bool haveTarget = false;
 static Point2f mouseSelection(0.0f, 0.0f);
@@ -28,6 +28,7 @@ int main(int argc, const char **argv)
     Mat img(Size(640, 480), CV_8UC3);
     Point2f targetPosition(0.0f, 0.0f);
     Point2f targetVelocity(0.0f, 0.0f);
+    std::vector<Point2f> targetHist;
 
     namedWindow("result", CV_WINDOW_AUTOSIZE);
     setMouseCallback("result", mouseCallback, NULL);
@@ -50,7 +51,7 @@ int main(int argc, const char **argv)
                 controlHist.deposit(TargetTrackerOutput());
         }
 
-        drawFrame(img, startedTracking, targetPosition, targetVelocity);
+        drawFrame(img, startedTracking, targetPosition, targetVelocity, targetHist);
         imshow("result", img);
         
         switch (waitKey(10))
@@ -62,6 +63,9 @@ int main(int argc, const char **argv)
                 printf("Here we go!\n");
                 Point2f rotationRate = MotionModel::getRotationRate(controlHist[0].joystickVals);
                 std::cout << "Rotation rate: " << rotationRate << std::endl;
+                targetHist.push_back(targetPosition);
+                for (int i = 0; i < targetHist.size(); ++i)
+                    targetHist[i] -= rotationRate;
                 targetPosition -= rotationRate;
                 targetPosition += targetVelocity;
                 if (controlHist[0].pullTrigger)
@@ -91,12 +95,16 @@ int main(int argc, const char **argv)
                 waitKey();
                 Point2f rotationRate = MotionModel::getRotationRate(controlHist[0].joystickVals);
                 std::cout << "Rotation rate: " << rotationRate << std::endl;
+                targetHist.push_back(targetPosition);
+                for (int i = 0; i < targetHist.size(); ++i)
+                    targetHist[i] -= rotationRate;
                 targetPosition -= rotationRate;
                 targetPosition += targetVelocity;
                 controlHist.deposit(control);
             }
             else if (haveTarget)
             {
+                targetHist.clear();
                 targetPosition = mouseSelection;
                 targetVelocity = velocitySelection;
                 startedTracking = true;
@@ -154,24 +162,27 @@ static Point2f getInitialVelocity()
     return Point2f(x, y);
 }
 
-static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, Point2f targetVelocity)
+static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, Point2f targetVelocity, const std::vector<Point2f>& targetHist)
 {
     img.setTo(Scalar(0));
 
     if (startedTracking)
     {
-        Point p1 = Point((int)targetPosition.x, (int)targetPosition.y);
-        Point p2 = p1 + Point((int)targetVelocity.x, (int)targetVelocity.y);
-        circle(img, p1, 5, Scalar(0, 0, 255));
-        arrowedLine(img, p1, p2, Scalar(0, 0, 255));
+        for (int i = 0; i < targetHist.size(); ++i)
+        {
+            Point p = Point((int)targetHist[i].x, (int)targetHist[i].y);
+            circle(img, p, 5, Scalar(0, 0, 127));
+        }
+
+        Point p = Point((int)targetPosition.x, (int)targetPosition.y);
+        circle(img, p, 5, Scalar(0, 0, 255));
     }
     else if (haveTarget)
     {
-        Point p1 = Point((int)mouseSelection.x, (int)mouseSelection.y);
-        Point p2 = p1 + Point((int)velocitySelection.x, (int)velocitySelection.y);
-        circle(img, p1, 5, Scalar(255, 0, 0));
-        arrowedLine(img, p1, p2, Scalar(255, 0, 0));
+        Point p = Point((int)mouseSelection.x, (int)mouseSelection.y);
+        circle(img, p, 5, Scalar(255, 0, 0));
     }
 
-    circle(img, Point((int)CROSSHAIR_LOCATION.x, (int)CROSSHAIR_LOCATION.y), 3, Scalar(255, 255, 255));
+    Point p = Point((int)CROSSHAIR_LOCATION.x, (int)CROSSHAIR_LOCATION.y);
+    circle(img, p, 3, Scalar(255, 255, 255));
 }
