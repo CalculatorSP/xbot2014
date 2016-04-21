@@ -10,16 +10,10 @@ TargetTracker::TargetTracker()
 
 void TargetTracker::trackWithTarget(Point2f newTarget, TargetTrackerOutput& out)
 {
-    std::cout << "Target: " << newTarget << std::endl;
-    if (!_tracking)
-    {
-        _startPursuing(newTarget);
-    }
-    else
-    {
-        _kalmanFilter.predict(_control);
-        _curEstimate = _kalmanFilter.correct((Mat_<float>(2, 1) << newTarget.x, newTarget.y));
-    }
+    _tracking = true;
+
+    _kalmanFilter.predict(_control);
+    _kalmanFilter.correct((Mat_<float>(2, 1) << newTarget.x, newTarget.y));
 
     _updateControl(out);
 }
@@ -36,8 +30,7 @@ void TargetTracker::trackWithoutTarget(TargetTrackerOutput& out)
         return;
     }
 
-    _curEstimate = _kalmanFilter.predict(_control);
-
+    _kalmanFilter.predict(_control);
     _kalmanFilter.statePre.copyTo(_kalmanFilter.statePost);
     _kalmanFilter.errorCovPre.copyTo(_kalmanFilter.errorCovPost);
 
@@ -47,6 +40,7 @@ void TargetTracker::trackWithoutTarget(TargetTrackerOutput& out)
 void TargetTracker::reset()
 {
     _tracking = false;
+
     _kalmanFilter.init(10, 2, 2, CV_32F);
 
     _kalmanFilter.transitionMatrix = *(Mat_<float>(10, 10) <<
@@ -58,6 +52,18 @@ void TargetTracker::reset()
         0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    _kalmanFilter.processNoiseCov = *(Mat_<float>(10, 10) <<
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
@@ -73,32 +79,41 @@ void TargetTracker::reset()
         -1, 0,
         0, -1);
 
-    _control = Mat::zeros(2, 1, CV_32F);
-    _curEstimate.setTo(Scalar(0));
+    _kalmanFilter.measurementMatrix = *(Mat_<float>(2, 10) <<
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
 
-    _kalmanFilter.statePre.setTo(Scalar(0));
-    setIdentity(_kalmanFilter.measurementMatrix);
-    setIdentity(_kalmanFilter.processNoiseCov, Scalar::all(0));
-    _kalmanFilter.processNoiseCov.at<float>(2, 2) = 1;
-    _kalmanFilter.processNoiseCov.at<float>(3, 3) = 1;
-    _kalmanFilter.processNoiseCov.at<float>(4, 4) = 3000;
-    _kalmanFilter.processNoiseCov.at<float>(5, 5) = 3000;
-    setIdentity(_kalmanFilter.measurementNoiseCov, Scalar::all(1));
-    setIdentity(_kalmanFilter.errorCovPre, Scalar::all(3000));
-    setIdentity(_kalmanFilter.errorCovPost, Scalar::all(3000));
-}
+    _kalmanFilter.measurementNoiseCov = *(Mat_<float>(2, 2) <<
+        0, 0,
+        0, 0);
 
-void TargetTracker::_startPursuing(Point2f target)
-{
-    _kalmanFilter.statePre.at<float>(0) = target.x;
-    _kalmanFilter.statePre.at<float>(1) = target.y;
+    _kalmanFilter.statePost = *(Mat_<float>(10, 1) <<
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0);
 
-    _kalmanFilter.statePost.at<float>(0) = target.x;
-    _kalmanFilter.statePost.at<float>(1) = target.y;
+    _kalmanFilter.errorCovPost = *(Mat_<float>(10, 10) <<
+        1000000, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 1000000, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 1000, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 1000, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-    _kalmanFilter.statePre.copyTo(_curEstimate);
-
-    _tracking = true;
+    _control = *(Mat_<float>(2, 1) <<
+        0,
+        0);
 }
 
 void TargetTracker::_updateControl(TargetTrackerOutput& out)
@@ -108,12 +123,11 @@ void TargetTracker::_updateControl(TargetTrackerOutput& out)
     _kalmanCopy(_kalmanFilter, tmpKalman);
 
     // Start by checking current location
-    Mat_<float> curState(_curEstimate);
     for (int i = -2; i < 10; ++i)
     {
-        Point2f curTarget(curState.at<float>(0), curState.at<float>(1));
+        Point2f curTarget(tmpKalman.statePost.at<float>(0), tmpKalman.statePost.at<float>(1));
         Point2f joystickVals;
-        std::cout << "trying (" << i << "): " << std::endl << _kalmanFilter.measurementNoiseCov << std::endl;
+        std::cout << "trying (" << i << "): " << std::endl << tmpKalman.statePost << std::endl;
         if (_iCanHit(curTarget, i, joystickVals))
         {
             printf("INTERSECTION IN %d\n", i);
@@ -140,7 +154,7 @@ void TargetTracker::_updateControl(TargetTrackerOutput& out)
         }
 
         // Predict with no control. We will calculate control based on result of this loop
-        curState = tmpKalman.predict();
+        tmpKalman.predict();
         tmpKalman.statePre.copyTo(tmpKalman.statePost);
         tmpKalman.errorCovPre.copyTo(tmpKalman.errorCovPost);
     }

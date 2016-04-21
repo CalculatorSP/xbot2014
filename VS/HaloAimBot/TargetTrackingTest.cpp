@@ -11,7 +11,7 @@ using namespace cv;
 
 static void mouseCallback(int evt, int x, int y, int flags, void* usrData);
 static Point2f getInitialVelocity();
-static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, Point2f targetVelocity, const std::vector<Point2f>& targetHist);
+static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, const std::vector<Point2f>& targetHist);
 
 static bool haveTarget = false;
 static Point2f mouseSelection(0.0f, 0.0f);
@@ -28,6 +28,7 @@ int main(int argc, const char **argv)
     Mat img(Size(640, 480), CV_8UC3);
     Point2f targetPosition(0.0f, 0.0f);
     Point2f targetVelocity(0.0f, 0.0f);
+    Point2f targetAcceleration(0.0f, 5.0f);
     std::vector<Point2f> targetHist;
 
     namedWindow("result", CV_WINDOW_AUTOSIZE);
@@ -51,7 +52,7 @@ int main(int argc, const char **argv)
                 controlHist.deposit(TargetTrackerOutput());
         }
 
-        drawFrame(img, startedTracking, targetPosition, targetVelocity, targetHist);
+        drawFrame(img, startedTracking, targetPosition, targetHist);
         imshow("result", img);
         
         switch (waitKey(10))
@@ -68,6 +69,7 @@ int main(int argc, const char **argv)
                     targetHist[i] -= rotationRate;
                 targetPosition -= rotationRate;
                 targetPosition += targetVelocity;
+                targetVelocity += targetAcceleration;
                 if (controlHist[0].pullTrigger)
                 {
                     printf("FIRE!!!! (Press key...)\n");
@@ -100,6 +102,7 @@ int main(int argc, const char **argv)
                     targetHist[i] -= rotationRate;
                 targetPosition -= rotationRate;
                 targetPosition += targetVelocity;
+                targetVelocity += targetAcceleration;
                 controlHist.deposit(control);
             }
             else if (haveTarget)
@@ -162,7 +165,7 @@ static Point2f getInitialVelocity()
     return Point2f(x, y);
 }
 
-static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, Point2f targetVelocity, const std::vector<Point2f>& targetHist)
+static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, const std::vector<Point2f>& targetHist)
 {
     img.setTo(Scalar(0));
 
