@@ -55,9 +55,11 @@ int main(int argc, const char **argv)
         drawFrame(img, startedTracking, targetPosition, targetHist);
         imshow("result", img);
         
-        switch (waitKey(10))
+        int k = waitKey(10);
+        switch (k)
         {
         case 's':
+        case 'b':
             printf("\n------------------------------------------\n");
             if (shooting)
             {
@@ -82,7 +84,10 @@ int main(int argc, const char **argv)
             else if (startedTracking)
             {
                 TargetTrackerOutput control;
-                targetTracker.trackWithTarget(targetPosition - CROSSHAIR_LOCATION, control);
+                if (k == 's')
+                    targetTracker.trackWithTarget(targetPosition - CROSSHAIR_LOCATION, control);
+                else
+                    targetTracker.trackWithoutTarget(control);
                 if (control.pullTrigger)
                 {
                     shooting = true;
