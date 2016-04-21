@@ -1,4 +1,9 @@
 TODO
-- Test trajectory tracking
-- Auto detect frame delay
-- Implement visual object tracking
+- Measure frame delay
+- Write module for reading xbox controller
+- Refactor TargetTracker
+	- Pass in initial buffer of control data
+	- Initialize Kalman filter with enemy location and control hist
+	- Pass control data on each update
+- Back to image processing
+- Look at options for Halo 5 and Xbox One
