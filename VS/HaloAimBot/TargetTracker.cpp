@@ -157,6 +157,7 @@ void TargetTracker::_updateControl(TargetTrackerOutput& out)
                 out.joystickVals = joystickVals;
                 out.giveUp = false;
                 out.pullTrigger = true;
+                _tracking = false;
                 return;
             }
 

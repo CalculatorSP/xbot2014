@@ -13,6 +13,7 @@ using namespace cv;
 class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
 {
     Scheduler*                  _scheduler;
+    XboxController*             _xboxController;
     RedTriangleHunter           _hunter;
     TargetTracker               _targetTracker;
     Point2f                     _joystickVals;
@@ -30,6 +31,7 @@ class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
     void _quit();
     void _saveRecording();
     void _updateStateMachine(Mat& frame);
+    void _clearController();
 
 public:
     HaloAimBotAppManager(Scheduler* scheduler, XboxController* controller);

@@ -6,14 +6,14 @@
 
 #include <iostream>
 
-#define WEBCAM	(0)
-#define CAPCARD	(1)
+#define WEBCAM  (0)
+#define CAPCARD (1)
 
 using namespace cv;
 
 const char* comport = "COM4";
 
-int main2(int argc, const char **argv)
+int main(int argc, const char **argv)
 {
     Scheduler                       scheduler;
     XboxController                  xboxController(comport);

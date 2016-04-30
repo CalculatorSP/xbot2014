@@ -1,12 +1,13 @@
 #include <sstream>
 #include "Processing.h"
 
-#define KEY_ESC	                (27)
+#define KEY_ESC                 (27)
 #define MAX_RECORDING_FRAMES    (900)
 
 HaloAimBotAppManager::HaloAimBotAppManager(Scheduler* scheduler, XboxController* controller)
     :
     _scheduler(scheduler),
+    _xboxController(controller),
     _joystickVals(0.0f, 0.0f),
     _keepGoing(true),
     _autoAim(false),
@@ -59,7 +60,10 @@ void HaloAimBotAppManager::handleKey(int key)
     case 'a':
         _autoAim = !_autoAim;
         if (!_autoAim)
+        {
             _targetTracker.reset();
+            _clearController();
+        }
         break;
 
     case 'e':
@@ -84,7 +88,7 @@ void HaloAimBotAppManager::handleKey(int key)
 void HaloAimBotAppManager::run()
 {
     namedWindow("result", WINDOW_AUTOSIZE);
-
+    _clearController();
     while (_keepGoing)
         _scheduler->run();
 }
@@ -92,8 +96,17 @@ void HaloAimBotAppManager::run()
 void HaloAimBotAppManager::_quit()
 {
     _targetTracker.reset();
+    _clearController();
     _keepGoing = false;
     _scheduler->clear();
+}
+
+void HaloAimBotAppManager::_clearController()
+{
+    _xboxController->set(XboxAnalog::RIGHT_STICK_X, 0.0f);
+    _xboxController->set(XboxAnalog::RIGHT_STICK_Y, 0.0f);
+    _xboxController->set(XboxButton::RIGHT_TRIGGER, false);
+    _xboxController->sendState(3);
 }
 
 void HaloAimBotAppManager::_saveRecording()
@@ -122,14 +135,14 @@ void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
             TargetTrackerOutput controls;
             _targetTracker.trackWithTarget(aimPoint, _joystickVals, controls);
             if (controls.giveUp)
-            {
                 printf("TARGET LOST\n");
-            }
-            else
-            {
-                //TODO apply controls
-                _joystickVals = controls.joystickVals;
-            }
+
+            _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
+            _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
+            _xboxController->set(XboxButton::RIGHT_TRIGGER, controls.pullTrigger);
+            _xboxController->sendState(3);
+
+            _joystickVals = controls.joystickVals;
         }
     }
     else if (_targetTracker.hasTarget() && _autoAim)
@@ -137,13 +150,13 @@ void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
         TargetTrackerOutput controls;
         _targetTracker.trackWithoutTarget(_joystickVals, controls);
         if (controls.giveUp)
-        {
             printf("TARGET LOST\n");
-        }
-        else
-        {
-            //TODO apply controls
-            _joystickVals = controls.joystickVals;
-        }
+
+        _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
+        _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
+        _xboxController->set(XboxButton::RIGHT_TRIGGER, controls.pullTrigger);
+        _xboxController->sendState(3);
+
+        _joystickVals = controls.joystickVals;
     }
 }
