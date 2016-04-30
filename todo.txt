@@ -1,9 +1,8 @@
 TODO
-- Measure frame delay
+- Measure frame delay (increase to 4)
+- Possibly fix ScreenGrabber
 - Write module for reading xbox controller
-- Refactor TargetTracker
-	- Pass in initial buffer of control data
-	- Initialize Kalman filter with enemy location and control hist
-	- Pass control data on each update
-- Back to image processing
+- Pass in initial buffer of control data
+- Back to image processing (HD)
+- Build PC
 - Look at options for Halo 5 and Xbox One
