@@ -15,6 +15,7 @@ class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
     Scheduler*                  _scheduler;
     RedTriangleHunter           _hunter;
     TargetTracker               _targetTracker;
+    Point2f                     _joystickVals;
 
     bool _keepGoing;
     bool _autoAim;

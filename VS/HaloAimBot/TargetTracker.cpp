@@ -3,44 +3,65 @@
 
 #define HIT_THRESH  (5.0f)
 
-TargetTracker::TargetTracker()
-{
-    reset();
-}
+TargetTracker::TargetTracker() : _tracking(false)
+{ }
 
-void TargetTracker::trackWithTarget(Point2f newTarget, TargetTrackerOutput& out)
+void TargetTracker::trackWithTarget(Point2f newTarget, Point2f joystickVals, TargetTrackerOutput& out)
 {
-    _tracking = true;
+    if (_tracking)
+    {
+        Point2f rotationRate = MotionModel::getRotationRate(joystickVals);
+        Mat_<float> control = *(Mat_<float>(2, 1) <<
+            rotationRate.x,
+            rotationRate.y);
 
-    _kalmanFilter.predict(_control);
-    _kalmanFilter.correct((Mat_<float>(2, 1) << newTarget.x, newTarget.y));
+        _kalmanFilter.predict(control);
+        _kalmanFilter.correct((Mat_<float>(2, 1) << newTarget.x, newTarget.y));
+    }
+    else
+    {
+        _startTracking(newTarget);
+    }
 
     _updateControl(out);
 }
 
-void TargetTracker::trackWithoutTarget(TargetTrackerOutput& out)
+void TargetTracker::trackWithoutTarget(Point2f joystickVals, TargetTrackerOutput& out)
 {
-    if (!_tracking)
+    if (_tracking)
+    {
+        Point2f rotationRate = MotionModel::getRotationRate(joystickVals);
+        Mat_<float> control = *(Mat_<float>(2, 1) <<
+            rotationRate.x,
+            rotationRate.y);
+
+        _kalmanFilter.predict(control);
+        _kalmanFilter.statePre.copyTo(_kalmanFilter.statePost);
+        _kalmanFilter.errorCovPre.copyTo(_kalmanFilter.errorCovPost);
+        _updateControl(out);
+    }
+    else
     {
         // No target
         out.joystickVals.x = 0.0f;
         out.joystickVals.y = 0.0f;
         out.pullTrigger = false;
         out.giveUp = true;
-        return;
     }
-
-    _kalmanFilter.predict(_control);
-    _kalmanFilter.statePre.copyTo(_kalmanFilter.statePost);
-    _kalmanFilter.errorCovPre.copyTo(_kalmanFilter.errorCovPost);
-
-    _updateControl(out);
 }
 
 void TargetTracker::reset()
 {
     _tracking = false;
+}
 
+bool TargetTracker::hasTarget() const
+{
+    return _tracking;
+}
+
+void TargetTracker::_startTracking(Point2f newTarget)
+{
     _kalmanFilter.init(10, 2, 2, CV_32F);
 
     _kalmanFilter.transitionMatrix = *(Mat_<float>(10, 10) <<
@@ -88,8 +109,8 @@ void TargetTracker::reset()
         0, 0);
 
     _kalmanFilter.statePost = *(Mat_<float>(10, 1) <<
-        0,
-        0,
+        newTarget.x,
+        newTarget.y,
         0,
         0,
         0,
@@ -100,8 +121,8 @@ void TargetTracker::reset()
         0);
 
     _kalmanFilter.errorCovPost = *(Mat_<float>(10, 10) <<
-        1000000, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 1000000, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 1000, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 1000, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
@@ -111,14 +132,7 @@ void TargetTracker::reset()
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-    _control = *(Mat_<float>(2, 1) <<
-        0,
-        0);
-}
-
-bool TargetTracker::hasTarget() const
-{
-    return _tracking;
+    _tracking = true;
 }
 
 void TargetTracker::_updateControl(TargetTrackerOutput& out)
@@ -148,8 +162,6 @@ void TargetTracker::_updateControl(TargetTrackerOutput& out)
 
             // Set controls for kalman filter
             Point2f pixelMovement = MotionModel::getRotationRate(joystickVals);
-            _control.at<float>(0) = pixelMovement.x;
-            _control.at<float>(1) = pixelMovement.y;
 
             // Tilt in appropriate direction
             out.joystickVals = joystickVals;
@@ -169,6 +181,8 @@ void TargetTracker::_updateControl(TargetTrackerOutput& out)
     out.joystickVals.y = 0.0f;
     out.giveUp = true;
     out.pullTrigger = false;
+
+    _tracking = false;
 }
 
 void TargetTracker::_kalmanCopy(const KalmanFilter& src, KalmanFilter& dst)

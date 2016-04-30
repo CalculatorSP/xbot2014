@@ -7,6 +7,7 @@
 HaloAimBotAppManager::HaloAimBotAppManager(Scheduler* scheduler, XboxController* controller)
     :
     _scheduler(scheduler),
+    _joystickVals(0.0f, 0.0f),
     _keepGoing(true),
     _autoAim(false),
     _eDetect(false),
@@ -57,6 +58,8 @@ void HaloAimBotAppManager::handleKey(int key)
 
     case 'a':
         _autoAim = !_autoAim;
+        if (!_autoAim)
+            _targetTracker.reset();
         break;
 
     case 'e':
@@ -108,7 +111,8 @@ void HaloAimBotAppManager::_saveRecording()
 void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
 {
     Point target;
-    if (_hunter.findTarget(frame, target, _eDetect))
+    bool targetFound = _hunter.findTarget(frame, target, _eDetect);
+    if (targetFound)
     {
         circle(frame, target, 3, Scalar(0, 255, 0), -1);
         Point2f aimPoint((float)(target.x - _crosshairLocation.x), (float)(target.y - _crosshairLocation.y));
@@ -116,30 +120,30 @@ void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
         if (_autoAim)
         {
             TargetTrackerOutput controls;
-            _targetTracker.trackWithTarget(aimPoint, controls);
+            _targetTracker.trackWithTarget(aimPoint, _joystickVals, controls);
             if (controls.giveUp)
             {
-                _targetTracker.reset();
                 printf("TARGET LOST\n");
             }
             else
             {
                 //TODO apply controls
+                _joystickVals = controls.joystickVals;
             }
         }
     }
     else if (_targetTracker.hasTarget() && _autoAim)
     {
         TargetTrackerOutput controls;
-        _targetTracker.trackWithoutTarget(controls);
+        _targetTracker.trackWithoutTarget(_joystickVals, controls);
         if (controls.giveUp)
         {
-            _targetTracker.reset();
             printf("TARGET LOST\n");
         }
         else
         {
             //TODO apply controls
+            _joystickVals = controls.joystickVals;
         }
     }
 }

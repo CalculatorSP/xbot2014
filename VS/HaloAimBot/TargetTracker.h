@@ -17,9 +17,9 @@ struct TargetTrackerOutput
 class TargetTracker
 {
     KalmanFilter                _kalmanFilter;
-    Mat_<float>                 _control;
-    bool _tracking;
+    bool                        _tracking;
 
+    void _startTracking(Point2f newTarget);
     void _updateControl(TargetTrackerOutput& out);
     static void _kalmanCopy(const KalmanFilter& src, KalmanFilter& dst);
     static bool _iCanHit(Point2f intersection, int framesInFuture, Point2f& joystickVals);
@@ -27,9 +27,8 @@ class TargetTracker
 public:
     TargetTracker();
 
-    void trackWithTarget(Point2f newTarget, TargetTrackerOutput& out);
-    void trackWithoutTarget(TargetTrackerOutput& out);
+    void trackWithTarget(Point2f newTarget, Point2f joystickVals, TargetTrackerOutput& out);
+    void trackWithoutTarget(Point2f joystickVals, TargetTrackerOutput& out);
     void reset();
-
     bool hasTarget() const;
 };
