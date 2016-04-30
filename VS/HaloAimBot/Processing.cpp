@@ -7,14 +7,12 @@
 HaloAimBotAppManager::HaloAimBotAppManager(Scheduler* scheduler, XboxController* controller)
     :
     _scheduler(scheduler),
-    _pursuitController(controller),
-    _state(HUNTING),
+    _keepGoing(true),
     _autoAim(false),
     _eDetect(false),
     _screenshot(false),
     _ssCounter(0),
     _recording(false),
-    _frames(),
     _crosshairLocation(318, 294)
 { }
 
@@ -82,14 +80,16 @@ void HaloAimBotAppManager::handleKey(int key)
 
 void HaloAimBotAppManager::run()
 {
-    while (_state != QUIT)
+    namedWindow("result", WINDOW_AUTOSIZE);
+
+    while (_keepGoing)
         _scheduler->run();
 }
 
 void HaloAimBotAppManager::_quit()
 {
-    _pursuitController.reset();
-    _state = QUIT;
+    _targetTracker.reset();
+    _keepGoing = false;
     _scheduler->clear();
 }
 
@@ -107,53 +107,39 @@ void HaloAimBotAppManager::_saveRecording()
 
 void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
 {
-    switch (_state)
+    Point target;
+    if (_hunter.findTarget(frame, target, _eDetect))
     {
-    case HUNTING:
-    {
-        Point target;
-        if (_hunter.findTarget(frame, target, _eDetect))
+        circle(frame, target, 3, Scalar(0, 255, 0), -1);
+        Point2f aimPoint((float)(target.x - _crosshairLocation.x), (float)(target.y - _crosshairLocation.y));
+
+        if (_autoAim)
         {
-            circle(frame, target, 3, Scalar(0, 255, 0), -1);
-            Point2f aimPoint((float)(target.x - _crosshairLocation.x), (float)(target.y - _crosshairLocation.y));
-
-            if (!_autoAim)
-                break;
-
-            if (_pursuitController.startPursuing(aimPoint))
+            TargetTrackerOutput controls;
+            _targetTracker.trackWithTarget(aimPoint, controls);
+            if (controls.giveUp)
             {
-                _state = PURSUIT;
-                printf("TARGET ACQUIRED\n");
-            }
-        }
-        break;
-    }
-
-    case PURSUIT:
-    {
-        Point newTarget;
-        if (_hunter.findTarget(frame, newTarget, _eDetect))
-        {
-            circle(frame, newTarget, 3, Scalar(0, 255, 0), -1);
-            Point2f aimPoint((float)(newTarget.x - _crosshairLocation.x), (float)(newTarget.y - _crosshairLocation.y));
-
-            if (!_pursuitController.updateWithTarget(aimPoint) || !_autoAim)
-            {
-                _pursuitController.reset();
-                _state = HUNTING;
+                _targetTracker.reset();
                 printf("TARGET LOST\n");
             }
+            else
+            {
+                //TODO apply controls
+            }
         }
-        else if (!_pursuitController.updateWithoutTarget() || !_autoAim)
+    }
+    else if (_targetTracker.hasTarget() && _autoAim)
+    {
+        TargetTrackerOutput controls;
+        _targetTracker.trackWithoutTarget(controls);
+        if (controls.giveUp)
         {
-            _pursuitController.reset();
-            _state = HUNTING;
+            _targetTracker.reset();
             printf("TARGET LOST\n");
         }
-        break;
-    }
-
-    default:
-        break;
+        else
+        {
+            //TODO apply controls
+        }
     }
 }

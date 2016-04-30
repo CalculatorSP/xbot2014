@@ -1,23 +1,23 @@
-#include "opencv2/highgui/highgui.hpp"
-
-#include "Collections/ModBuffer.h"
-
-#include "MotionModel.h"
-#include "TargetTracker.h"
-
-#define FRAME_DELAY (2)
-
-using namespace cv;
-
-static void mouseCallback(int evt, int x, int y, int flags, void* usrData);
-static Point2f getInitialVelocity();
-static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, const std::vector<Point2f>& targetHist);
-
-static bool haveTarget = false;
-static Point2f mouseSelection(0.0f, 0.0f);
-static Point2f velocitySelection(0.0f, 0.0f);
-static const Point2f CROSSHAIR_LOCATION(318.0f, 294.0f);
-
+//#include "opencv2/highgui/highgui.hpp"
+//
+//#include "Collections/ModBuffer.h"
+//
+//#include "MotionModel.h"
+//#include "TargetTracker.h"
+//
+//#define FRAME_DELAY (2)
+//
+//using namespace cv;
+//
+//static void mouseCallback(int evt, int x, int y, int flags, void* usrData);
+//static Point2f getInitialVelocity();
+//static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, const std::vector<Point2f>& targetHist);
+//
+//static bool haveTarget = false;
+//static Point2f mouseSelection(0.0f, 0.0f);
+//static Point2f velocitySelection(0.0f, 0.0f);
+//static const Point2f CROSSHAIR_LOCATION(318.0f, 294.0f);
+//
 //int main(int argc, const char **argv)
 //{
 //    TargetTracker targetTracker;
@@ -137,60 +137,60 @@ static const Point2f CROSSHAIR_LOCATION(318.0f, 294.0f);
 //
 //    return 0;
 //}
-
-static void mouseCallback(int evt, int x, int y, int flags, void* usrData)
-{
-    switch (evt)
-    {
-    case EVENT_LBUTTONUP:
-        haveTarget = true;
-        mouseSelection = Point2f((float)x, (float)y);
-        velocitySelection = getInitialVelocity();
-        std::cout << "YOU CHOSE: " << velocitySelection << std::endl;
-        break;
-
-    case EVENT_RBUTTONUP:
-        haveTarget = false;
-        break;
-
-    default:
-        break;
-    }
-}
-
-static Point2f getInitialVelocity()
-{
-    float x = 0.0f;
-    float y = 0.0f;
-    printf("X Velocity: ");
-    scanf("%f", &x);
-    printf("Y Velocity: ");
-    scanf("%f", &y);
-
-    return Point2f(x, y);
-}
-
-static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, const std::vector<Point2f>& targetHist)
-{
-    img.setTo(Scalar(0));
-
-    if (startedTracking)
-    {
-        for (int i = 0; i < targetHist.size(); ++i)
-        {
-            Point p = Point((int)targetHist[i].x, (int)targetHist[i].y);
-            circle(img, p, 5, Scalar(0, 0, 127));
-        }
-
-        Point p = Point((int)targetPosition.x, (int)targetPosition.y);
-        circle(img, p, 5, Scalar(0, 0, 255));
-    }
-    else if (haveTarget)
-    {
-        Point p = Point((int)mouseSelection.x, (int)mouseSelection.y);
-        circle(img, p, 5, Scalar(255, 0, 0));
-    }
-
-    Point p = Point((int)CROSSHAIR_LOCATION.x, (int)CROSSHAIR_LOCATION.y);
-    circle(img, p, 3, Scalar(255, 255, 255));
-}
+//
+//static void mouseCallback(int evt, int x, int y, int flags, void* usrData)
+//{
+//    switch (evt)
+//    {
+//    case EVENT_LBUTTONUP:
+//        haveTarget = true;
+//        mouseSelection = Point2f((float)x, (float)y);
+//        velocitySelection = getInitialVelocity();
+//        std::cout << "YOU CHOSE: " << velocitySelection << std::endl;
+//        break;
+//
+//    case EVENT_RBUTTONUP:
+//        haveTarget = false;
+//        break;
+//
+//    default:
+//        break;
+//    }
+//}
+//
+//static Point2f getInitialVelocity()
+//{
+//    float x = 0.0f;
+//    float y = 0.0f;
+//    printf("X Velocity: ");
+//    scanf("%f", &x);
+//    printf("Y Velocity: ");
+//    scanf("%f", &y);
+//
+//    return Point2f(x, y);
+//}
+//
+//static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, const std::vector<Point2f>& targetHist)
+//{
+//    img.setTo(Scalar(0));
+//
+//    if (startedTracking)
+//    {
+//        for (int i = 0; i < targetHist.size(); ++i)
+//        {
+//            Point p = Point((int)targetHist[i].x, (int)targetHist[i].y);
+//            circle(img, p, 5, Scalar(0, 0, 127));
+//        }
+//
+//        Point p = Point((int)targetPosition.x, (int)targetPosition.y);
+//        circle(img, p, 5, Scalar(0, 0, 255));
+//    }
+//    else if (haveTarget)
+//    {
+//        Point p = Point((int)mouseSelection.x, (int)mouseSelection.y);
+//        circle(img, p, 5, Scalar(255, 0, 0));
+//    }
+//
+//    Point p = Point((int)CROSSHAIR_LOCATION.x, (int)CROSSHAIR_LOCATION.y);
+//    circle(img, p, 3, Scalar(255, 255, 255));
+//}

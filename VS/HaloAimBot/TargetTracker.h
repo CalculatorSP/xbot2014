@@ -30,4 +30,6 @@ public:
     void trackWithTarget(Point2f newTarget, TargetTrackerOutput& out);
     void trackWithoutTarget(TargetTrackerOutput& out);
     void reset();
+
+    bool hasTarget() const;
 };

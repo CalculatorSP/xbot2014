@@ -116,6 +116,11 @@ void TargetTracker::reset()
         0);
 }
 
+bool TargetTracker::hasTarget() const
+{
+    return _tracking;
+}
+
 void TargetTracker::_updateControl(TargetTrackerOutput& out)
 {
     // Copy kalman filter so we don't mess up our current state

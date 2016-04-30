@@ -3,8 +3,8 @@
 #include "opencv2/opencv.hpp"
 
 #include "PSX/XboxController.h"
-#include "PursuitController.h"
 #include "RedTriangleHunter.h"
+#include "TargetTracker.h"
 #include "Task/Scheduler.h"
 #include "Util/ScreenGrabber.h"
 
@@ -14,16 +14,9 @@ class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
 {
     Scheduler*                  _scheduler;
     RedTriangleHunter           _hunter;
-    PursuitController           _pursuitController;
+    TargetTracker               _targetTracker;
 
-    enum
-    {
-        HUNTING,
-        PURSUIT,
-        QUIT
-
-    } _state;
-
+    bool _keepGoing;
     bool _autoAim;
     bool _eDetect;
     bool _screenshot;
