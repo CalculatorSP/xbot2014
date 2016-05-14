@@ -18,7 +18,7 @@ void ScreenGrabber::_grab()
     if (!frame.empty())
         _frameProcessor->processFrame(frame);
 
-    _keyHandler->handleKey(cvWaitKey(1));
+    _keyHandler->handleKey(cv::waitKey(1));
 }
 
 void ScreenGrabber::_scheduleGrab()

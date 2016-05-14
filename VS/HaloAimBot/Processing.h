@@ -2,10 +2,9 @@
 
 #include "opencv2/opencv.hpp"
 
-#include "MotionTracker.h"
 #include "PSX/XboxController.h"
-#include "PursuitController.h"
 #include "RedTriangleHunter.h"
+#include "TargetTracker.h"
 #include "Task/Scheduler.h"
 #include "Util/ScreenGrabber.h"
 
@@ -14,30 +13,25 @@ using namespace cv;
 class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
 {
     Scheduler*                  _scheduler;
-    MotionTracker<FRAME_DELAY>  _motionTracker;
+    XboxController*             _xboxController;
     RedTriangleHunter           _hunter;
-    PursuitController           _pursuitController;
+    TargetTracker               _targetTracker;
+    Point2f                     _joystickVals;
 
-    enum
-    {
-        HUNTING,
-        PURSUIT,
-        QUIT
-
-    } _state;
-
+    bool _keepGoing;
     bool _autoAim;
     bool _eDetect;
     bool _screenshot;
     int _ssCounter;
     bool _recording;
-    vector<Mat> _frames;
+    std::vector<Mat> _frames;
 
     const Point _crosshairLocation;
 
     void _quit();
     void _saveRecording();
     void _updateStateMachine(Mat& frame);
+    void _clearController();
 
 public:
     HaloAimBotAppManager(Scheduler* scheduler, XboxController* controller);

@@ -1,20 +1,20 @@
 #include <sstream>
 #include "Processing.h"
 
-#define KEY_ESC	                (27)
+#define KEY_ESC                 (27)
 #define MAX_RECORDING_FRAMES    (900)
 
 HaloAimBotAppManager::HaloAimBotAppManager(Scheduler* scheduler, XboxController* controller)
     :
     _scheduler(scheduler),
-    _pursuitController(scheduler, controller, &_motionTracker),
-    _state(HUNTING),
+    _xboxController(controller),
+    _joystickVals(0.0f, 0.0f),
+    _keepGoing(true),
     _autoAim(false),
     _eDetect(false),
     _screenshot(false),
     _ssCounter(0),
     _recording(false),
-    _frames(),
     _crosshairLocation(318, 294)
 { }
 
@@ -25,14 +25,13 @@ HaloAimBotAppManager::~HaloAimBotAppManager()
 
 void HaloAimBotAppManager::processFrame(Mat& frame)
 {
-    _motionTracker.update();
-    _pursuitController.updateTargetHistory(_motionTracker.motionHistory[-1]);
     _updateStateMachine(frame);
 
-    resize(frame, frame, Size(), 0.5, 0.5, INTER_NEAREST);
-    resize(frame, frame, Size(), 2.0, 2.0, INTER_NEAREST);
+    resize(frame, frame, Size(), 1.0, 0.5, INTER_NEAREST);
+    resize(frame, frame, Size(), 1.0, 2.0, INTER_NEAREST);
 
     circle(frame, _crosshairLocation, 8, Scalar(0, 255, 255));
+
     imshow("result", frame);
 
     if (_recording)
@@ -60,6 +59,11 @@ void HaloAimBotAppManager::handleKey(int key)
 
     case 'a':
         _autoAim = !_autoAim;
+        if (!_autoAim)
+        {
+            _targetTracker.reset();
+            _clearController();
+        }
         break;
 
     case 'e':
@@ -83,15 +87,26 @@ void HaloAimBotAppManager::handleKey(int key)
 
 void HaloAimBotAppManager::run()
 {
-    while (_state != QUIT)
+    namedWindow("result", WINDOW_AUTOSIZE);
+    _clearController();
+    while (_keepGoing)
         _scheduler->run();
 }
 
 void HaloAimBotAppManager::_quit()
 {
-    _pursuitController.reset();
-    _state = QUIT;
+    _targetTracker.reset();
+    _clearController();
+    _keepGoing = false;
     _scheduler->clear();
+}
+
+void HaloAimBotAppManager::_clearController()
+{
+    _xboxController->set(XboxAnalog::RIGHT_STICK_X, 0.0f);
+    _xboxController->set(XboxAnalog::RIGHT_STICK_Y, 0.0f);
+    _xboxController->set(XboxButton::RIGHT_TRIGGER, false);
+    _xboxController->sendState(3);
 }
 
 void HaloAimBotAppManager::_saveRecording()
@@ -108,55 +123,40 @@ void HaloAimBotAppManager::_saveRecording()
 
 void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
 {
-    switch (_state)
+    Point target;
+    bool targetFound = _hunter.findTarget(frame, target, _eDetect);
+    if (targetFound)
     {
-    case HUNTING:
-    {
-        Point target;
-        if (_hunter.findTarget(frame, target, _eDetect))
-        {
-            circle(frame, target, 3, Scalar(0, 255, 0), -1);
-            Point2f aimPoint(target.x - _crosshairLocation.x, target.y - _crosshairLocation.y);
-            if (!_autoAim)
-                break;
+        circle(frame, target, 3, Scalar(0, 255, 0), -1);
+        Point2f aimPoint((float)(target.x - _crosshairLocation.x), (float)(target.y - _crosshairLocation.y));
 
-            aimPoint -= _motionTracker.motionHistory[-FRAME_DELAY];
-            printf("Frame comp4: (%f, %f)\n", _motionTracker.motionHistory[-4].x, _motionTracker.motionHistory[-4].y);
-            if (_pursuitController.startPursuing(aimPoint))
-            {
-                _state = PURSUIT;
-                printf("TARGET ACQUIRED\n");
-            }
-        }
-        break;
-    }
-
-    case PURSUIT:
-    {
-        Point newTarget;
-        if (_hunter.findTarget(frame, newTarget, _eDetect))
+        if (_autoAim)
         {
-            circle(frame, newTarget, 3, Scalar(0, 255, 0), -1);
-            Point2f aimPoint(newTarget.x - _crosshairLocation.x, newTarget.y - _crosshairLocation.y);
-            aimPoint -= _motionTracker.motionHistory[-FRAME_DELAY];
-            printf("Frame comp4: (%f, %f)\n", _motionTracker.motionHistory[-4].x, _motionTracker.motionHistory[-4].y);
-            if (!_pursuitController.updateWithTarget(aimPoint) || !_autoAim)
-            {
-                _pursuitController.reset();
-                _state = HUNTING;
+            TargetTrackerOutput controls;
+            _targetTracker.trackWithTarget(aimPoint, _joystickVals, controls);
+            if (controls.giveUp)
                 printf("TARGET LOST\n");
-            }
-        }
-        else if (!_pursuitController.updateWithoutTarget() || !_autoAim)
-        {
-            _pursuitController.reset();
-            _state = HUNTING;
-            printf("TARGET LOST\n");
-        }
-        break;
-    }
 
-    default:
-        break;
+            _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
+            _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
+            _xboxController->set(XboxButton::RIGHT_TRIGGER, controls.pullTrigger);
+            _xboxController->sendState(3);
+
+            _joystickVals = controls.joystickVals;
+        }
+    }
+    else if (_targetTracker.hasTarget() && _autoAim)
+    {
+        TargetTrackerOutput controls;
+        _targetTracker.trackWithoutTarget(_joystickVals, controls);
+        if (controls.giveUp)
+            printf("TARGET LOST\n");
+
+        _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
+        _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
+        _xboxController->set(XboxButton::RIGHT_TRIGGER, controls.pullTrigger);
+        _xboxController->sendState(3);
+
+        _joystickVals = controls.joystickVals;
     }
 }

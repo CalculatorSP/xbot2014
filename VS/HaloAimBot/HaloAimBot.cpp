@@ -6,19 +6,19 @@
 
 #include <iostream>
 
-#define WEBCAM	(0)
-#define CAPCARD	(1)
+#define WEBCAM  (0)
+#define CAPCARD (1)
 
 using namespace cv;
 
 const char* comport = "COM4";
 
-int main(int argc, const char **argv)
+int main3(int argc, const char **argv)
 {
-    Scheduler						scheduler;
-    XboxController					xboxController(comport);
-    HaloAimBotAppManager	        appManager(&scheduler, &xboxController);
-    ScreenGrabber					grabber(CAPCARD, 30, &scheduler, &appManager, &appManager);
+    Scheduler                       scheduler;
+    XboxController                  xboxController(comport);
+    HaloAimBotAppManager            appManager(&scheduler, &xboxController);
+    ScreenGrabber                   grabber(CAPCARD, 30, &scheduler, &appManager, &appManager);
 
     if (!grabber.cap.isOpened())
     {
@@ -32,9 +32,6 @@ int main(int argc, const char **argv)
         //return -1;
     }
 
-    namedWindow("result", CV_WINDOW_AUTOSIZE);
-
     appManager.run();
-
     return 0;
 }

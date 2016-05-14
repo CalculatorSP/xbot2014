@@ -1,4 +1,8 @@
 TODO
-- Test trajectory tracking
-- Auto detect frame delay
-- Implement visual object tracking
+- Measure frame delay (increase to 4)
+- Possibly fix ScreenGrabber
+- Write module for reading xbox controller
+- Pass in initial buffer of control data
+- Back to image processing (HD)
+- Build PC
+- Look at options for Halo 5 and Xbox One
