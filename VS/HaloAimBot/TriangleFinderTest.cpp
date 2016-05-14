@@ -3,11 +3,13 @@
 
 #include <iostream>
 
-#define TMPLFILE    "C:/Users/John/Desktop/hdSamples/enemy_arrow.png"
+#define TMPLFILE    "C:/Users/John/Desktop/hdSamples/enemy_arrow2.png"
 
 using namespace cv;
 
+static void getKernel(Mat& kernel, Mat& mask);
 static void makeOneChannel(const Mat& src, Mat& dst);
+static void matchTemplateWithMask(const Mat& src, const Mat& tmpl, const Mat& mask, Mat& result);
 
 int main(int argc, const char **argv)
 {
@@ -18,16 +20,16 @@ int main(int argc, const char **argv)
     }
 
     VideoCapture cap(argv[1]);
-    Mat frame, result;
-    Mat kernel = imread(TMPLFILE);
+    Mat frame, result, kernel, mask;
 
-    makeOneChannel(kernel, kernel);
+    namedWindow("orig", WINDOW_AUTOSIZE);
+    namedWindow("result", WINDOW_AUTOSIZE);
+    namedWindow("kernel", WINDOW_AUTOSIZE);
+    namedWindow("mask", WINDOW_AUTOSIZE);
 
-    namedWindow("orig", CV_WINDOW_AUTOSIZE);
-    namedWindow("result", CV_WINDOW_AUTOSIZE);
-    namedWindow("kernel", CV_WINDOW_AUTOSIZE);
-
+    getKernel(kernel, mask);
     imshow("kernel", kernel);
+    imshow("mask", mask);
 
     while (true)
     {
@@ -36,14 +38,16 @@ int main(int argc, const char **argv)
             break;
 
         makeOneChannel(frame, frame);
-        matchTemplate(frame, kernel, result, 1);
+        matchTemplateWithMask(frame, kernel, mask, result);
         double minval, maxval;
-        minMaxIdx(result, &minval, &maxval);
+        Point minloc, maxloc;
+        minMaxLoc(result, &minval, &maxval, &minloc, &maxloc);
+        circle(frame, minloc, 5, 0, -1);
 
         std::cout << minval << ", " << maxval << std::endl;
 
         imshow("orig", frame);
-        imshow("result", result);
+        imshow("result", (result - minval) / (maxval - minval));
         switch (waitKey(1))
         {
         case 'p':
@@ -60,44 +64,35 @@ int main(int argc, const char **argv)
     return 0;
 }
 
+static void getKernel(Mat& kernel, Mat& mask)
+{
+    kernel = imread(TMPLFILE);
+    std::vector<Mat> chans;
+    split(kernel, chans);
+    threshold(chans[0], mask, 0, 0, THRESH_BINARY);
+    mask += 255;
+    makeOneChannel(kernel, kernel);
+}
+
 static void makeOneChannel(const Mat& src, Mat& dst)
 {
     std::vector<Mat> chans;
     split(src, chans);
     chans[2] = 255 - chans[2];
     merge(chans, dst);
-    //cvtColor(dst, dst, CV_BGR2GRAY);
+    dst = min(max(max(chans[0], chans[1]), chans[2]), 170);
 }
 
-static void findEnemy(const Mat& src, Mat& dst)
+static void matchTemplateWithMask(const Mat& src, const Mat& tmpl, const Mat& mask, Mat& result)
 {
-    namedWindow("original", CV_WINDOW_AUTOSIZE);
-    namedWindow("result", CV_WINDOW_AUTOSIZE);
+    Mat i, t, w, r1, r2;
+    src.convertTo(i, CV_32F, 1.0 / 255.0);
+    tmpl.convertTo(t, CV_32F, 1.0 / 255.0);
+    mask.convertTo(w, CV_32F, 1.0 / 255.0);
 
-    Mat tmp = src.clone();
-    tmp.convertTo(tmp, CV_32F);
-    cvtColor(tmp, tmp, CV_BGR2GRAY);
-    tmp /= 255.0f;
+    static Scalar adj = sum(w.mul(t.mul(t)));
 
-    Mat kernel = imread(TMPLFILE);
-    kernel.convertTo(kernel, CV_32F);
-    cvtColor(kernel, kernel, CV_BGR2GRAY);
-    kernel /= 255.0f;
-
-    matchTemplate(tmp, kernel, dst, 1);
-
-    double minVal, maxVal;
-    Point minLoc, maxLoc;
-    minMaxLoc(dst, &minVal, &maxVal, &minLoc, &maxLoc);
-    minLoc += Point(kernel.cols / 2, kernel.rows);
-    maxLoc += Point(kernel.cols / 2, kernel.rows);
-    dst /= maxVal;
-    std::cout << minLoc << ", " << minVal << std::endl << maxLoc << ", " << maxVal << std::endl;
-
-    cvtColor(tmp, tmp, CV_GRAY2BGR);
-    circle(tmp, minLoc, 8, Scalar(0.0f, 1.0f, 0.0f));
-    circle(tmp, maxLoc, 8, Scalar(0.0f, 0.0f, 1.0f));
-
-    imshow("original", tmp);
-    imshow("result", dst);
+    matchTemplate(i.mul(i), w, r1, TM_CCORR);
+    matchTemplate(i, w.mul(t, 2.0), r2, TM_CCORR);
+    result = r1 - r2 + adj;
 }

@@ -23,9 +23,6 @@
     <ClCompile Include="RedTriangleHunter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PursuitController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MotionModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -44,9 +41,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="RedTriangleHunter.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PursuitController.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="MotionModel.h">

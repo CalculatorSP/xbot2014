@@ -11,7 +11,7 @@ void TargetTracker::trackWithTarget(Point2f newTarget, Point2f joystickVals, Tar
     if (_tracking)
     {
         Point2f rotationRate = MotionModel::getRotationRate(joystickVals);
-        Mat_<float> control = *(Mat_<float>(2, 1) <<
+        Mat_<float> control = (Mat_<float>(2, 1) <<
             rotationRate.x,
             rotationRate.y);
 
@@ -31,7 +31,7 @@ void TargetTracker::trackWithoutTarget(Point2f joystickVals, TargetTrackerOutput
     if (_tracking)
     {
         Point2f rotationRate = MotionModel::getRotationRate(joystickVals);
-        Mat_<float> control = *(Mat_<float>(2, 1) <<
+        Mat_<float> control = (Mat_<float>(2, 1) <<
             rotationRate.x,
             rotationRate.y);
 
@@ -64,7 +64,7 @@ void TargetTracker::_startTracking(Point2f newTarget)
 {
     _kalmanFilter.init(10, 2, 2, CV_32F);
 
-    _kalmanFilter.transitionMatrix = *(Mat_<float>(10, 10) <<
+    _kalmanFilter.transitionMatrix = (Mat_<float>(10, 10) <<
         1, 0, 1, 0, 0, 0, 1, 0, 0, 0,
         0, 1, 0, 1, 0, 0, 0, 1, 0, 0,
         0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
@@ -76,7 +76,7 @@ void TargetTracker::_startTracking(Point2f newTarget)
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-    _kalmanFilter.processNoiseCov = *(Mat_<float>(10, 10) <<
+    _kalmanFilter.processNoiseCov = (Mat_<float>(10, 10) <<
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -88,7 +88,7 @@ void TargetTracker::_startTracking(Point2f newTarget)
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-    _kalmanFilter.controlMatrix = *(Mat_<float>(10, 2) <<
+    _kalmanFilter.controlMatrix = (Mat_<float>(10, 2) <<
         0, 0,
         0, 0,
         0, 0,
@@ -100,15 +100,15 @@ void TargetTracker::_startTracking(Point2f newTarget)
         -1, 0,
         0, -1);
 
-    _kalmanFilter.measurementMatrix = *(Mat_<float>(2, 10) <<
+    _kalmanFilter.measurementMatrix = (Mat_<float>(2, 10) <<
         1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
 
-    _kalmanFilter.measurementNoiseCov = *(Mat_<float>(2, 2) <<
+    _kalmanFilter.measurementNoiseCov = (Mat_<float>(2, 2) <<
         0, 0,
         0, 0);
 
-    _kalmanFilter.statePost = *(Mat_<float>(10, 1) <<
+    _kalmanFilter.statePost = (Mat_<float>(10, 1) <<
         newTarget.x,
         newTarget.y,
         0,
@@ -120,7 +120,7 @@ void TargetTracker::_startTracking(Point2f newTarget)
         0,
         0);
 
-    _kalmanFilter.errorCovPost = *(Mat_<float>(10, 10) <<
+    _kalmanFilter.errorCovPost = (Mat_<float>(10, 10) <<
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 1000, 0, 0, 0, 0, 0, 0, 0,

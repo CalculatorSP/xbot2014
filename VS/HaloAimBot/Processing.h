@@ -24,7 +24,7 @@ class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
     bool _screenshot;
     int _ssCounter;
     bool _recording;
-    vector<Mat> _frames;
+    std::vector<Mat> _frames;
 
     const Point _crosshairLocation;
 
