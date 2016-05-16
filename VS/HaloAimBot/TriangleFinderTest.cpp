@@ -20,7 +20,7 @@ int main(int argc, const char **argv)
     }
 
     VideoCapture cap(argv[1]);
-    Mat frame, result, kernel, mask;
+    Mat frame, proc, result, kernel, mask;
 
     namedWindow("orig", WINDOW_AUTOSIZE);
     namedWindow("result", WINDOW_AUTOSIZE);
@@ -37,12 +37,12 @@ int main(int argc, const char **argv)
         if (frame.empty())
             break;
 
-        makeOneChannel(frame, frame);
-        matchTemplateWithMask(frame, kernel, mask, result);
+        makeOneChannel(frame, proc);
+        matchTemplateWithMask(proc, kernel, mask, result);
         double minval, maxval;
         Point minloc, maxloc;
         minMaxLoc(result, &minval, &maxval, &minloc, &maxloc);
-        circle(frame, minloc, 5, 0, -1);
+        circle(frame, minloc + Point(13, 16), 4, Scalar(0, 0, 255));
 
         std::cout << minval << ", " << maxval << std::endl;
 
