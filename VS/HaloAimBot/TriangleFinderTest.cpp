@@ -3,8 +3,9 @@
 
 #include <iostream>
 
-#define TMPLFILE    "C:/Users/John/Desktop/hdSamples/enemy_arrow2.png"
-
+#define WEBCAM      (0)
+#define CAPCARD     (1)
+#define TMPLFILE    "enemy_arrow2.png"
 using namespace cv;
 
 static void getKernel(Mat& kernel, Mat& mask);
@@ -13,13 +14,7 @@ static void matchTemplateWithMask(const Mat& src, const Mat& tmpl, const Mat& ma
 
 int main(int argc, const char **argv)
 {
-    if (argc != 2)
-    {
-        printf("Please provide a filename or drag and drop");
-        return -1;
-    }
-
-    VideoCapture cap(argv[1]);
+    VideoCapture cap(CAPCARD);
     Mat frame, proc, result, kernel, mask;
 
     namedWindow("orig", WINDOW_AUTOSIZE);
@@ -31,20 +26,23 @@ int main(int argc, const char **argv)
     imshow("kernel", kernel);
     imshow("mask", mask);
 
+    int64 lastTime = getTickCount();
+
     while (true)
     {
         cap >> frame;
         if (frame.empty())
             break;
 
+        //resize(frame, frame, Size(), 640.0 / 1280.0, 480.0 / 720.0, INTER_NEAREST);
         makeOneChannel(frame, proc);
         matchTemplateWithMask(proc, kernel, mask, result);
         double minval, maxval;
         Point minloc, maxloc;
         minMaxLoc(result, &minval, &maxval, &minloc, &maxloc);
-        circle(frame, minloc + Point(13, 16), 4, Scalar(0, 0, 255));
+        circle(frame, minloc + Point(13, 16), 4, Scalar(0, 255, 0), -1);
 
-        std::cout << minval << ", " << maxval << std::endl;
+        std::cout << minval << ", ";
 
         imshow("orig", frame);
         imshow("result", (result - minval) / (maxval - minval));
@@ -59,6 +57,10 @@ int main(int argc, const char **argv)
         default:
             break;
         }
+
+        int64 curTime = getTickCount();
+        std::cout << 1000.0 * (curTime - lastTime) / getTickFrequency() << std::endl;
+        lastTime = curTime;
     }
 
     return 0;
@@ -76,8 +78,9 @@ static void getKernel(Mat& kernel, Mat& mask)
 
 static void makeOneChannel(const Mat& src, Mat& dst)
 {
+    Mat tmp = src;
     std::vector<Mat> chans;
-    split(src, chans);
+    split(tmp, chans);
     chans[2] = 255 - chans[2];
     merge(chans, dst);
     dst = min(max(max(chans[0], chans[1]), chans[2]), 170);
