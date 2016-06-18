@@ -7,7 +7,7 @@ class RunningStats
 	int _count;
 
 public:
-	RunningStats()
+    RunningStats()
 		: _count(0)
 	{ }
 

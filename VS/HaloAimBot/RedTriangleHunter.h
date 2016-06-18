@@ -2,17 +2,15 @@
 
 #include "opencv2/opencv.hpp"
 
-using namespace cv;
-
 class RedTriangleHunter
 {
-    Mat _template;
-    const Rect _searchRegion;
-    const Point _templateCenter;
+    cv::Mat _template;
+    const cv::Rect _searchRegion;
+    const cv::Point _templateCenter;
 
 public:
     RedTriangleHunter();
 
-    bool findTarget(Mat& frame, Point& target, bool modifyFrame);
+    bool findTarget(cv::Mat& frame, cv::Point& target, bool modifyFrame);
 
 };

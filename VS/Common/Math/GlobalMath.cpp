@@ -1,5 +1,7 @@
 #include "GlobalMath.h"
 
+using namespace cv;
+
 float radians(float degrees)
 {
     return degrees * PI_F / 180.0f;
@@ -20,18 +22,18 @@ double degrees(double radians)
     return radians * 180.0 / PI;
 }
 
-cv::Point3f fromSpherical(float r, float theta, float phi)
+Point3f fromSpherical(float r, float theta, float phi)
 {
-    return cv::Point3f(
+    return Point3f(
         r * cosf(theta) * sinf(phi),
         r * sinf(theta) * sinf(phi),
         r * cosf(phi)
         );
 }
 
-cv::Point3d fromSpherical(double r, double theta, double phi)
+Point3d fromSpherical(double r, double theta, double phi)
 {
-    return cv::Point3d(
+    return Point3d(
         r * cos(theta) * sin(phi),
         r * sin(theta) * sin(phi),
         r * cos(phi)

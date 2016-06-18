@@ -1,10 +1,11 @@
+#include <iostream>
+
 #include "opencv2/opencv.hpp"
 
 #include "PSX/XboxController.h"
 #include "Util/ScreenGrabber.h"
-#include "Processing.h"
 
-#include <iostream>
+#include "Processing.h"
 
 #define WEBCAM  (0)
 #define CAPCARD (1)

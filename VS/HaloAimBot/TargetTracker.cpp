@@ -3,6 +3,8 @@
 
 #define HIT_THRESH  (5.0f)
 
+using namespace cv;
+
 TargetTracker::TargetTracker() : _tracking(false)
 { }
 

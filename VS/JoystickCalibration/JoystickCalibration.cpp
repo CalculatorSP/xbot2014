@@ -1,13 +1,14 @@
+#include <iostream>
+
 #include "opencv2/opencv.hpp"
 
 #include "PSX/XboxController.h"
 #include "Util/ScreenGrabber.h"
+
 #include "Processing.h"
 
-#include <iostream>
-
-#define WEBCAM	(0)
-#define CAPCARD	(1)
+#define WEBCAM  (0)
+#define CAPCARD (1)
 
 using namespace cv;
 
@@ -15,10 +16,10 @@ const char* comport = "COM4";
 
 int main(int argc, const char **argv)
 {
-    Scheduler						scheduler;
-    XboxController					xboxController(comport);
-    JoystickCalibrationAppManager	appManager(&scheduler, &xboxController);
-    ScreenGrabber					grabber(CAPCARD, 30, &scheduler, &appManager, &appManager);
+    Scheduler                       scheduler;
+    XboxController                  xboxController(comport);
+    JoystickCalibrationAppManager   appManager(&scheduler, &xboxController);
+    ScreenGrabber                   grabber(CAPCARD, 30, &scheduler, &appManager, &appManager);
 
     if (!grabber.cap.isOpened())
     {

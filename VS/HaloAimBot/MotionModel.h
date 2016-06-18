@@ -4,8 +4,6 @@
 
 #include "Math/InvertibleFunction.h"
 
-using namespace cv;
-
 namespace MotionModel
 {
     static class : public InvertibleFunction
@@ -29,6 +27,6 @@ namespace MotionModel
         }
     } _getRotationMagnitude;
 
-    Point2f getRotationRate(Point2f joystickVals);
-    Point2f getJoystickVals(Point2f rotationRate);
+    cv::Point2f getRotationRate(cv::Point2f joystickVals);
+    cv::Point2f getJoystickVals(cv::Point2f rotationRate);
 }

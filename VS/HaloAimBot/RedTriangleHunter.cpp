@@ -6,6 +6,8 @@
 #define SCORE_THRESH        (160)
 #define MAX_SEARCH_PIXELS   (3000)
 
+using namespace cv;
+
 RedTriangleHunter::RedTriangleHunter()
     :
     _template(imread("C:/Users/John/Source/Repos/xbot2014/VS/HaloAimBot/template.png", CV_LOAD_IMAGE_GRAYSCALE)),

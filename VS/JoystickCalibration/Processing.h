@@ -1,14 +1,14 @@
 #pragma once
 
+#include <fstream>
+
 #include "opencv2/opencv.hpp"
 
-#include "FlowCalculator.h"
 #include "PSX/XboxController.h"
 #include "Task/Scheduler.h"
 #include "Util/ScreenGrabber.h"
-#include <fstream>
 
-using namespace cv;
+#include "FlowCalculator.h"
 
 class JoystickCalibrationAppManager : public FrameProcessor, public KeyHandler
 {
@@ -17,7 +17,7 @@ class JoystickCalibrationAppManager : public FrameProcessor, public KeyHandler
     FlowCalculator _flowCalculator;
     std::ofstream _outFile;
 
-    static const Rect _flowRoi;
+    static const cv::Rect _flowRoi;
 
     bool _keepGoing;
     bool _running;
@@ -32,7 +32,7 @@ public:
     JoystickCalibrationAppManager(Scheduler* scheduler, XboxController* controller);
 
     void run();
-    void processFrame(Mat& frame);
+    void processFrame(cv::Mat& frame);
     void handleKey(int key);
 
 };

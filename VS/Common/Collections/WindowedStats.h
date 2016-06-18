@@ -6,40 +6,40 @@
 template <typename T, int N>
 class WindowedStats
 {
-	ModBuffer<T, N> _data;
-	RunningStats<T> _stats;
+    ModBuffer<T, N> _data;
+    RunningStats<T> _stats;
 
 public:
-	WindowedStats()
-	{ }
+    WindowedStats()
+    { }
 
-	void reset()
-	{
-		_data.reset();
-		_stats.reset();
-	}
+    void reset()
+    {
+        _data.reset();
+        _stats.reset();
+    }
 
-	void deposit(const T &item)
-	{
-		if (_data.isFull())
-			_stats.remove(_data[0]);
+    void deposit(const T &item)
+    {
+        if (_data.isFull())
+            _stats.remove(_data[0]);
 
-		_stats.deposit(item);
-		_data.deposit(item);
-	}
+        _stats.deposit(item);
+        _data.deposit(item);
+    }
 
-	bool isFull() const
-	{
-		return _data.isFull();
-	}
+    bool isFull() const
+    {
+        return _data.isFull();
+    }
 
-	int getCount() const
-	{
-		return _stats.getCount();
-	}
+    int getCount() const
+    {
+        return _stats.getCount();
+    }
 
-	T getMean() const
-	{
-		return _stats.getMean();
-	}
+    T getMean() const
+    {
+        return _stats.getMean();
+    }
 };

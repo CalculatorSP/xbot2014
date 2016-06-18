@@ -2,13 +2,11 @@
 
 #include "opencv2/opencv.hpp"
 
-using namespace cv;
-
 struct TargetTrackerOutput
 {
     bool giveUp;
     bool pullTrigger;
-    Point2f joystickVals;
+    cv::Point2f joystickVals;
 
     TargetTrackerOutput() : giveUp(false), pullTrigger(false), joystickVals(0.0f, 0.0f)
     { }
@@ -16,19 +14,19 @@ struct TargetTrackerOutput
 
 class TargetTracker
 {
-    KalmanFilter                _kalmanFilter;
+    cv::KalmanFilter            _kalmanFilter;
     bool                        _tracking;
 
-    void _startTracking(Point2f newTarget);
+    void _startTracking(cv::Point2f newTarget);
     void _updateControl(TargetTrackerOutput& out);
-    static void _kalmanCopy(const KalmanFilter& src, KalmanFilter& dst);
-    static bool _iCanHit(Point2f intersection, int framesInFuture, Point2f& joystickVals);
+    static void _kalmanCopy(const cv::KalmanFilter& src, cv::KalmanFilter& dst);
+    static bool _iCanHit(cv::Point2f intersection, int framesInFuture, cv::Point2f& joystickVals);
 
 public:
     TargetTracker();
 
-    void trackWithTarget(Point2f newTarget, Point2f joystickVals, TargetTrackerOutput& out);
-    void trackWithoutTarget(Point2f joystickVals, TargetTrackerOutput& out);
+    void trackWithTarget(cv::Point2f newTarget, cv::Point2f joystickVals, TargetTrackerOutput& out);
+    void trackWithoutTarget(cv::Point2f joystickVals, TargetTrackerOutput& out);
     void reset();
     bool hasTarget() const;
 };

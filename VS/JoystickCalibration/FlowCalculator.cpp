@@ -1,8 +1,11 @@
-#include "FlowCalculator.h"
 #include <stdint.h>
 
+#include "FlowCalculator.h"
+
 #define KEY_ENTER   (13)
-#define KEY_ESC	    (27)
+#define KEY_ESC     (27)
+
+using namespace cv;
 
 FlowCalculator::FlowCalculator(int screenWidth, float fieldOfViewDegrees)
     : _globalRadius(screenWidth, radians(fieldOfViewDegrees)),
@@ -26,10 +29,10 @@ void FlowCalculator::depositFrame(const Mat& frame)
 
 void FlowCalculator::calculate()
 {
-    vector<Point2f> p0, p1;
-    vector<float> rx, ry;
-    vector<uint8_t> status;
-    vector<float> err;
+    std::vector<Point2f> p0, p1;
+    std::vector<float> rx, ry;
+    std::vector<uint8_t> status;
+    std::vector<float> err;
 
     Mat copy1, copy2;
 
@@ -105,7 +108,7 @@ void FlowCalculator::calculate()
 }
 
 template <typename T>
-T FlowCalculator::_getMedian(vector<T>& vals)
+T FlowCalculator::_getMedian(std::vector<T>& vals)
 {
     size_t size = vals.size();
     if (size == 0)

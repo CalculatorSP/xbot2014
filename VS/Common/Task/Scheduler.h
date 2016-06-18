@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Collections/Heap.h"
-#include "Job.h"
-
 #include <time.h>
 #include <Windows.h>
+
+#include "Collections/Heap.h"
+#include "Job.h"
 
 static int shouldSwap(IJob* parent, IJob* child)
 {

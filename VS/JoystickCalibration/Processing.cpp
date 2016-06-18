@@ -6,6 +6,8 @@
 #define FRAMES_TO_RUN       (30)
 #define MIN_DATAPOINTS      (5)
 
+using namespace cv;
+
 const Rect JoystickCalibrationAppManager::_flowRoi(150, 40, 360, 100);
 
 JoystickCalibrationAppManager::JoystickCalibrationAppManager(Scheduler* scheduler, XboxController* controller)

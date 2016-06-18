@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PSX/XboxController.h"
+
 #include "Processors/Stockfish/types.h"
 
 class ChessActuator

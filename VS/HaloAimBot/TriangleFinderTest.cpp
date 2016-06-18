@@ -1,11 +1,12 @@
+#include <iostream>
+
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
-
-#include <iostream>
 
 #define WEBCAM      (0)
 #define CAPCARD     (1)
 #define TMPLFILE    "enemy_arrow2.png"
+
 using namespace cv;
 
 static void getKernel(Mat& kernel, Mat& mask);

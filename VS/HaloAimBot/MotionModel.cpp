@@ -1,5 +1,7 @@
 #include "MotionModel.h"
 
+using namespace cv;
+
 namespace MotionModel
 {
     Point2f getRotationRate(Point2f joystickVals)

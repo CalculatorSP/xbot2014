@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdio.h>
-
 #include "List.h"
 
 template <typename T>
@@ -62,8 +60,6 @@ public:
             }
         }
         
-//        if (!isValid())
-//            printf("BROKEN\n");
         return true;
     }
     
@@ -92,7 +88,6 @@ public:
             }
             else if (leftVsCur)
             {
-                //Swap left
                 next = left;
                 if (leftVsRight)
                     next = right;
@@ -108,9 +103,6 @@ public:
             
             cur = next;
         }
-        
-//        if (!isValid())
-//            printf("BROKEN\n");
 
         return val;
     }

@@ -1,8 +1,11 @@
 #include <sstream>
+
 #include "Processing.h"
 
 #define KEY_ESC                 (27)
 #define MAX_RECORDING_FRAMES    (900)
+
+using namespace cv;
 
 HaloAimBotAppManager::HaloAimBotAppManager(Scheduler* scheduler, XboxController* controller)
     :

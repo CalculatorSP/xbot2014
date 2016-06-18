@@ -1,6 +1,7 @@
 #pragma once
 
 #include "opencv2/opencv.hpp"
+
 #include "Task/Scheduler.h"
 
 class FrameProcessor

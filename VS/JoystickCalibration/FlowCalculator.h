@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Math/GlobalMath.h"
 #include "opencv2/opencv.hpp"
 
-using namespace cv;
+#include "Math/GlobalMath.h"
 
 class FlowCalculator
 {
-    vector<Mat> _frames;
+    std::vector<cv::Mat> _frames;
 
     // Global Params
     const GlobalRadius _globalRadius;
@@ -19,18 +18,18 @@ class FlowCalculator
     const int _blockSize;
 
     // LK Params
-    const Size _winSize;
+    const cv::Size _winSize;
     const int _maxLevel;
-    const TermCriteria _termCrit;
+    const cv::TermCriteria _termCrit;
 
     template<typename T>
-    static T _getMedian(vector<T>& vals);
+    static T _getMedian(std::vector<T>& vals);
 
 public:
-    vector<Point2f> gammaAlphaRotations;
+    std::vector<cv::Point2f> gammaAlphaRotations;
 
     FlowCalculator(int screenWidth, float fieldOfViewDegrees);
 
-    void depositFrame(const Mat& frame);
+    void depositFrame(const cv::Mat& frame);
     void calculate();
 };

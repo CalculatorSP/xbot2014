@@ -5,74 +5,67 @@ const PlaystationPacket_t PlaystationController::defaultPacket =
 
 PlaystationController::PlaystationController() : _serialPort(NULL)
 {	
-	reset();
+    reset();
 }
 
 PlaystationController::~PlaystationController()
 {
-	disconnect();
+    disconnect();
 }
 
 bool PlaystationController::isConnected() const
 {
-	return _serialPort != NULL;
+    return _serialPort != NULL;
 }
 
 bool PlaystationController::connect(const char* comport)
 {
-	if (isConnected())
-		return false;
+    if (isConnected())
+        return false;
 
-	try
-	{
-		_serialPort = new Serial(comport);
-	}
-	catch (...)
-	{
-		_serialPort = NULL;
-		return false;
-	}
+    try
+    {
+        _serialPort = new Serial(comport);
+    }
+    catch (...)
+    {
+        _serialPort = NULL;
+        return false;
+    }
 
-	_serialPort->flush();
-	return true;
+    _serialPort->flush();
+    return true;
 }
 
 void PlaystationController::disconnect()
 {
-	if (!isConnected())
-		return;
+    if (!isConnected())
+        return;
 
-	delete _serialPort;
-	_serialPort = NULL;
+    delete _serialPort;
+    _serialPort = NULL;
 }
 
 void PlaystationController::reset()
 {
-	state.packet = defaultPacket;
+    state.packet = defaultPacket;
 }
 
 void PlaystationController::sendState(int framecount) const
 {
-	char serialString[PACKET_SIZE];
-	char miniString[3];
-	//FILE* fp;
-	//if (fopen_s(&fp, "C:/Users/John/Desktop/xbot.txt", "a"))
-		//return;
+    char serialString[PACKET_SIZE];
+    char miniString[3];
 
-	serialString[0] = 'c';	// Controller update instruction
-	serialString[1] = '0' + framecount;	// Hold for specified number of frames
-	for (int i = 0; i < sizeof(state.packet); i++)
-	{
-		sprintf_s(miniString, 3, "%02hhx", state.packet.arr[i]);
-		serialString[2 * i + 2] = miniString[0];
-		serialString[2 * i + 3] = miniString[1];
-	}
-	serialString[PACKET_SIZE - 1] = '\n';	// Separator
+    serialString[0] = 'c';                  // Controller update instruction
+    serialString[1] = '0' + framecount;     // Hold for specified number of frames
+    for (int i = 0; i < sizeof(state.packet); i++)
+    {
+        sprintf_s(miniString, 3, "%02hhx", state.packet.arr[i]);
+        serialString[2 * i + 2] = miniString[0];
+        serialString[2 * i + 3] = miniString[1];
+    }
+    serialString[PACKET_SIZE - 1] = '\n';   // Separator
 
-	if (isConnected())
-		_serialPort->write((uint8_t *)serialString, sizeof(serialString));
-
-	//fwrite(serialString, PACKET_SIZE, 1, fp);
-
-	//fclose(fp);
+    if (isConnected())
+        _serialPort->write((uint8_t *)serialString, sizeof(serialString));
 }

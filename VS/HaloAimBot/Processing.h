@@ -4,11 +4,11 @@
 
 #include "PSX/XboxController.h"
 #include "RedTriangleHunter.h"
-#include "TargetTracker.h"
 #include "Task/Scheduler.h"
 #include "Util/ScreenGrabber.h"
 
-using namespace cv;
+#include "TargetTracker.h"
+
 
 class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
 {
@@ -16,7 +16,7 @@ class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
     XboxController*             _xboxController;
     RedTriangleHunter           _hunter;
     TargetTracker               _targetTracker;
-    Point2f                     _joystickVals;
+    cv::Point2f                 _joystickVals;
 
     bool _keepGoing;
     bool _autoAim;
@@ -24,13 +24,13 @@ class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
     bool _screenshot;
     int _ssCounter;
     bool _recording;
-    std::vector<Mat> _frames;
+    std::vector<cv::Mat> _frames;
 
-    const Point _crosshairLocation;
+    const cv::Point _crosshairLocation;
 
     void _quit();
     void _saveRecording();
-    void _updateStateMachine(Mat& frame);
+    void _updateStateMachine(cv::Mat& frame);
     void _clearController();
 
 public:
@@ -38,7 +38,7 @@ public:
     ~HaloAimBotAppManager();
 
     void run();
-    void processFrame(Mat& frame);
+    void processFrame(cv::Mat& frame);
     void handleKey(int key);
 
 };
