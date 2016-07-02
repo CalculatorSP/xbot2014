@@ -5,39 +5,48 @@
 
 #define WEBCAM      (0)
 #define CAPCARD     (1)
-#define TMPLFILE    "enemy_arrow2.png"
+#define TMPLFILE    "C:/Users/John/Git/xbot2014/VS/HaloAimBot/enemy_arrow2.png"
 
 using namespace cv;
 
-static void getKernel(Mat& kernel, Mat& mask);
 static void makeOneChannel(const Mat& src, Mat& dst);
-static void matchTemplateWithMask(const Mat& src, const Mat& tmpl, const Mat& mask, Mat& result);
 
 int main(int argc, const char **argv)
 {
-    VideoCapture cap(CAPCARD);
-    Mat frame, proc, result, kernel, mask;
+    if (argc != 2)
+    {
+        std::cout << "Usage: HaloAimBot.exe video_file" << std::endl;
+        return -1;
+    }
+
+    VideoCapture cap(argv[1]);
+    if (!cap.isOpened())
+    {
+        std::cout << "Could not open capture " << argv[1] << std::endl;
+        return -1;
+    }
+
+    Mat kernel;
+    kernel = imread(TMPLFILE);
+    if (kernel.empty())
+    {
+        std::cout << "Could not open template file " << TMPLFILE << std::endl;
+        return -1;
+    }
+    makeOneChannel(kernel, kernel);
 
     namedWindow("orig", WINDOW_AUTOSIZE);
-    namedWindow("result", WINDOW_AUTOSIZE);
-    namedWindow("kernel", WINDOW_AUTOSIZE);
-    namedWindow("mask", WINDOW_AUTOSIZE);
-
-    getKernel(kernel, mask);
-    imshow("kernel", kernel);
-    imshow("mask", mask);
+    Mat frame, proc, result;
 
     int64 lastTime = getTickCount();
-
     while (true)
     {
         cap >> frame;
         if (frame.empty())
             break;
 
-        //resize(frame, frame, Size(), 640.0 / 1280.0, 480.0 / 720.0, INTER_NEAREST);
         makeOneChannel(frame, proc);
-        matchTemplateWithMask(proc, kernel, mask, result);
+        matchTemplate(proc, kernel, result, TM_SQDIFF_NORMED);
         double minval, maxval;
         Point minloc, maxloc;
         minMaxLoc(result, &minval, &maxval, &minloc, &maxloc);
@@ -46,7 +55,6 @@ int main(int argc, const char **argv)
         std::cout << minval << ", ";
 
         imshow("orig", frame);
-        imshow("result", (result - minval) / (maxval - minval));
         switch (waitKey(1))
         {
         case 'p':
@@ -67,36 +75,11 @@ int main(int argc, const char **argv)
     return 0;
 }
 
-static void getKernel(Mat& kernel, Mat& mask)
-{
-    kernel = imread(TMPLFILE);
-    std::vector<Mat> chans;
-    split(kernel, chans);
-    threshold(chans[0], mask, 0, 0, THRESH_BINARY);
-    mask += 255;
-    makeOneChannel(kernel, kernel);
-}
-
 static void makeOneChannel(const Mat& src, Mat& dst)
 {
     Mat tmp = src;
     std::vector<Mat> chans;
     split(tmp, chans);
     chans[2] = 255 - chans[2];
-    merge(chans, dst);
     dst = min(max(max(chans[0], chans[1]), chans[2]), 170);
-}
-
-static void matchTemplateWithMask(const Mat& src, const Mat& tmpl, const Mat& mask, Mat& result)
-{
-    Mat i, t, w, r1, r2;
-    src.convertTo(i, CV_32F, 1.0 / 255.0);
-    tmpl.convertTo(t, CV_32F, 1.0 / 255.0);
-    mask.convertTo(w, CV_32F, 1.0 / 255.0);
-
-    static Scalar adj = sum(w.mul(t.mul(t)));
-
-    matchTemplate(i.mul(i), w, r1, TM_CCORR);
-    matchTemplate(i, w.mul(t, 2.0), r2, TM_CCORR);
-    result = r1 - r2 + adj;
 }
