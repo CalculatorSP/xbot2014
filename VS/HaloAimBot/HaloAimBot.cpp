@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "opencv2/opencv.hpp"
+#include "opencv2/videoio.hpp"
 
 #include "PSX/XboxController.h"
 #include "Util/ScreenGrabber.h"
@@ -8,13 +9,13 @@
 #include "Processing.h"
 
 #define WEBCAM  (0)
-#define CAPCARD (1)
+#define CAPCARD (0)
 
 using namespace cv;
 
-const char* comport = "COM4";
+const char* comport = "COM3";
 
-int main3(int argc, const char **argv)
+int main(int argc, const char **argv)
 {
     Scheduler                       scheduler;
     XboxController                  xboxController(comport);

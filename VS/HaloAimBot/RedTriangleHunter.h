@@ -5,12 +5,12 @@
 class RedTriangleHunter
 {
     cv::Mat _template;
-    const cv::Rect _searchRegion;
-    const cv::Point _templateCenter;
+
+    static void _makeOneChannel(const cv::Mat& src, cv::Mat& dst);
 
 public:
     RedTriangleHunter();
 
-    bool findTarget(cv::Mat& frame, cv::Point& target, bool modifyFrame);
+    bool findTarget(const cv::Mat& frame, cv::Point& target) const;
 
 };

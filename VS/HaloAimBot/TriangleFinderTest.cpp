@@ -3,15 +3,13 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
-#define WEBCAM      (0)
-#define CAPCARD     (1)
 #define TMPLFILE    "C:/Users/John/Git/xbot2014/VS/HaloAimBot/enemy_arrow2.png"
 
 using namespace cv;
 
 static void makeOneChannel(const Mat& src, Mat& dst);
 
-int main(int argc, const char **argv)
+int main3(int argc, const char **argv)
 {
     if (argc != 2)
     {
@@ -19,7 +17,7 @@ int main(int argc, const char **argv)
         return -1;
     }
 
-    VideoCapture cap(argv[1]);
+    VideoCapture cap(0);
     if (!cap.isOpened())
     {
         std::cout << "Could not open capture " << argv[1] << std::endl;
@@ -37,8 +35,10 @@ int main(int argc, const char **argv)
 
     namedWindow("orig", WINDOW_AUTOSIZE);
     Mat frame, proc, result;
+    cap >> frame;
 
     int64 lastTime = getTickCount();
+    while (!waitKey());
     while (true)
     {
         cap >> frame;
@@ -72,6 +72,8 @@ int main(int argc, const char **argv)
         lastTime = curTime;
     }
 
+    cap.release();
+    destroyAllWindows();
     return 0;
 }
 

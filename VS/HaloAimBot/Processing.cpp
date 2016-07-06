@@ -14,11 +14,10 @@ HaloAimBotAppManager::HaloAimBotAppManager(Scheduler* scheduler, XboxController*
     _joystickVals(0.0f, 0.0f),
     _keepGoing(true),
     _autoAim(false),
-    _eDetect(false),
     _screenshot(false),
     _ssCounter(0),
     _recording(false),
-    _crosshairLocation(318, 294)
+    _crosshairLocation(639, 441)
 { }
 
 HaloAimBotAppManager::~HaloAimBotAppManager()
@@ -29,9 +28,6 @@ HaloAimBotAppManager::~HaloAimBotAppManager()
 void HaloAimBotAppManager::processFrame(Mat& frame)
 {
     _updateStateMachine(frame);
-
-    resize(frame, frame, Size(), 1.0, 0.5, INTER_NEAREST);
-    resize(frame, frame, Size(), 1.0, 2.0, INTER_NEAREST);
 
     circle(frame, _crosshairLocation, 8, Scalar(0, 255, 255));
 
@@ -67,10 +63,6 @@ void HaloAimBotAppManager::handleKey(int key)
             _targetTracker.reset();
             _clearController();
         }
-        break;
-
-    case 'e':
-        _eDetect = !_eDetect;
         break;
 
     case 's':
@@ -127,7 +119,7 @@ void HaloAimBotAppManager::_saveRecording()
 void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
 {
     Point target;
-    bool targetFound = _hunter.findTarget(frame, target, _eDetect);
+    bool targetFound = _hunter.findTarget(frame, target);
     if (targetFound)
     {
         circle(frame, target, 3, Scalar(0, 255, 0), -1);

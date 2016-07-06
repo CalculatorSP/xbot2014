@@ -5,7 +5,7 @@
 #include "MotionModel.h"
 #include "TargetTracker.h"
 
-#define FRAME_DELAY (2)
+#define FRAME_DELAY (4)
 
 using namespace cv;
 
@@ -16,7 +16,7 @@ static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, co
 static bool haveTarget = false;
 static Point2f mouseSelection(0.0f, 0.0f);
 static Point2f velocitySelection(0.0f, 0.0f);
-static const Point2f CROSSHAIR_LOCATION(318.0f, 294.0f);
+static const Point2f CROSSHAIR_LOCATION(639.0f, 441.0f);
 
 int main2(int argc, const char **argv)
 {
@@ -25,10 +25,10 @@ int main2(int argc, const char **argv)
     for (int i = 0; i < FRAME_DELAY; ++i)
         controlHist.deposit(TargetTrackerOutput());
 
-    Mat img(Size(640, 480), CV_8UC3);
+    Mat img(Size(1280, 720), CV_8UC3);
     Point2f targetPosition(0.0f, 0.0f);
     Point2f targetVelocity(0.0f, 0.0f);
-    Point2f targetAcceleration(0.0f, 5.0f);
+    Point2f targetAcceleration(0.0f, 7.0f);
     std::vector<Point2f> targetHist;
 
     namedWindow("result", CV_WINDOW_AUTOSIZE);
@@ -179,18 +179,18 @@ static void drawFrame(Mat& img, bool startedTracking, Point2f targetPosition, co
         for (int i = 0; i < targetHist.size(); ++i)
         {
             Point p = Point((int)targetHist[i].x, (int)targetHist[i].y);
-            circle(img, p, 5, Scalar(0, 0, 127));
+            circle(img, p, 7, Scalar(0, 0, 127));
         }
 
         Point p = Point((int)targetPosition.x, (int)targetPosition.y);
-        circle(img, p, 5, Scalar(0, 0, 255));
+        circle(img, p, 7, Scalar(0, 0, 255));
     }
     else if (haveTarget)
     {
         Point p = Point((int)mouseSelection.x, (int)mouseSelection.y);
-        circle(img, p, 5, Scalar(255, 0, 0));
+        circle(img, p, 7, Scalar(255, 0, 0));
     }
 
     Point p = Point((int)CROSSHAIR_LOCATION.x, (int)CROSSHAIR_LOCATION.y);
-    circle(img, p, 3, Scalar(255, 255, 255));
+    circle(img, p, 5, Scalar(255, 255, 255));
 }

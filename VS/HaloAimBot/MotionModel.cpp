@@ -28,11 +28,17 @@ namespace MotionModel
         if (joystickVals.y > 0.0f)
             rotationRate.y *= -1.0f;
 
+        rotationRate.x *= 1280.0f / 640.0f;
+        rotationRate.y *= 720.0f / 480.0f;
+
         return rotationRate;
     }
 
     Point2f getJoystickVals(Point2f rotationRate)
     {
+        rotationRate.x *= 640.0f / 1280.0f;
+        rotationRate.y *= 480.0f / 720.0f;
+
         if (rotationRate.x == 0.0f && rotationRate.y == 0.0f)
             return Point2f(0.0f, 0.0f);
 
