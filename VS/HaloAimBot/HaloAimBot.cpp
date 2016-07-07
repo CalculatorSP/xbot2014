@@ -15,7 +15,7 @@ using namespace cv;
 
 const char* comport = "COM3";
 
-int main(int argc, const char **argv)
+int HALO_BOT(int argc, const char **argv)
 {
     Scheduler                       scheduler;
     XboxController                  xboxController(comport);

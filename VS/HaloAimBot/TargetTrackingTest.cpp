@@ -18,7 +18,7 @@ static Point2f mouseSelection(0.0f, 0.0f);
 static Point2f velocitySelection(0.0f, 0.0f);
 static const Point2f CROSSHAIR_LOCATION(639.0f, 441.0f);
 
-int main2(int argc, const char **argv)
+int TARGET_TRACK(int argc, const char **argv)
 {
     TargetTracker targetTracker;
     ModBuffer<TargetTrackerOutput, FRAME_DELAY> controlHist;

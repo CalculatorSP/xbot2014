@@ -35,6 +35,9 @@
     <ClCompile Include="TriangleFinderTest.cpp">
       <Filter>Source Files\Tests</Filter>
     </ClCompile>
+    <ClCompile Include="PointAndShoot.cpp">
+      <Filter>Source Files\Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Processing.h">

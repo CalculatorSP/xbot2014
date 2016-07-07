@@ -9,7 +9,7 @@ using namespace cv;
 
 static void makeOneChannel(const Mat& src, Mat& dst);
 
-int main3(int argc, const char **argv)
+int TRIANGLE_FIND(int argc, const char **argv)
 {
     if (argc != 2)
     {
