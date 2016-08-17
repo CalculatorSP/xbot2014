@@ -168,7 +168,7 @@ void TargetTracker::_updateControl(TargetTrackerOutput& out)
     {
         Point2f curTarget(tmpKalman.statePost.at<float>(0), tmpKalman.statePost.at<float>(1));
         Point2f joystickVals;
-        std::cout << "trying (" << i << "): " << std::endl << tmpKalman.statePost << std::endl;
+        //std::cout << "trying (" << i << "): " << std::endl << tmpKalman.statePost << std::endl;
         if (_iCanHit(curTarget, i, joystickVals))
         {
             printf("INTERSECTION IN %d\n", i);
@@ -236,6 +236,6 @@ bool TargetTracker::_iCanHit(Point2f intersection, int framesInFuture, Point2f& 
         return hypotf(intersection.x, intersection.y) < HIT_THRESH;
 
     joystickVals = MotionModel::getJoystickVals(1.0f / framesInFuture * intersection);
-    printf("req: %f, %f\n", joystickVals.x, joystickVals.y);
+    //printf("req: %f, %f\n", joystickVals.x, joystickVals.y);
     return hypotf(joystickVals.x, joystickVals.y) < 0.9f;
 }

@@ -146,7 +146,7 @@ void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
             _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
             _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
             _xboxController->set(XboxButton::RIGHT_TRIGGER, controls.pullTrigger);
-            _xboxController->sendState(2);
+            _xboxController->sendState((controls.pullTrigger || controls.giveUp) ? 3 : 2);
 
             _joystickVals = controls.joystickVals;
         }
@@ -161,7 +161,7 @@ void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
         _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
         _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
         _xboxController->set(XboxButton::RIGHT_TRIGGER, controls.pullTrigger);
-        _xboxController->sendState(2);
+        _xboxController->sendState((controls.pullTrigger || controls.giveUp) ? 3 : 2);
 
         _joystickVals = controls.joystickVals;
     }
