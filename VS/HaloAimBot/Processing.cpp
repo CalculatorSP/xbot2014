@@ -13,11 +13,14 @@ HaloAimBotAppManager::HaloAimBotAppManager(Scheduler* scheduler, XboxController*
     _xboxController(controller),
     _joystickVals(0.0f, 0.0f),
     _keepGoing(true),
+    _lastCapTime(0),
+    _MIN_TICK_PERIOD((int64)(.02*getTickFrequency())),
     _autoAim(false),
     _screenshot(false),
     _ssCounter(0),
     _recording(false),
     _crosshairLocation(639, 441)
+
 { }
 
 HaloAimBotAppManager::~HaloAimBotAppManager()
@@ -27,6 +30,14 @@ HaloAimBotAppManager::~HaloAimBotAppManager()
 
 void HaloAimBotAppManager::processFrame(Mat& frame)
 {
+    // Downsample from 60fps to 30fps
+    int64 curTime = getTickCount();
+    if (curTime - _lastCapTime < _MIN_TICK_PERIOD)
+        return;
+
+    std::cout << 1000.0 * (curTime - _lastCapTime) / getTickFrequency() << std::endl;
+
+    _lastCapTime = curTime;
     _updateStateMachine(frame);
 
     circle(frame, _crosshairLocation, 8, Scalar(0, 255, 255));
@@ -135,7 +146,7 @@ void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
             _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
             _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
             _xboxController->set(XboxButton::RIGHT_TRIGGER, controls.pullTrigger);
-            _xboxController->sendState(3);
+            _xboxController->sendState(2);
 
             _joystickVals = controls.joystickVals;
         }
@@ -150,7 +161,7 @@ void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
         _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
         _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
         _xboxController->set(XboxButton::RIGHT_TRIGGER, controls.pullTrigger);
-        _xboxController->sendState(3);
+        _xboxController->sendState(2);
 
         _joystickVals = controls.joystickVals;
     }

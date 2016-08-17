@@ -15,12 +15,12 @@ using namespace cv;
 
 const char* comport = "COM3";
 
-int HALO_BOT(int argc, const char **argv)
+int main(int argc, const char **argv)
 {
     Scheduler                       scheduler;
     XboxController                  xboxController(comport);
     HaloAimBotAppManager            appManager(&scheduler, &xboxController);
-    ScreenGrabber                   grabber(CAPCARD, 30, &scheduler, &appManager, &appManager);
+    ScreenGrabber                   grabber(CAPCARD, 60, &scheduler, &appManager, &appManager);
 
     if (!grabber.cap.isOpened())
     {

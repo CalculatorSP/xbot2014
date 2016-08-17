@@ -19,6 +19,8 @@ class HaloAimBotAppManager : public FrameProcessor, public KeyHandler
     cv::Point2f                 _joystickVals;
 
     bool _keepGoing;
+    int64 _lastCapTime;
+    const int64 _MIN_TICK_PERIOD;
     bool _autoAim;
     bool _screenshot;
     int _ssCounter;
