@@ -1,3 +1,4 @@
+#include <sstream>
 #include "opencv2/highgui/highgui.hpp"
 
 #include "Collections/ModBuffer.h"
@@ -5,7 +6,7 @@
 #include "MotionModel.h"
 #include "TargetTracker.h"
 
-#define FRAME_DELAY (4)
+#define FRAME_DELAY (3)
 
 using namespace cv;
 
@@ -84,10 +85,11 @@ int TARGET_TRACK(int argc, const char **argv)
             else if (startedTracking)
             {
                 TargetTrackerOutput control;
+                std::stringstream dbg;
                 if (k == 's')
-                    targetTracker.trackWithTarget(targetPosition - CROSSHAIR_LOCATION, controlHist[-1].joystickVals, control);
+                    targetTracker.trackWithTarget(targetPosition - CROSSHAIR_LOCATION, controlHist[-1].joystickVals, control, dbg);
                 else
-                    targetTracker.trackWithoutTarget(controlHist[-1].joystickVals, control);
+                    targetTracker.trackWithoutTarget(controlHist[-1].joystickVals, control, dbg);
                 if (control.pullTrigger)
                 {
                     shooting = true;
@@ -163,9 +165,9 @@ static Point2f getInitialVelocity()
     float x = 0.0f;
     float y = 0.0f;
     printf("X Velocity: ");
-    scanf("%f", &x);
+    std::cin >> x;
     printf("Y Velocity: ");
-    scanf("%f", &y);
+    std::cin >> y;
 
     return Point2f(x, y);
 }

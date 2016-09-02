@@ -1,3 +1,4 @@
+#include <fstream>
 #include <sstream>
 
 #include "Processing.h"
@@ -30,12 +31,15 @@ HaloAimBotAppManager::~HaloAimBotAppManager()
 
 void HaloAimBotAppManager::processFrame(Mat& frame)
 {
+    _dbgPrint.str(std::string());
+
     // Downsample from 60fps to 30fps
     int64 curTime = getTickCount();
     if (curTime - _lastCapTime < _MIN_TICK_PERIOD)
         return;
 
     std::cout << 1000.0 * (curTime - _lastCapTime) / getTickFrequency() << std::endl;
+    _dbgPrint << 1000.0 * (curTime - _lastCapTime) / getTickFrequency() << std::endl;
 
     _lastCapTime = curTime;
     _updateStateMachine(frame);
@@ -45,7 +49,10 @@ void HaloAimBotAppManager::processFrame(Mat& frame)
     imshow("result", frame);
 
     if (_recording)
+    {
         _frames.push_back(frame.clone());
+        _dbgPrintVector.push_back(_dbgPrint.str());
+    }
 
     if (_frames.size() > MAX_RECORDING_FRAMES)
         _saveRecording();
@@ -74,6 +81,9 @@ void HaloAimBotAppManager::handleKey(int key)
             _targetTracker.reset();
             _clearController();
         }
+        _recording = !_recording;
+        if (!_recording)
+            _saveRecording();
         break;
 
     case 's':
@@ -81,9 +91,6 @@ void HaloAimBotAppManager::handleKey(int key)
         break;
 
     case 'r':
-        _recording = !_recording;
-        if (!_recording)
-            _saveRecording();
         break;
 
     default:
@@ -117,11 +124,21 @@ void HaloAimBotAppManager::_clearController()
 
 void HaloAimBotAppManager::_saveRecording()
 {
+    int tmp = _ssCounter;;
     for (int i = 0; i < _frames.size(); ++i)
     {
         std::stringstream filename;
-        filename << "C:/Users/John/Desktop/cap/" << _ssCounter++ << ".png";
+        filename << "C:/Users/John/Desktop/cap/" << tmp++ << ".png";
         imwrite(filename.str(), _frames[i]);
+    }
+
+    for (int i = 0; i < _dbgPrintVector.size(); ++i)
+    {
+        std::stringstream filename;
+        filename << "C:/Users/John/Desktop/cap/" << _ssCounter++ << ".txt";
+        std::ofstream outfile;
+        outfile.open(filename.str(), std::ios::out | std::ios::trunc);
+        outfile << _dbgPrintVector[i];
     }
     
     _frames.clear();
@@ -139,9 +156,12 @@ void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
         if (_autoAim)
         {
             TargetTrackerOutput controls;
-            _targetTracker.trackWithTarget(aimPoint, _joystickVals, controls);
+            _targetTracker.trackWithTarget(aimPoint, _joystickVals, controls, _dbgPrint);
             if (controls.giveUp)
-                printf("TARGET LOST\n");
+            {
+                std::cout << "TARGET LOST" << std::endl;
+                _dbgPrint << "TARGET LOST" << std::endl;
+            }
 
             _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
             _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
@@ -154,10 +174,12 @@ void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
     else if (_targetTracker.hasTarget() && _autoAim)
     {
         TargetTrackerOutput controls;
-        _targetTracker.trackWithoutTarget(_joystickVals, controls);
+        _targetTracker.trackWithoutTarget(_joystickVals, controls, _dbgPrint);
         if (controls.giveUp)
-            printf("TARGET LOST\n");
-
+        {
+            std::cout << "TARGET LOST" << std::endl;
+            _dbgPrint << "TARGET LOST" << std::endl;
+        }
         _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
         _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
         _xboxController->set(XboxButton::RIGHT_TRIGGER, controls.pullTrigger);

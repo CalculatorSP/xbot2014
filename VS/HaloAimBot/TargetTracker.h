@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sstream>
 #include "opencv2/opencv.hpp"
 
 struct TargetTrackerOutput
@@ -18,15 +19,15 @@ class TargetTracker
     bool                        _tracking;
 
     void _startTracking(cv::Point2f newTarget);
-    void _updateControl(TargetTrackerOutput& out);
+    void _updateControl(TargetTrackerOutput& out, std::stringstream& dbg);
     static void _kalmanCopy(const cv::KalmanFilter& src, cv::KalmanFilter& dst);
-    static bool _iCanHit(cv::Point2f intersection, int framesInFuture, cv::Point2f& joystickVals);
+    static bool _iCanHit(cv::Point2f intersection, int framesInFuture, cv::Point2f& joystickVals, std::stringstream& dbg);
 
 public:
     TargetTracker();
 
-    void trackWithTarget(cv::Point2f newTarget, cv::Point2f joystickVals, TargetTrackerOutput& out);
-    void trackWithoutTarget(cv::Point2f joystickVals, TargetTrackerOutput& out);
+    void trackWithTarget(cv::Point2f newTarget, cv::Point2f joystickVals, TargetTrackerOutput& out, std::stringstream& dbg);
+    void trackWithoutTarget(cv::Point2f joystickVals, TargetTrackerOutput& out, std::stringstream& dbg);
     void reset();
     bool hasTarget() const;
 };
