@@ -38,7 +38,6 @@ void HaloAimBotAppManager::processFrame(Mat& frame)
     if (curTime - _lastCapTime < _MIN_TICK_PERIOD)
         return;
 
-    std::cout << 1000.0 * (curTime - _lastCapTime) / getTickFrequency() << std::endl;
     _dbgPrint << 1000.0 * (curTime - _lastCapTime) / getTickFrequency() << std::endl;
 
     _lastCapTime = curTime;
@@ -146,8 +145,13 @@ void HaloAimBotAppManager::_saveRecording()
 
 void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
 {
+    int64 starttime = getTickCount();
     Point target;
     bool targetFound = _hunter.findTarget(frame, target);
+    int64 endtime = getTickCount();
+
+    _dbgPrint << "Find target: " << 1000.0 * (endtime - starttime) / getTickFrequency() << std::endl;
+
     if (targetFound)
     {
         circle(frame, target, 3, Scalar(0, 255, 0), -1);
@@ -155,13 +159,15 @@ void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
 
         if (_autoAim)
         {
+            int64 starttime2 = getTickCount();
             TargetTrackerOutput controls;
             _targetTracker.trackWithTarget(aimPoint, _joystickVals, controls, _dbgPrint);
+            int64 endtime2 = getTickCount();
+
+            _dbgPrint << "Tracking: " << 1000.0 * (endtime2 - starttime2) / getTickFrequency() << std::endl;
+
             if (controls.giveUp)
-            {
-                std::cout << "TARGET LOST" << std::endl;
                 _dbgPrint << "TARGET LOST" << std::endl;
-            }
 
             _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
             _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
@@ -173,13 +179,16 @@ void HaloAimBotAppManager::_updateStateMachine(Mat& frame)
     }
     else if (_targetTracker.hasTarget() && _autoAim)
     {
+        int64 starttime2 = getTickCount();
         TargetTrackerOutput controls;
         _targetTracker.trackWithoutTarget(_joystickVals, controls, _dbgPrint);
+        int64 endtime2 = getTickCount();
+
+        _dbgPrint << "Tracking: " << 1000.0 * (endtime2 - starttime2) / getTickFrequency() << std::endl;
+
         if (controls.giveUp)
-        {
-            std::cout << "TARGET LOST" << std::endl;
             _dbgPrint << "TARGET LOST" << std::endl;
-        }
+
         _xboxController->set(XboxAnalog::RIGHT_STICK_X, controls.joystickVals.x);
         _xboxController->set(XboxAnalog::RIGHT_STICK_Y, controls.joystickVals.y);
         _xboxController->set(XboxButton::RIGHT_TRIGGER, controls.pullTrigger);

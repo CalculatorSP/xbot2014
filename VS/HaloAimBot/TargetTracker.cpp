@@ -10,30 +10,49 @@ TargetTracker::TargetTracker() : _tracking(false)
 
 void TargetTracker::trackWithTarget(Point2f newTarget, Point2f joystickVals, TargetTrackerOutput& out, std::stringstream& dbg)
 {
-    std::cout << "With target: " << newTarget << std::endl;
     dbg << "With target: " << newTarget << std::endl;
 
     if (_tracking)
     {
+        int64 starttime = getTickCount();
         Point2f rotationRate = MotionModel::getRotationRate(joystickVals);
         Mat_<float> control = (Mat_<float>(2, 1) <<
             rotationRate.x,
             rotationRate.y);
+        int64 endtime = getTickCount();
 
+        dbg << "MotionModel: " << 1000.0 * (endtime - starttime) / getTickFrequency() << std::endl;
+
+        starttime = getTickCount();
         _kalmanFilter.predict(control);
+        endtime = getTickCount();
+
+        dbg << "_kalmanFilter.predict(): " << 1000.0 * (endtime - starttime) / getTickFrequency() << std::endl;
+
+        starttime = getTickCount();
         _kalmanFilter.correct((Mat_<float>(2, 1) << newTarget.x, newTarget.y));
+        endtime = getTickCount();
+
+        dbg << "_kalmanFilter.correct(): " << 1000.0 * (endtime - starttime) / getTickFrequency() << std::endl;
     }
     else
     {
+        int64 starttime = getTickCount();
         _startTracking(newTarget);
+        int64 endtime = getTickCount();
+
+        dbg << "_startTracking: " << 1000.0 * (endtime - starttime) / getTickFrequency() << std::endl;
     }
 
+    int64 starttime = getTickCount();
     _updateControl(out, dbg);
+    int64 endtime = getTickCount();
+
+    dbg << "_updateControl: " << 1000.0 * (endtime - starttime) / getTickFrequency() << std::endl;
 }
 
 void TargetTracker::trackWithoutTarget(Point2f joystickVals, TargetTrackerOutput& out, std::stringstream& dbg)
 {
-    std::cout << "Without target" << std::endl;
     dbg << "Without target" << std::endl;
 
     if (_tracking)
@@ -164,11 +183,9 @@ void TargetTracker::_updateControl(TargetTrackerOutput& out, std::stringstream& 
     {
         Point2f curTarget(tmpKalman.statePost.at<float>(0), tmpKalman.statePost.at<float>(1));
         Point2f joystickVals;
-        std::cout << "trying (" << i << "): " << std::endl << tmpKalman.statePost << std::endl;
         dbg << "trying (" << i << "): " << std::endl << tmpKalman.statePost << std::endl;
         if (_iCanHit(curTarget, i, joystickVals, dbg))
         {
-            std::cout << "INTERSECTION IN " << i << std::endl;
             dbg << "INTERSECTION IN " << i << std::endl;
 
             if (i == 0)
@@ -234,7 +251,6 @@ bool TargetTracker::_iCanHit(Point2f intersection, int framesInFuture, Point2f& 
         return hypotf(intersection.x, intersection.y) < HIT_THRESH;
 
     joystickVals = MotionModel::getJoystickVals(1.0f / framesInFuture * intersection);
-    std::cout << "req: " << joystickVals.x << ", " << joystickVals.y << std::endl;
     dbg << "req: " << joystickVals.x << ", " << joystickVals.y << std::endl;
     return hypotf(joystickVals.x, joystickVals.y) < 0.9f;
 }
