@@ -2,14 +2,9 @@
 
 #include "opencv2/opencv.hpp"
 
-#include "Math/GlobalMath.h"
-
 class FlowCalculator
 {
     std::vector<cv::Mat> _frames;
-
-    // Global Params
-    const GlobalRadius _globalRadius;
 
     // Feature Params
     const int _maxCorners;
@@ -28,7 +23,7 @@ class FlowCalculator
 public:
     std::vector<cv::Point2f> gammaAlphaRotations;
 
-    FlowCalculator(int screenWidth, float fieldOfViewDegrees);
+    FlowCalculator();
 
     void depositFrame(const cv::Mat& frame);
     void calculate();

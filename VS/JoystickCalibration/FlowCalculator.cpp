@@ -7,9 +7,7 @@
 
 using namespace cv;
 
-FlowCalculator::FlowCalculator(int screenWidth, float fieldOfViewDegrees)
-    : _globalRadius(screenWidth, radians(fieldOfViewDegrees)),
-    
+FlowCalculator::FlowCalculator() :
     _maxCorners(50),
     _qualityLevel(0.2),
     _minDistance(15),
@@ -89,7 +87,7 @@ void FlowCalculator::calculate()
         // Store average rotation angles if supervisor approves...
         case KEY_ENTER:
             // Convert pixels to radians
-            gammaAlphaRotations.push_back(Point2f(_globalRadius.toRadians(gamma), _globalRadius.toRadians(alpha)));
+            gammaAlphaRotations.push_back(Point2f(gamma, alpha));
             break;
 
         // Give up :(

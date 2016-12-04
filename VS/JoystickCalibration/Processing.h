@@ -19,6 +19,9 @@ class JoystickCalibrationAppManager : public FrameProcessor, public KeyHandler
 
     static const cv::Rect _flowRoi;
 
+    const int64 _MIN_TICK_PERIOD;
+    int64 _lastCapTime;
+
     bool _keepGoing;
     bool _running;
     bool _switchToY;

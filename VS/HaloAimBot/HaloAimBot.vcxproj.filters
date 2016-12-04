@@ -52,5 +52,11 @@
     <ClInclude Include="TargetTracker.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="HaloAimBot.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

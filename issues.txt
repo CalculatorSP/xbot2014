@@ -1,0 +1,6 @@
+Potential issue				Resolution
+==========================================
+Frame delay is wrong		Re-measure frame delay, abstract in target tracker
+Imprecision on detection	Modify Kalman filter variances, add test with noisy measurements
+Duplicate frames collected	Add filter or timing method
+Initial xbox controls		Write joystick reader (man-in-the-middle module)

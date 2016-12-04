@@ -1,8 +1,6 @@
 #include "Processing.h"
 
-#define KEY_ESC	            (27)
-#define FIELD_OF_VIEW_DEG   (61.0f)
-#define SCREEN_WIDTH        (640)
+#define KEY_ESC             (27)
 #define FRAMES_TO_RUN       (30)
 #define MIN_DATAPOINTS      (5)
 
@@ -13,16 +11,18 @@ const Rect JoystickCalibrationAppManager::_flowRoi(150, 40, 360, 100);
 JoystickCalibrationAppManager::JoystickCalibrationAppManager(Scheduler* scheduler, XboxController* controller)
     : _scheduler(scheduler),
     _controller(controller),
-    _flowCalculator(SCREEN_WIDTH, FIELD_OF_VIEW_DEG),
+
+    _MIN_TICK_PERIOD((int64)(.02*getTickFrequency())),
+    _lastCapTime(0),
 
     _keepGoing(true),
     _running(false),
-    _switchToY(true),
+    _switchToY(false),
     _done(false),
     _frameCounter(0),
 
     _xRate(0.0f),
-    _yRate(-0.81f)
+    _yRate(0.0f)
 {
     _outFile.open("C:\\Users\\John\\Desktop\\75.csv");
     _outFile << "x,y,gamma,alpha" << std::endl;
@@ -30,11 +30,16 @@ JoystickCalibrationAppManager::JoystickCalibrationAppManager(Scheduler* schedule
 
 void JoystickCalibrationAppManager::processFrame(Mat& frame)
 {
-    imshow("result", frame);
+    // Downsample from 60fps to 30fps
+    int64 curTime = getTickCount();
+    if (curTime - _lastCapTime < _MIN_TICK_PERIOD)
+        return;
+    _lastCapTime = curTime;
 
+    rectangle(frame, _flowRoi, Scalar(255, 255, 255));
+    imshow("result", frame);
     if (_running)
     {
-        resize(frame, frame, Size(), 1.0, 0.5, INTER_NEAREST);
         _flowCalculator.depositFrame(frame(_flowRoi));
 
         if (++_frameCounter >= FRAMES_TO_RUN)
@@ -112,8 +117,8 @@ void JoystickCalibrationAppManager::handleKey(int key)
             // Move the joysticks and compute the optical flow
             if (!_running)
             {
-                _xRate = -0.2f;
-                _yRate = -0.8f;
+                _xRate = -0.9f;
+                _yRate = 0.0f;
                 printf("\n-----------------------------\n%f, %f\n-----------------------------\n", _xRate, _yRate);
                 _controller->set(XboxAnalog::RIGHT_STICK_X, _xRate);
                 _controller->set(XboxAnalog::RIGHT_STICK_Y, _yRate);
