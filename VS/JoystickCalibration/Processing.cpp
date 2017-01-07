@@ -6,7 +6,7 @@
 
 using namespace cv;
 
-const Rect JoystickCalibrationAppManager::_flowRoi(150, 40, 360, 100);
+const Rect JoystickCalibrationAppManager::_flowRoi(150, 160, 600, 150);
 
 JoystickCalibrationAppManager::JoystickCalibrationAppManager(Scheduler* scheduler, XboxController* controller)
     : _scheduler(scheduler),
@@ -21,10 +21,10 @@ JoystickCalibrationAppManager::JoystickCalibrationAppManager(Scheduler* schedule
     _done(false),
     _frameCounter(0),
 
-    _xRate(0.0f),
+    _xRate(-0.9f),
     _yRate(0.0f)
 {
-    _outFile.open("C:\\Users\\John\\Desktop\\75.csv");
+    _outFile.open("C:/Users/John/Desktop/75.csv");
     _outFile << "x,y,gamma,alpha" << std::endl;
 }
 
@@ -117,8 +117,6 @@ void JoystickCalibrationAppManager::handleKey(int key)
             // Move the joysticks and compute the optical flow
             if (!_running)
             {
-                _xRate = -0.9f;
-                _yRate = 0.0f;
                 printf("\n-----------------------------\n%f, %f\n-----------------------------\n", _xRate, _yRate);
                 _controller->set(XboxAnalog::RIGHT_STICK_X, _xRate);
                 _controller->set(XboxAnalog::RIGHT_STICK_Y, _yRate);
