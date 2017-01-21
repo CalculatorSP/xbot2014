@@ -5,12 +5,10 @@
 #include "opencv2/opencv.hpp"
 
 #include "PSX/XboxController.h"
-#include "Task/Scheduler.h"
-#include "Util/ScreenGrabber.h"
 
-class TestDataGenerator : public FrameProcessor, public KeyHandler
+class TestDataGenerator
 {
-    Scheduler* _scheduler;
+    cv::VideoCapture* _cap;
     XboxController* _controller;
     std::ofstream _outFile;
 
@@ -24,14 +22,14 @@ class TestDataGenerator : public FrameProcessor, public KeyHandler
     float _xRate;
     float _yRate;
 
+    void processFrame(cv::Mat& frame);
+    void handleKey(int key);
     void _quit();
 
 public:
-    TestDataGenerator(Scheduler* scheduler, XboxController* controller);
+    TestDataGenerator(cv::VideoCapture* cap, XboxController* controller);
     ~TestDataGenerator();
 
     void run();
-    void processFrame(cv::Mat& frame);
-    void handleKey(int key);
 
 };

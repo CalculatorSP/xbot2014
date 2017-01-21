@@ -3,11 +3,8 @@
 #include "opencv2/opencv.hpp"
 
 #include "PSX/XboxController.h"
-#include "Util/ScreenGrabber.h"
-
 #include "TestDataGenerator.h"
 
-#define WEBCAM  (0)
 #define CAPCARD (0)
 
 using namespace cv;
@@ -16,12 +13,10 @@ const char* comport = "COM3";
 
 int main(int argc, const char **argv)
 {
-    Scheduler                       scheduler;
-    XboxController                  xboxController(comport);
-    TestDataGenerator               appManager(&scheduler, &xboxController);
-    ScreenGrabber                   grabber(CAPCARD, 60, &scheduler, &appManager, &appManager);
+    VideoCapture cap(CAPCARD);
+    XboxController xboxController(comport);
 
-    if (!grabber.cap.isOpened())
+    if (!cap.isOpened())
     {
         std::cerr << "Could not open capture device" << std::endl;
         //return -1;
@@ -33,9 +28,8 @@ int main(int argc, const char **argv)
         //return -1;
     }
 
-    cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
-
-    appManager.run();
+    TestDataGenerator testDataGenerator(&cap, &xboxController);
+    testDataGenerator.run();
 
     return 0;
 }

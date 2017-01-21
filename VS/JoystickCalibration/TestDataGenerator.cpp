@@ -2,14 +2,12 @@
 
 #define KEY_ESC             (27)
 #define FRAMES_TO_RUN       (30)
-#define MIN_DATAPOINTS      (5)
 
 using namespace cv;
 
-TestDataGenerator::TestDataGenerator(Scheduler* scheduler, XboxController* controller)
-    : _scheduler(scheduler),
+TestDataGenerator::TestDataGenerator(VideoCapture* cap, XboxController* controller) :
+    _cap(cap),
     _controller(controller),
-
     _MIN_TICK_PERIOD((int64)(.02*getTickFrequency())),
     _lastCapTime(0),
 
@@ -23,6 +21,8 @@ TestDataGenerator::TestDataGenerator(Scheduler* scheduler, XboxController* contr
     //TODO output header
     _outFile.open("C:/Users/John/Desktop/75.csv");
     _outFile << "x,y,gamma,alpha" << std::endl;
+
+    namedWindow("result", WINDOW_AUTOSIZE);
 }
 
 TestDataGenerator::~TestDataGenerator()
@@ -32,12 +32,6 @@ TestDataGenerator::~TestDataGenerator()
 
 void TestDataGenerator::processFrame(Mat& frame)
 {
-    // Downsample from 60fps to 30fps
-    int64 curTime = getTickCount();
-    if (curTime - _lastCapTime < _MIN_TICK_PERIOD)
-        return;
-    _lastCapTime = curTime;
-
     imshow("result", frame);
     if (_running)
     {
@@ -65,15 +59,12 @@ void TestDataGenerator::handleKey(int key)
     switch (key)
     {
     case KEY_ESC:
-        _quit();
+        _keepGoing = false;
         break;
 
     case 'g':
         if (!_running)
-        {
-            _frameCounter = 0;
             _running = true;
-        }
         break;
 
     default:
@@ -83,8 +74,25 @@ void TestDataGenerator::handleKey(int key)
 
 void TestDataGenerator::run()
 {
+    Mat frame;
     while (_keepGoing)
-        _scheduler->run();
+    {
+        *_cap >> frame;
+        if (frame.empty())
+            break;
+
+        // Downsample from 60fps to 30fps
+        int64 curTime = getTickCount();
+        if (curTime - _lastCapTime >= _MIN_TICK_PERIOD)
+        {
+            processFrame(frame);
+            _lastCapTime = curTime;
+        }
+
+        handleKey(waitKey(1));
+    }
+
+    _quit();
 }
 
 void TestDataGenerator::_quit()
@@ -92,10 +100,6 @@ void TestDataGenerator::_quit()
     _controller->release(XboxAnalog::RIGHT_STICK_X);
     _controller->release(XboxAnalog::RIGHT_STICK_Y);
     _controller->sendState();
-    _running = false;
-
     if (_outFile.is_open())
         _outFile.close();
-
-    _keepGoing = false;
 }
