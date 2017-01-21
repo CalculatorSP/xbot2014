@@ -50,10 +50,12 @@
     <ClCompile Include="FlowCalculator.cpp" />
     <ClCompile Include="JoystickCalibration.cpp" />
     <ClCompile Include="Processing.cpp" />
+    <ClCompile Include="TestDataGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FlowCalculator.h" />
     <ClInclude Include="Processing.h" />
+    <ClInclude Include="TestDataGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

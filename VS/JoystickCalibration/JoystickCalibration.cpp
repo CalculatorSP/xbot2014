@@ -5,7 +5,7 @@
 #include "PSX/XboxController.h"
 #include "Util/ScreenGrabber.h"
 
-#include "Processing.h"
+#include "TestDataGenerator.h"
 
 #define WEBCAM  (0)
 #define CAPCARD (0)
@@ -18,7 +18,7 @@ int main(int argc, const char **argv)
 {
     Scheduler                       scheduler;
     XboxController                  xboxController(comport);
-    JoystickCalibrationAppManager   appManager(&scheduler, &xboxController);
+    TestDataGenerator               appManager(&scheduler, &xboxController);
     ScreenGrabber                   grabber(CAPCARD, 60, &scheduler, &appManager, &appManager);
 
     if (!grabber.cap.isOpened())
@@ -34,8 +34,6 @@ int main(int argc, const char **argv)
     }
 
     cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
-    cvNamedWindow("flow1", CV_WINDOW_AUTOSIZE);
-    cvNamedWindow("flow2", CV_WINDOW_AUTOSIZE);
 
     appManager.run();
 

@@ -20,12 +20,18 @@
     <ClCompile Include="FlowCalculator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestDataGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Processing.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="FlowCalculator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestDataGenerator.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
