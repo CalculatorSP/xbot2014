@@ -28,7 +28,7 @@ int main(int argc, const char **argv)
         //return -1;
     }
 
-    TestDataGenerator testDataGenerator(&cap, &xboxController);
+    TestDataGenerator testDataGenerator(cap, xboxController);
     testDataGenerator.run();
 
     return 0;
