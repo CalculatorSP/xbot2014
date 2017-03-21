@@ -123,7 +123,7 @@ void HaloAimBotAppManager::_clearController()
 
 void HaloAimBotAppManager::_saveRecording()
 {
-    int tmp = _ssCounter;;
+    int tmp = _ssCounter;
     for (int i = 0; i < _frames.size(); ++i)
     {
         std::stringstream filename;

@@ -10,20 +10,24 @@ class TestDataGenerator
 {
     cv::VideoCapture* _cap;
     XboxController* _controller;
-    std::ofstream _outFile;
+    std::vector<cv::Mat> _frames;
+    std::vector<std::string> _dbgPrintVector;
 
     const int64 _MIN_TICK_PERIOD;
     int64 _lastCapTime;
 
-    bool _keepGoing;
-    bool _running;
-    int _frameCounter;
-
     float _xRate;
     float _yRate;
 
-    void processFrame(cv::Mat& frame);
-    void handleKey(int key);
+    bool _keepGoing;
+    bool _running;
+    bool _yMode;
+    int _frameCounter;
+    int _globalFrameCounter;
+
+    void _processFrame(cv::Mat& frame);
+    void _handleKey(int key);
+    void _updateController(float x, float y);
     void _quit();
 
 public:
