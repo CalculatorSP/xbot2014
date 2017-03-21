@@ -8,8 +8,8 @@
 
 class TestDataGenerator
 {
-    cv::VideoCapture _cap;
-    XboxController _controller;
+    cv::VideoCapture* _cap;
+    XboxController* _controller;
     std::ofstream _outFile;
 
     const int64 _MIN_TICK_PERIOD;
@@ -27,7 +27,7 @@ class TestDataGenerator
     void _quit();
 
 public:
-    TestDataGenerator(const cv::VideoCapture& cap, const XboxController& controller);
+    TestDataGenerator(cv::VideoCapture* cap, XboxController* controller);
     ~TestDataGenerator();
 
     void run();

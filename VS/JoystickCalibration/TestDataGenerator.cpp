@@ -5,7 +5,7 @@
 
 using namespace cv;
 
-TestDataGenerator::TestDataGenerator(const VideoCapture& cap, const XboxController& controller) :
+TestDataGenerator::TestDataGenerator(VideoCapture* cap, XboxController* controller) :
     _cap(cap),
     _controller(controller),
     _MIN_TICK_PERIOD((int64)(.02*getTickFrequency())),
@@ -34,12 +34,15 @@ void TestDataGenerator::processFrame(Mat& frame)
     imshow("result", frame);
     if (_running)
     {
+        _controller->set(XboxAnalog::RIGHT_STICK_X, _xRate);
+        _controller->sendState();
+
         if (++_frameCounter >= FRAMES_TO_RUN)
         {
             // Release the joysticks
-            _controller.release(XboxAnalog::RIGHT_STICK_X);
-            _controller.release(XboxAnalog::RIGHT_STICK_Y);
-            _controller.sendState();
+            _controller->release(XboxAnalog::RIGHT_STICK_X);
+            _controller->release(XboxAnalog::RIGHT_STICK_Y);
+            _controller->sendState();
 
             // Print the results to a file
             if (_outFile.is_open())
@@ -77,7 +80,7 @@ void TestDataGenerator::run()
     Mat frame;
     while (_keepGoing)
     {
-        _cap >> frame;
+        *_cap >> frame;
         if (frame.empty())
             break;
 
@@ -97,9 +100,9 @@ void TestDataGenerator::run()
 
 void TestDataGenerator::_quit()
 {
-    _controller.release(XboxAnalog::RIGHT_STICK_X);
-    _controller.release(XboxAnalog::RIGHT_STICK_Y);
-    _controller.sendState();
+    _controller->release(XboxAnalog::RIGHT_STICK_X);
+    _controller->release(XboxAnalog::RIGHT_STICK_Y);
+    _controller->sendState();
     if (_outFile.is_open())
         _outFile.close();
 }
