@@ -57,23 +57,23 @@ void TestDataGenerator::_processFrame(Mat& frame)
     imshow("result", frame);
     if (_running)
     {
-        std::stringstream printStr;
+        _printStr.str(std::string());
 
         ++_frameCounter;
         ++_globalFrameCounter;
         _frames.push_back(frame.clone());
-        printStr << _globalFrameCounter << "," << _xRate << "," << _yRate << std::endl;
-        _dbgPrintVector.push_back(printStr.str());
+        _printStr << _globalFrameCounter << "," << _xRate << "," << _yRate << std::endl;
+        _dbgPrintVector.push_back(_printStr.str());
 
-        if (_yMode && _frameCounter > 30)
+        if (_yMode && _frameCounter > 15)
         {
-            _updateController(0.5f, 0.0f);
+            _updateController(0.75f, 0.0f);
             _yMode = false;
             _frameCounter = 0;
         }
-        else if (_frameCounter > 150)
+        else if (_frameCounter > 120)
         {
-            _updateController(0.0f, 0.5f);
+            _updateController(0.0f, 0.75f);
             _frameCounter = 0;
             _yMode = true;
         }
@@ -90,7 +90,12 @@ void TestDataGenerator::_handleKey(int key)
 
     case 'g':
         if (!_running)
+        {
+            _updateController(0.75f, 0.0f);
+            _frameCounter = 0;
+            _yMode = false;
             _running = true;
+        }
         break;
 
     default:
@@ -120,9 +125,11 @@ void TestDataGenerator::_quit()
         imwrite(filename.str(), _frames[i]);
     }
 
-    std::ofstream outfile("C:/Users/John/Desktop/cap/input.csv");
+    std::ofstream outfile;
+    outfile.open("C:/Users/John/Desktop/cap/input.csv", std::ios::out | std::ios::app);
     for (int i = 0; i < _dbgPrintVector.size(); ++i)
         outfile << _dbgPrintVector[i];
+    outfile.close();
 
     _frames.clear();
     _dbgPrintVector.clear();

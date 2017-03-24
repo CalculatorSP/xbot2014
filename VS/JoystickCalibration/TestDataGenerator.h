@@ -12,6 +12,7 @@ class TestDataGenerator
     XboxController* _controller;
     std::vector<cv::Mat> _frames;
     std::vector<std::string> _dbgPrintVector;
+    std::stringstream _printStr;
 
     const int64 _MIN_TICK_PERIOD;
     int64 _lastCapTime;
